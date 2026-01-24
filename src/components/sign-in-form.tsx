@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
 import { authClient } from "@/lib/auth/client";
+import { signInFn } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
 import type { FileRouteTypes } from "@/routeTree.gen";
@@ -50,27 +52,21 @@ export function SignInForm({
     resolver: zodResolver(signInFormSchema),
   });
 
-  const submit = async ({
-    email,
-    password,
-    rememberMe,
-  }: z.infer<typeof signInFormSchema>) => {
-    clearErrors();
-    const { data, error } = await authClient.signIn.email({
-      email,
-      password,
-      rememberMe,
-    });
-    if (error) {
-      setError("root", { message: "Credenciales incorrectas" });
-      console.error(`Sign-in error -> "/sign-in": ${error.message}`);
+  const { mutate } = useMutation({
+    mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
+      clearErrors();
+      return await signInFn({ data });
+    },
+    onError: (e) => {
+      setError("root", { message: "Wrong credentials" });
+      console.error(`Sign-in error -> "/sign-in": ${e.message}`);
       toast.error("Credenciales incorrectas");
-    }
-    if (data) {
-      toast.success(`Bienvenido ${data?.user.name}`);
+    },
+    onSuccess: (data) => {
+      toast.success(`Welcome ${data.user.name}`);
       router.navigate({ to: callbackUrl });
-    }
-  };
+    },
+  });
 
   return (
     <div
@@ -85,7 +81,7 @@ export function SignInForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
             className="p-4 md:p-6"
-            onSubmit={handleSubmit(async (data) => await submit(data))}
+            onSubmit={handleSubmit((data) => mutate(data))}
           >
             <FieldSet>
               <FieldLegend className="text-center">

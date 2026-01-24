@@ -20,10 +20,8 @@ export const Route = createFileRoute("/_authed/dashboard/admin/")({
 });
 
 function RouteComponent() {
-  const { session } = Route.useRouteContext();
-
   const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions(session.user.id),
+    listOrganizationsQueryOptions,
   );
 
   return (
@@ -44,16 +42,22 @@ function RouteComponent() {
           ></Button>
         </div>
         <div className="flex gap-4">
-          {organizations.map((org) => (
-            <Card key={org.id}>
-              <CardHeader>
-                <TypographyH5>{org.name}</TypographyH5>
-              </CardHeader>
-              <CardContent>
-                <div>Slug: {org.slug}</div>
-                <div className="text-xs">ID: {org.id}</div>
-              </CardContent>
-            </Card>
+          {organizations?.map((org) => (
+            <Link
+              key={org.id}
+              params={{ id: org.id }}
+              to="/dashboard/admin/organization/$id"
+            >
+              <Card>
+                <CardHeader>
+                  <TypographyH5>{org.name}</TypographyH5>
+                </CardHeader>
+                <CardContent>
+                  <div>Slug: {org.slug}</div>
+                  <div className="text-xs">ID: {org.id}</div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </section>

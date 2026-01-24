@@ -1,16 +1,11 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getSessionFn } from "@/lib/fn/auth";
 
 export const Route = createFileRoute("/_authed/dashboard/admin")({
-  component: RouteComponent,
-  beforeLoad: async ({ context }) => {
-    if (context.session.user.role === "admin") {
-      return { user: context.session.user };
-    } else {
+  beforeLoad: async () => {
+    const session = await getSessionFn();
+    if (session?.user.role !== "admin") {
       throw redirect({ to: "/dashboard" });
     }
   },
 });
-
-function RouteComponent() {
-  return <Outlet />;
-}

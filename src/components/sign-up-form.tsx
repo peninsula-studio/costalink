@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
@@ -19,7 +20,10 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import type { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth/client";
+import { signUpFn } from "@/lib/fn/auth";
+import { userKeys } from "@/lib/fn/keys";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
@@ -35,32 +39,48 @@ export function SignUpForm({
 
   const router = useRouter();
 
-  const submit = async ({
-    email,
-    password,
-    name,
-  }: z.infer<typeof signUpFormSchema>) => {
-    clearErrors();
-    const { data, error } = await authClient.signUp.email({
-      name,
-      email,
-      password,
-    });
-    if (error) {
-      setError("root", { message: "Credenciales incorrectas" });
-      console.error(`Sign-up error -> "/sign-up": ${error.message}`);
-      toast.error("Credenciales incorrectas");
-    }
-    if (data) {
-      toast.success(`Bienvenido ${data?.user.name}`);
-      router.navigate({ to: callbackUrl });
-    }
-  };
+  // const submit = async ({
+  //   email,
+  //   password,
+  //   name,
+  // }: z.infer<typeof signUpFormSchema>) => {
+  //   clearErrors();
+  //   const { data, error } = await authClient.signUp.email({
+  //     name,
+  //     email,
+  //     password,
+  //   });
+  //   if (error) {
+  //     setError("root", { message: "Credenciales incorrectas" });
+  //     console.error(`Sign-up error -> "/sign-up": ${error.message}`);
+  //     toast.error("Credenciales incorrectas");
+  //   }
+  //   if (data) {
+  //     toast.success(`Bienvenido ${data?.user.name}`);
+  //     router.navigate({ to: callbackUrl });
+  //   }
+  // };
 
   const { formState, handleSubmit, register, clearErrors, setError } = useForm({
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
     mode: "onSubmit",
     resolver: zodResolver(signUpFormSchema),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: async (data: z.infer<typeof signUpFormSchema>) => {
+      clearErrors();
+      return await signUpFn({ data });
+    },
+    onError: (e) => {
+      setError("root", { message: "Error en la creación de sesión" });
+      console.error(`Sign-up error -> "/sign-up": ${e.message}`);
+      toast.error("Credenciales incorrectas");
+    },
+    onSuccess: (data) => {
+      toast.success(`Bienvenido ${data.user.name || ""}`);
+      router.navigate({ to: callbackUrl });
+    },
   });
 
   return (
@@ -72,7 +92,10 @@ export function SignUpForm({
       {/*   </CardDescription> */}
       {/* </CardHeader> */}
       <CardContent>
-        <form onSubmit={handleSubmit(async (data) => await submit(data))}>
+        <form
+          // onSubmit={handleSubmit(async (data) => await submit(data))}
+          onSubmit={handleSubmit((data) => mutate(data))}
+        >
           <FieldSet>
             <FieldLegend className="text-center">Create an account</FieldLegend>
             <FieldDescription className="text-center">

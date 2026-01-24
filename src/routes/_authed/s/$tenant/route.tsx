@@ -1,27 +1,21 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import * as React from "react";
-import { fullOrganizationQueryOptions } from "@/lib/fn/organization";
+import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/_authed/s/$tenant")({
   component: TenantLayout,
   beforeLoad: async ({ context, params }) => {
-    const fullOrganization = await context.queryClient.fetchQuery(
-      fullOrganizationQueryOptions({ organizationSlug: params.tenant }),
+    const organizations = await context.queryClient.fetchQuery(
+      listOrganizationsQueryOptions,
     );
-    return { fullOrganization };
+    console.log(organizations.find((o) => o.slug === params.tenant));
   },
 });
 
 function TenantLayout() {
-  // const { fullOrganization } = Route.useRouteContext();
-
-  // const { setCurrentOrg } = useAppSidebarCtx();
-  //
-  // setCurrentOrg(fullOrganization);
-
   return (
     <main className="flex flex-col gap-y-6 p-4">
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense fallback={<div className="bg-red-600">Loading...</div>}>
         <Outlet />
       </React.Suspense>
     </main>

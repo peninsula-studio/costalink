@@ -22,6 +22,7 @@ import { Route as AuthedSTenantIndexRouteImport } from './routes/_authed/s/$tena
 import { Route as AuthedDashboardAdminIndexRouteImport } from './routes/_authed/dashboard/admin/index'
 import { Route as AuthedDashboardAdminOrganizationIndexRouteImport } from './routes/_authed/dashboard/admin/organization/index'
 import { Route as AuthedDashboardAdminOrganizationCreateRouteImport } from './routes/_authed/dashboard/admin/organization/create'
+import { Route as AuthedDashboardAdminOrganizationOrganizationIdRouteImport } from './routes/_authed/dashboard/admin/organization/$organizationId'
 
 const AuthedRouteRoute = AuthedRouteRouteImport.update({
   id: '/_authed',
@@ -91,6 +92,12 @@ const AuthedDashboardAdminOrganizationCreateRoute =
     path: '/organization/create',
     getParentRoute: () => AuthedDashboardAdminRouteRoute,
   } as any)
+const AuthedDashboardAdminOrganizationOrganizationIdRoute =
+  AuthedDashboardAdminOrganizationOrganizationIdRouteImport.update({
+    id: '/organization/$organizationId',
+    path: '/organization/$organizationId',
+    getParentRoute: () => AuthedDashboardAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof AuthedDashboardIndexRoute
   '/dashboard/admin/': typeof AuthedDashboardAdminIndexRoute
   '/s/$tenant/': typeof AuthedSTenantIndexRoute
+  '/dashboard/admin/organization/$organizationId': typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
   '/dashboard/admin/organization/create': typeof AuthedDashboardAdminOrganizationCreateRoute
   '/dashboard/admin/organization/': typeof AuthedDashboardAdminOrganizationIndexRoute
 }
@@ -114,6 +122,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthedDashboardIndexRoute
   '/dashboard/admin': typeof AuthedDashboardAdminIndexRoute
   '/s/$tenant': typeof AuthedSTenantIndexRoute
+  '/dashboard/admin/organization/$organizationId': typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
   '/dashboard/admin/organization/create': typeof AuthedDashboardAdminOrganizationCreateRoute
   '/dashboard/admin/organization': typeof AuthedDashboardAdminOrganizationIndexRoute
 }
@@ -130,6 +139,7 @@ export interface FileRoutesById {
   '/_authed/dashboard/': typeof AuthedDashboardIndexRoute
   '/_authed/dashboard/admin/': typeof AuthedDashboardAdminIndexRoute
   '/_authed/s/$tenant/': typeof AuthedSTenantIndexRoute
+  '/_authed/dashboard/admin/organization/$organizationId': typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
   '/_authed/dashboard/admin/organization/create': typeof AuthedDashboardAdminOrganizationCreateRoute
   '/_authed/dashboard/admin/organization/': typeof AuthedDashboardAdminOrganizationIndexRoute
 }
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/dashboard/admin/'
     | '/s/$tenant/'
+    | '/dashboard/admin/organization/$organizationId'
     | '/dashboard/admin/organization/create'
     | '/dashboard/admin/organization/'
   fileRoutesByTo: FileRoutesByTo
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/dashboard/admin'
     | '/s/$tenant'
+    | '/dashboard/admin/organization/$organizationId'
     | '/dashboard/admin/organization/create'
     | '/dashboard/admin/organization'
   id:
@@ -172,6 +184,7 @@ export interface FileRouteTypes {
     | '/_authed/dashboard/'
     | '/_authed/dashboard/admin/'
     | '/_authed/s/$tenant/'
+    | '/_authed/dashboard/admin/organization/$organizationId'
     | '/_authed/dashboard/admin/organization/create'
     | '/_authed/dashboard/admin/organization/'
   fileRoutesById: FileRoutesById
@@ -277,11 +290,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedDashboardAdminOrganizationCreateRouteImport
       parentRoute: typeof AuthedDashboardAdminRouteRoute
     }
+    '/_authed/dashboard/admin/organization/$organizationId': {
+      id: '/_authed/dashboard/admin/organization/$organizationId'
+      path: '/organization/$organizationId'
+      fullPath: '/dashboard/admin/organization/$organizationId'
+      preLoaderRoute: typeof AuthedDashboardAdminOrganizationOrganizationIdRouteImport
+      parentRoute: typeof AuthedDashboardAdminRouteRoute
+    }
   }
 }
 
 interface AuthedDashboardAdminRouteRouteChildren {
   AuthedDashboardAdminIndexRoute: typeof AuthedDashboardAdminIndexRoute
+  AuthedDashboardAdminOrganizationOrganizationIdRoute: typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
   AuthedDashboardAdminOrganizationCreateRoute: typeof AuthedDashboardAdminOrganizationCreateRoute
   AuthedDashboardAdminOrganizationIndexRoute: typeof AuthedDashboardAdminOrganizationIndexRoute
 }
@@ -289,6 +310,8 @@ interface AuthedDashboardAdminRouteRouteChildren {
 const AuthedDashboardAdminRouteRouteChildren: AuthedDashboardAdminRouteRouteChildren =
   {
     AuthedDashboardAdminIndexRoute: AuthedDashboardAdminIndexRoute,
+    AuthedDashboardAdminOrganizationOrganizationIdRoute:
+      AuthedDashboardAdminOrganizationOrganizationIdRoute,
     AuthedDashboardAdminOrganizationCreateRoute:
       AuthedDashboardAdminOrganizationCreateRoute,
     AuthedDashboardAdminOrganizationIndexRoute:

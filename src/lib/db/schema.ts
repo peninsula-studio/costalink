@@ -9,6 +9,9 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+export const USER_ROLE_ENUM = ["owner", "admin", "member"] as const;
+export const MEMBER_ROLE_ENUM = ["owner", "admin", "member"] as const;
+
 export const estadoPlaza = pgEnum("estado_plaza", [
   "vacante",
   "ocupada",

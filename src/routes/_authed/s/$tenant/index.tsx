@@ -1,14 +1,13 @@
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
+import * as React from "react";
+import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH3,
   TypographyH5,
 } from "@/components/ui/typography";
-import { organizationKeys } from "@/lib/fn/keys";
 import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
 const BOLSAS = [
@@ -31,70 +30,46 @@ const NOMBRAMIENTOS = [
 
 export const Route = createFileRoute("/_authed/s/$tenant/")({
   component: TenantPage,
-  // loader: async ({ context, params }) => {
-  //   await context.queryClient.refetchQueries({
-  //     queryKey: organizationKeys.setActiveOrganization({
-  //       organizationSlug: params.tenant,
-  //     }),
-  //     type: "all",
-  //     stale: true,
-  //   });
-  // },
 });
 
 function TenantPage() {
   const { tenant } = Route.useParams();
+
 
   // INFO: Then we await the activeOrganization data that will be cached by the queryClient
   const { data: activeOrganization } = useSuspenseQuery(
     setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
   );
 
-  // const qc = useQueryClient();
-  // qc.refetchQueries({
-  //   queryKey: organizationKeys.setActiveOrganization({
-  //     organizationSlug: tenant,
-  //   }),
-  //   type: "all",
-  //   stale: true,
-  // });
+  const { setActiveOrganization } = useAppSidebarCtx();
+
+  React.useEffect(() => {
+    setActiveOrganization(activeOrganization);
+  }, [setActiveOrganization, activeOrganization]);
 
   return (
-    <>
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <div className="bg-lime-200 p-2">
-          <table>
-            <tbody className="divide-y divide-foreground border border-foreground **:px-2 *:[tr]:divide-x *:[tr]:divide-foreground">
-              <tr>
-                <td>path:</td>
-                <td> _authed/s/$tenant</td>
-              </tr>
-              <tr>
-                <td>params:</td>
-                <td> {tenant}</td>
-              </tr>
-              <tr>
-                <td>Organization ID:</td>
-                <td> {activeOrganization?.id}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </React.Suspense>
+    <div>
+      <div className="bg-lime-200 p-2">
+        <table>
+          <tbody className="divide-y divide-foreground border border-foreground **:px-2 *:[tr]:divide-x *:[tr]:divide-foreground">
+            <tr>
+              <td>path:</td>
+              <td> _authed/s/$tenant</td>
+            </tr>
+            <tr>
+              <td>params:</td>
+              <td> {tenant}</td>
+            </tr>
+            <tr>
+              <td>Organization ID:</td>
+              <td> {activeOrganization?.id}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <React.Suspense
-        fallback={
-          <section>
-            <Skeleton className="h-lh w-[15ch] text-5xl" />
-            <Skeleton className="h-lh w-[15ch] text-base" />
-          </section>
-        }
-      >
-        <TypographyH2>{activeOrganization?.name}</TypographyH2>
-        <TypographyH5>{activeOrganization?.id}</TypographyH5>
-      </React.Suspense>
-
-      {/* <OrganizationHeader tenantSlug={tenantSlug} /> */}
+      <TypographyH2>{activeOrganization?.name}</TypographyH2>
+      <TypographyH5>{activeOrganization?.id}</TypographyH5>
 
       <section>
         <TypographyH3>Nombramientos</TypographyH3>
@@ -123,6 +98,6 @@ function TenantPage() {
           ))}
         </div>
       </section>
-    </>
+    </div>
   );
 }

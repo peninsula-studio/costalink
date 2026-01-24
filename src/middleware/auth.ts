@@ -2,11 +2,26 @@ import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { getSessionFn } from "@/lib/fn/auth";
 
-export const authMiddleware = createMiddleware().server(async ({ next }) => {
-  console.log("Getting session from middleware...");
-  const session = await getSessionFn();
-  if (!session?.user) {
-    throw redirect({ to: "/sign-in" });
-  }
-  return await next({ context: { user: session.user } });
-});
+export const authMiddleware = createMiddleware({ type: "function" }).server(
+  async ({ next }) => {
+    console.log("Getting session from middleware...");
+    const session = await getSessionFn();
+    if (!session?.user) {
+      throw redirect({ to: "/sign-in" });
+    }
+    return await next({ context: { session } });
+  },
+);
+
+// export const adminMiddleware = createMiddleware({ type: "function" })
+//   // .inputValidator(
+//   //   (data: { context: { session: typeof auth.$Infer.Session } }) => data,
+//   // )
+//   .server(async ({ next, context }) => {
+//     console.log("Checking if user is Admin...");
+//     const session = await getSessionFn();
+//     if (context?.session.user.role !== "admin") {
+//       throw redirect({ to: "/dashboard" });
+//     }
+//     return await next({ context: { session } });
+//   });

@@ -1,12 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
+import React from "react";
+import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { TypographyH2 } from "@/components/ui/typography";
 import {
-  setActiveOrganizationQueryOptions,
   listOrganizationsQueryOptions,
+  setActiveOrganizationQueryOptions,
 } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/_authed/dashboard/")({
@@ -17,12 +19,19 @@ function DashboardPage() {
   const { session } = Route.useRouteContext();
 
   const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions(session.user.id),
+    listOrganizationsQueryOptions,
   );
 
+  // INFO: Then we await the activeOrganization data that will be cached by the queryClient
   const { data: activeOrganization } = useSuspenseQuery(
     setActiveOrganizationQueryOptions({ organizationId: null }),
   );
+
+  const { setActiveOrganization } = useAppSidebarCtx();
+
+  React.useEffect(() => {
+    setActiveOrganization(activeOrganization);
+  }, [setActiveOrganization, activeOrganization]);
 
   return (
     <div className="flex flex-col gap-y-6">

@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useLocation, useRouteContext } from "@tanstack/react-router";
+import { Link, useRouteContext } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
-import { useEffect, useEffectEvent } from "react";
+import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,44 +13,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
-import { organizationKeys } from "@/lib/fn/keys";
-import {
-  listOrganizationsQueryOptions,
-  setActiveOrganizationFn,
-} from "@/lib/fn/organization";
+import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
   const { session } = useRouteContext({ from: "/_authed" });
 
-  const { pathname } = useLocation();
-
   const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions(session.user.id),
+    listOrganizationsQueryOptions,
   );
 
-  const { data: activeOrganization, refetch } = useSuspenseQuery({
-    queryKey: organizationKeys.setActiveOrganization({
-      organizationSlug: pathname.split("/")[2],
-      organizationId: pathname.split("/")[2] ? undefined : null,
-    }),
-    queryFn: async () =>
-      await setActiveOrganizationFn({
-        data: {
-          organizationSlug: pathname.split("/")[2],
-          organizationId: pathname.split("/")[2] ? undefined : null,
-        },
-      }),
-  });
-
-  const onNavigate = useEffectEvent((_path: string) => {
-    refetch();
-  });
-
-  useEffect(() => {
-    onNavigate(pathname);
-  }, [pathname]);
+  const { activeOrganization } = useAppSidebarCtx();
 
   return (
     <DropdownMenu>
@@ -103,7 +77,7 @@ export function OrganizationSwitcher() {
           {/*   <OrganizationList activeOrganization={activeOrganization} /> */}
           {/* </Suspense> */}
 
-          {organizations.map((o, index) => (
+          {organizations?.map((o, index) => (
             <DropdownMenuItem
               // aria-selected={o.id === activeOrganization?.id}
               aria-selected={o.id === activeOrganization?.id}
