@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import * as React from "react";
 import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_authed/s/$tenant")({
     const organizations = await context.queryClient.fetchQuery(
       listOrganizationsQueryOptions,
     );
-    console.log(organizations.find((o) => o.slug === params.tenant));
+    const isMember = organizations.find((o) => o.slug === params.tenant);
+    if (!isMember) {
+      throw redirect({ to: "/dashboard" });
+    }
   },
 });
 

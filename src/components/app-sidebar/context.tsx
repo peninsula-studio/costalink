@@ -12,6 +12,7 @@ interface AppSidebarCtxProps {
     React.SetStateAction<ActiveOrganization>
   >;
 }
+
 const AppSidebarCtx = React.createContext({} as AppSidebarCtxProps);
 
 export const AppSidebarCtxProvider = ({
@@ -31,4 +32,8 @@ export const AppSidebarCtxProvider = ({
   );
 };
 
-export const useAppSidebarCtx = () => React.useContext(AppSidebarCtx);
+export function useAppSidebarCtx() {
+  const val = React.use(AppSidebarCtx);
+  if (!val) throw new Error("useTheme called outside of ThemeProvider!");
+  return val;
+}

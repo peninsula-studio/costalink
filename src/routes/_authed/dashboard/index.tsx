@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import React from "react";
+import { toast } from "sonner";
 import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
@@ -47,6 +48,20 @@ function DashboardPage() {
           </Button>
         </section>
       )}
+      <div className="flex gap-2">
+        <Button
+          onClick={() => toast.success("Success toast")}
+          variant="default"
+        >
+          Toast success
+        </Button>
+        <Button
+          onClick={() => toast.error("Error toast")}
+          variant="destructive"
+        >
+          Toast error
+        </Button>
+      </div>
       <div className="flex flex-col gap-4 py-10">
         {organizations?.map((o, index) => (
           <Button

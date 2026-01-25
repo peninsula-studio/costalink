@@ -4,7 +4,6 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
-  CircleUserIcon,
   CreditCard,
   LogOut,
   Monitor,
@@ -12,6 +11,7 @@ import {
   Palette,
   Sparkles,
   SunIcon,
+  UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { ClassNameValue } from "tailwind-merge";
@@ -77,37 +77,42 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                 className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
                 size="lg"
               >
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar>
                   <AvatarImage alt={session.user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    <CircleUserIcon className="stroke-1" />
+                  <AvatarFallback>
+                    <UserIcon />
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{session.user.name}</span>
+                  <span className="truncate font-medium">
+                    {session.user.name}
+                  </span>
                   <span className="truncate text-xs">{session.user.email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
             }
-          ></DropdownMenuTrigger>
+          />
+
           <DropdownMenuContent
             align={isMobile ? "center" : "start"}
-            className="w-(--anchor-width) min-w-56 rounded-lg"
+            className="w-(--anchor-width) min-w-56 rounded"
             side={isMobile ? "bottom" : "left"}
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage alt={session.user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{session.user.name}</span>
-                    <span className="truncate text-xs">{session.user.email}</span>
-                  </div>
+              <DropdownMenuLabel className="flex items-center gap-2 font-light text-sm">
+                <Avatar>
+                  <AvatarImage alt={session.user.name} />
+                  <AvatarFallback>
+                    <UserIcon className="size-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">
+                    {session.user.name}
+                  </span>
+                  <span className="truncate text-xs">{session.user.email}</span>
                 </div>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
