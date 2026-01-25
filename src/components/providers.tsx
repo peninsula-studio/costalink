@@ -1,14 +1,16 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import type { Theme } from "@/lib/fn/theme";
 
 type Props = {
   children: React.ReactNode;
+  theme: Theme;
 };
 
-export const Providers = ({ children }: Props) => {
+export const Providers = ({ children, theme }: Props) => {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider theme={theme}>
       <ReactQueryDevtools
         buttonPosition="bottom-right"
         initialIsOpen={false}

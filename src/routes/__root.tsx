@@ -7,13 +7,15 @@ import {
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { Providers } from "@/components/providers";
-import appCss from "@/styles.css?url";
+import { getThemeServerFn } from "@/lib/fn/theme";
+import appCss from "@/styles/globals.css?url";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  loader: () => getThemeServerFn(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -42,17 +44,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const theme = Route.useLoaderData();
   return (
-    <html lang="en">
+    <html className={theme} lang="en">
       <head>
         <HeadContent />
       </head>
-      <body>
-        <Providers>
+      <Providers theme={theme}>
+        <body>
           {children}
           <Scripts />
-        </Providers>
-      </body>
+        </body>
+      </Providers>
     </html>
   );
 }
