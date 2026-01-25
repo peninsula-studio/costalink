@@ -53,8 +53,8 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
       console.error(
         `Error setting active Organization: ${(e as Error).message}`,
       );
-      // throw e;
-      throw new Error("kek");
+      throw redirect({ to: "/dashboard" });
+      // throw new Error("kek");
     }
   });
 

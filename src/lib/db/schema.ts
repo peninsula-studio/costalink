@@ -8,6 +8,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import { string } from "zod";
 
 export const USER_ROLE_ENUM = ["owner", "admin", "member"] as const;
 export const MEMBER_ROLE_ENUM = ["owner", "admin", "member"] as const;
@@ -55,13 +56,15 @@ export const bolsa_empleo_temporal = pgTable("bolsa_empleo_temporal", {
     .notNull(),
 });
 
-export const plaza = pgTable("plaza", {
+export const property = pgTable("property", {
   id: uuid("id").primaryKey().defaultRandom(),
-  puesto: text("puesto").unique(),
-  estado: estadoPlaza("estado").default("vacante").notNull(),
-  denominacion: text("denominacion").notNull().unique(),
-  departamento: text("departamento").notNull(),
-  grupo: text("grupo").notNull(),
+  reference: text("reference").unique(),
+  price: integer("price").notNull(),
+  price_freq: integer("price_freq"),
+  currency: text("currency"),
+  type: text("type").notNull(),
+  town: text("town").notNull(),
+  province: text("province").notNull(),
   subgrupo: text("subgrupo").notNull(),
   c_especifico: text("c_especifico").notNull(),
   c_destino: text("c_destino").notNull(),
