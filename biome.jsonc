@@ -22,7 +22,8 @@
     "attributePosition": "auto",
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineEnding": "lf"
+    "lineEnding": "lf",
+    "formatWithErrors": true
   },
   "linter": {
     "enabled": true,
@@ -69,7 +70,8 @@
       "enabled": true
     },
     "parser": {
-      "cssModules": true
+      "cssModules": true,
+      "tailwindDirectives": true
     }
   }
 }
