@@ -62,6 +62,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
       });
     },
     onSuccess: () => {
+      router.invalidate();
       toast.info("Sesión cerrada");
       router.navigate({ to: "/sign-in" });
     },

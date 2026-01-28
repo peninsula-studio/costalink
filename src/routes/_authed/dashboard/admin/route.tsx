@@ -1,9 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { getSessionFn } from "@/lib/fn/auth";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 
 export const Route = createFileRoute("/_authed/dashboard/admin")({
-  beforeLoad: async () => {
-    const session = await getSessionFn();
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.fetchQuery(
+      getSessionQueryOptions(),
+    );
     if (session?.user.role !== "admin") {
       throw redirect({ to: "/dashboard" });
     }

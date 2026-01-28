@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser";
 import type {
   KyeroImage,
   KyeroProperty,
-  MultiLanguageString,
+  KyeroMultiLanguageString,
 } from "@/lib/fn/kyero/types";
 
 // --- Extraction Function ---
@@ -64,10 +64,10 @@ export function extractKyeroProperties(xmlData: string): KyeroProperty[] {
     }
 
     // Helper to extract nested MultiLanguage objects (desc, features)
-    const extractMultiLang = (node: any): MultiLanguageString | undefined => {
+    const extractMultiLang = (node: any): KyeroMultiLanguageString | undefined => {
       if (!node) return undefined;
       // Filter out non-language keys if any artifact exists
-      const result: MultiLanguageString = {};
+      const result: KyeroMultiLanguageString = {};
       Object.keys(node).forEach((key) => {
         if (typeof node[key] === "string") {
           result[key] = node[key];

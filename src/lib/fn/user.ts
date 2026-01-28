@@ -3,10 +3,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
-import { authMiddleware } from "@/middleware/auth";
+// import { authMiddleware } from "@/middleware/auth";
 
 export const listUsersFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .handler(async () => {
     try {
       const users = await auth.api.listUsers({

@@ -1,10 +1,10 @@
 import type z from "zod";
 import type {
-  kyeroPropertySchema,
   kyeroEnergyRatingSchema,
   kyeroFeedSchema,
   kyeroImageSchema,
   kyeroMultiLanguageStringSchema,
+  kyeroPropertySchema,
   kyeroSurfaceAreaSchema,
 } from "@/lib/fn/kyero/schemas";
 
@@ -19,7 +19,7 @@ export type KyeroEnergyRating = z.infer<typeof kyeroEnergyRatingSchema>;
 // Kyero supports multi-language fields for descriptions and features
 // e.g., <en>...</en>, <es>...</es>, <de>...</de>
 // export type MultiLanguageString = Record<string, string>;
-export type MultiLanguageString = z.infer<
+export type KyeroMultiLanguageString = z.infer<
   typeof kyeroMultiLanguageStringSchema
 >;
 
@@ -86,4 +86,4 @@ export type KyeroProperty = z.infer<typeof kyeroPropertySchema>;
 //   };
 // }
 
-export type KyeroFeed = z.infer<typeof kyeroFeedSchema>
+export type KyeroFeed = z.infer<typeof kyeroFeedSchema>;

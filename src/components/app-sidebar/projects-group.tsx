@@ -60,7 +60,7 @@ function ProjectsSidebarMenu() {
   const { data: projects } = useSuspenseQuery({
     queryKey: ["teams", session.user.id],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // await new Promise((resolve) => setTimeout(resolve, 1500));
       const data = [
         {
           name: "Design Engineering",

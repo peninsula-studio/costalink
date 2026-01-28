@@ -1,10 +1,10 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { SignInForm } from "@/components/sign-in-form";
 import { getSessionFn } from "@/lib/fn/auth";
-import type { FileRouteTypes } from "@/routeTree.gen";
 
 export type SignInRouteSearch = {
-  callbackUrl?: FileRouteTypes["to"];
+  // callbackUrl?: FileRouteTypes["to"];
+  callbackUrl?: string;
 };
 
 export const Route = createFileRoute("/(auth)/sign-in")({

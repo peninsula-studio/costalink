@@ -1,4 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
+import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import type z from "zod";
@@ -7,9 +8,26 @@ import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 
-export const getSessionFn = createServerFn().handler(
-  async () => await auth.api.getSession({ headers: getRequestHeaders() }),
-);
+export const getSessionFn = createServerFn().handler(async () => {
+  try {
+    const session = await auth.api.getSession({ headers: getRequestHeaders() });
+    if (!session) {
+      throw redirect({
+        to: "/sign-in",
+        search: { callbackUrl: location.href },
+      });
+    }
+    return session;
+  } catch (error) {
+    // Re-throw redirects (they're intentional, not errors)
+    if (isRedirect(error)) throw error;
+    // Auth check failed (network error, etc.) - redirect to login
+    throw redirect({
+      to: "/sign-in",
+      search: { callbackUrl: location.href },
+    });
+  }
+});
 
 export const getSessionQueryOptions = () =>
   queryOptions({
@@ -30,7 +48,6 @@ export const signUpFn = createServerFn()
       const data = await auth.api.signUpEmail({
         body: { name, email, password },
       });
-      console.info(`Signed up with email: ${data.user.email}`);
       return data;
     } catch (e) {
       console.error(`Error signing up: ${(e as Error).cause}`);
@@ -51,7 +68,6 @@ export const signInFn = createServerFn()
       const data = await auth.api.signInEmail({
         body: { email, password, rememberMe },
       });
-      console.info(`Signed up with email: ${data.user.email}`);
       return data;
     } catch (e) {
       console.error(`Error signing up: ${(e as Error).cause}`);

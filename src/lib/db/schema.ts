@@ -2,13 +2,19 @@ import {
   boolean,
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { string } from "zod";
+import type {
+  KyeroEnergyRating,
+  KyeroImage,
+  KyeroMultiLanguageString,
+  KyeroSurfaceArea,
+} from "@/lib/fn/kyero/types";
 
 export const USER_ROLE_ENUM = ["owner", "admin", "member"] as const;
 export const MEMBER_ROLE_ENUM = ["owner", "admin", "member"] as const;
@@ -26,48 +32,45 @@ export const memberRoleEnum = pgEnum("memberRole", [
 ]);
 export const planEnum = pgEnum("plan", ["free", "pro", "enterprise"]);
 
-export const aspirante = pgTable("aspirante", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  dni: text("dni").notNull().unique(),
-  email: text("email").notNull(),
-  telf: text("telf").notNull(),
-  altaSS: boolean("alta_ss").default(true),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
-
-export const bolsa_empleo_temporal = pgTable("bolsa_empleo_temporal", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  grupo: text("grupo").notNull(),
-  subgrupo: text("subgrupo").notNull(),
-  denominacion_puesto: text("denominacion_puesto").notNull(),
-  prioridad: integer("prioridad").default(1).unique(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
-
 export const property = pgTable("property", {
   id: uuid("id").primaryKey().defaultRandom(),
   reference: text("reference").unique(),
   price: integer("price").notNull(),
-  price_freq: integer("price_freq"),
-  currency: text("currency"),
   type: text("type").notNull(),
   town: text("town").notNull(),
   province: text("province").notNull(),
-  subgrupo: text("subgrupo").notNull(),
-  c_especifico: text("c_especifico").notNull(),
-  c_destino: text("c_destino").notNull(),
+  // -- Optional / Conditional Fields --
+  priceFreq: integer("price_freq"),
+  currency: text("currency"),
+  partOwnership: boolean("part_ownership").default(false),
+  leasehold: boolean("leasehold").default(false),
+  newBuild: boolean("new_build").default(false),
+  locationDetail: text("location_detail"),
+  beds: integer("beds").notNull(),
+  baths: integer("baths").notNull(),
+  pool: boolean("pool").default(false),
+  // -- Nested Objects --
+  surfaceArea: jsonb("surface_area").$type<KyeroSurfaceArea>(),
+  energyRating: jsonb("energy_rating").$type<KyeroEnergyRating>(),
+  url: text("url"),
+  notes: text("notes"),
+  // -- Description and Features (Multi-language) --
+  desc: jsonb("desc").$type<KyeroMultiLanguageString>(),
+  features: jsonb("features").$type<KyeroMultiLanguageString>(),
+  // -- Arrays --
+  images: jsonb("images").$type<KyeroImage[]>(),
+  // -- V3.5+ Additions --
+  videoUrl: text("video_url"),
+  virtualTourUrl: text("virtual_tour_url"),
+  catastral: text("catastral"),
+  // -- V3.7+ Additions --
+  email: text("email"),
+  // -- V3.8+ Additions --
+  prime: boolean("prime").default(false),
+  // -- V3.9+ Additions --
+  contactNumber: text("contact_number"),
+  whatsappNumber: text("whatsapp_number"),
+  // -- Standard fields for created and updated timestamps
   createdAt: timestamp("created_at", { withTimezone: true })
     .$defaultFn(() => new Date())
     .notNull(),
@@ -76,34 +79,6 @@ export const property = pgTable("property", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
-
-export const proceso = pgTable("proceso", (d) => ({
-  id: d.uuid().primaryKey().defaultRandom(),
-  estado: d.text().notNull(),
-  plaza_id: d.uuid().references(() => plaza.id),
-  createdAt: d
-    .timestamp("created_at", { withTimezone: true })
-    .$defaultFn(() => new Date())
-    .notNull(),
-  updatedAt: d
-    .timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-}));
-
-export const ope = pgTable("ope", (d) => ({
-  id: d.uuid().primaryKey().defaultRandom(),
-  anualidad: d.integer().notNull(),
-  publicado: d.timestamp(),
-  // plazas: d.uuid().references(() => plazas.id),
-  createdAt: d.timestamp("created_at", { withTimezone: true }).defaultNow(),
-  updatedAt: d
-    .timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-}));
 
 // *****************************************************************
 // ******************** BETTER AUTH ********************************

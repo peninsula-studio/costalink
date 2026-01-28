@@ -58,7 +58,7 @@ function UserList() {
     listMembersQueryOptions({ organizationId }),
   );
   return (
-    <section className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <TypographyH3>Add members:</TypographyH3>
       <div className="flex flex-wrap gap-2">
         {users.users.map((user) => (
@@ -111,6 +111,6 @@ function UserList() {
           </Card>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

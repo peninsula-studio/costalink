@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { redirect } from "@tanstack/react-router";
+import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
@@ -8,15 +8,9 @@ import {
   type OrganizationSelect,
   organizationKeys,
 } from "@/lib/fn/keys";
-import { authMiddleware } from "@/middleware/auth";
 
 export const getListOrganizationsFn = createServerFn()
-  .middleware([authMiddleware])
   .handler(async () => {
-    console.info(
-      "[ 󰊕]:getListOrganizationFn ",
-      "Getting Organization list...",
-    );
     try {
       const organizationList = await auth.api.listOrganizations({
         headers: getRequestHeaders(),
@@ -26,7 +20,7 @@ export const getListOrganizationsFn = createServerFn()
       console.error(
         `Error getting list of organizations: ${(e as Error).message}`,
       );
-      throw new Error("kek");
+      throw new Error("Error getting organizations");
     }
   });
 
@@ -36,7 +30,6 @@ export const listOrganizationsQueryOptions = queryOptions({
 });
 
 export const setActiveOrganizationFn = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
   .inputValidator((data: ActiveOrganizationSelect) => data)
   .handler(async ({ data: { organizationId, organizationSlug } }) => {
     try {
@@ -44,17 +37,15 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
         body: { organizationId, organizationSlug },
         headers: getRequestHeaders(),
       });
-      console.info(
-        "[ 󰊕]:setActiveOrganizationFn ",
-        "Setting active Organization...",
-      );
       return data;
-    } catch (e) {
+    } catch (error) {
+      // Re-throw redirects (they're intentional, not errors)
+      if (isRedirect(error)) throw error;
+      // Setting active Organization failed (network error, etc.) - redirect to dashboard
       console.error(
-        `Error setting active Organization: ${(e as Error).message}`,
+        `Error setting active Organization: ${(error as Error).message}`,
       );
       throw redirect({ to: "/dashboard" });
-      // throw new Error("kek");
     }
   });
 
@@ -75,7 +66,7 @@ export const getFullOrganizationQueryOptions = (
   });
 
 export const getFullOrganizationFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .inputValidator(
     (data?: {
       organizationId?: string;
@@ -89,7 +80,6 @@ export const getFullOrganizationFn = createServerFn()
         query: data,
         headers: getRequestHeaders(),
       });
-      console.info(`Getting info for organization: ${organization?.name}`);
       return organization;
     } catch (e) {
       console.error(`Error getting organization info: ${(e as Error).message}`);
@@ -104,13 +94,12 @@ export const fullOrganizationQueryOptions = (props: OrganizationSelect) =>
   });
 
 export const getActiveOrganizationFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .handler(async () => {
     try {
       const organization = await auth.api.getFullOrganization({
         headers: getRequestHeaders(),
       });
-      console.info(`Getting info for organization: ${organization?.name}`);
       return organization;
     } catch (e) {
       console.error(`Error getting organization info: ${(e as Error).message}`);

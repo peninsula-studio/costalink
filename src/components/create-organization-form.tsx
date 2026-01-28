@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "@tanstack/react-router";
 import { XCircle } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,8 @@ export function CreateOrganizationForm({
   onSuccess?: () => void;
   callbackURL?: string;
 }) {
+  const router = useRouter();
+
   const { formState, handleSubmit, setValue, setError, clearErrors, register } =
     useForm({
       defaultValues: { name: "", slug: "" },
@@ -73,6 +76,7 @@ export function CreateOrganizationForm({
       toast.error("Error al crear la organización");
     }
     if (data) {
+      router.invalidate();
       toast.success(`Organización creada`, {
         description: `Organización "${data?.name}" con ruta "${data?.slug}" creada con éxito`,
       });

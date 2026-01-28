@@ -16,15 +16,17 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { getSessionFn } from "@/lib/fn/auth";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
+import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
 
 export const Route = createFileRoute("/_authed")({
   component: AuthedLayout,
-  beforeLoad: async ({ location }) => {
-    const session = await getSessionFn();
-    if (!session?.user) {
+  beforeLoad: async ({ context, location }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+    if (!session) {
       throw redirect({
         to: "/sign-in",
         search: {
@@ -32,10 +34,12 @@ export const Route = createFileRoute("/_authed")({
         },
       });
     }
-    return { session };
-  },
-  loader: ({ context }) => {
-    context.queryClient.fetchQuery(listOrganizationsQueryOptions);
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      setActiveOrganizationQueryOptions({
+        organizationId: session.session.activeOrganizationId,
+      }),
+    );
+    return { session, activeOrganization };
   },
 });
 

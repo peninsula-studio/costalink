@@ -1,11 +1,14 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import React from "react";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import * as React from "react";
+import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/_authed/dashboard")({
   component: DashboardLayout,
   beforeLoad: async ({ context }) => {
-    context.queryClient.fetchQuery(listOrganizationsQueryOptions);
+    const activeOrganizationPromise = context.queryClient.fetchQuery(
+      setActiveOrganizationQueryOptions({ organizationId: null }),
+    );
+    return { activeOrganizationPromise };
   },
 });
 

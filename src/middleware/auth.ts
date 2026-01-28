@@ -6,7 +6,7 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
     console.log("Getting session from middleware...");
     const session = await getSessionFn();
-    if (!session?.user) {
+    if (!session) {
       throw redirect({ to: "/sign-in" });
     }
     return await next({ context: { session } });

@@ -27,7 +27,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-y-8">
       <TypographyH2>Admin</TypographyH2>
-      <section className="flex flex-col gap-y-6">
+      <div className="flex flex-col gap-y-6">
         <div className="flex flex-col gap-y-2">
           <TypographyH3 className="inline-flex items-center gap-[0.2em]">
             <Building2 className="aspect-square size-[0.8em]" /> Organizations
@@ -45,8 +45,8 @@ function RouteComponent() {
           {organizations?.map((org) => (
             <Link
               key={org.id}
-              params={{ id: org.id }}
-              to="/dashboard/admin/organization/$id"
+              params={{ organizationId: org.id }}
+              to="/dashboard/admin/organization/$organizationId"
             >
               <Card>
                 <CardHeader>
@@ -60,7 +60,7 @@ function RouteComponent() {
             </Link>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   );
 }

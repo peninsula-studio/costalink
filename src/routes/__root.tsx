@@ -50,12 +50,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <Providers theme={theme}>
-        <body>
+      <body>
+        <Providers theme={theme}>
           {children}
           <Scripts />
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }

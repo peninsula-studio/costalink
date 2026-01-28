@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
 export function OrganizationSwitcher() {
@@ -24,26 +25,40 @@ export function OrganizationSwitcher() {
     listOrganizationsQueryOptions,
   );
 
-  const { activeOrganization } = useAppSidebarCtx();
+  const { activeOrganization, setActiveOrganization } = useAppSidebarCtx();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <SidebarMenuButton
-            className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
-            size="lg"
-          >
-            <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
-              <UserIcon className="size-4" />
-            </div>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">
-                {activeOrganization?.name || session.user.name}
-              </span>
-            </div>
-            <ChevronsUpDown className="ml-auto" />
-          </SidebarMenuButton>
+          // INFO: This is the only way to show loading state without unmounting the component and thus losing the fade out animation on the dropdown menu content
+          activeOrganization === undefined ? (
+            <SidebarMenuButton
+              className="pointer-events-none **:data-[slot=skeleton]:bg-sidebar-accent"
+              size="lg"
+            >
+              <Skeleton className="aspect-square size-8" />
+              <div className="flex w-full flex-col gap-1">
+                <Skeleton className="h-3 w-full max-w-14" />
+                <Skeleton className="h-3 w-full max-w-32" />
+              </div>
+            </SidebarMenuButton>
+          ) : (
+            <SidebarMenuButton
+              className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
+              size="lg"
+            >
+              <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
+                <UserIcon className="size-4" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">
+                  {activeOrganization?.name || session.user.name}
+                </span>
+              </div>
+              <ChevronsUpDown className="ml-auto" />
+            </SidebarMenuButton>
+          )
         }
       />
       <DropdownMenuContent
@@ -57,7 +72,11 @@ export function OrganizationSwitcher() {
             aria-selected={!activeOrganization}
             className="gap-2 p-2"
             render={
-              <Link to="/dashboard">
+              <Link
+                onClick={() => setActiveOrganization(undefined)}
+                preload={false}
+                to="/dashboard"
+              >
                 <div className="flex size-6 items-center justify-center rounded-md border">
                   <UserIcon className="size-3.5 shrink-0" />
                 </div>
@@ -84,7 +103,12 @@ export function OrganizationSwitcher() {
               className="gap-2 p-2"
               key={o.name}
               render={
-                <Link params={{ tenant: o.slug }} to="/s/$tenant">
+                <Link
+                  onClick={() => setActiveOrganization(undefined)}
+                  params={{ tenant: o.slug }}
+                  preload={false}
+                  to="/s/$tenant"
+                >
                   <div className="flex size-6 items-center justify-center rounded-md border">
                     <Building2 className="size-3.5 shrink-0" />
                   </div>

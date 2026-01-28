@@ -7,26 +7,24 @@ import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { TypographyH2 } from "@/components/ui/typography";
-import {
-  listOrganizationsQueryOptions,
-  setActiveOrganizationQueryOptions,
-} from "@/lib/fn/organization";
+import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/_authed/dashboard/")({
   component: DashboardPage,
+  loader: async ({ context }) => {
+    const organizationsPromise = context.queryClient.ensureQueryData(
+      listOrganizationsQueryOptions,
+    );
+    return { organizationsPromise };
+  },
 });
 
 function DashboardPage() {
-  const { session } = Route.useRouteContext();
+  const { session, activeOrganizationPromise } = Route.useRouteContext();
+  const { organizationsPromise } = Route.useLoaderData();
 
-  const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions,
-  );
-
-  // INFO: Then we await the activeOrganization data that will be cached by the queryClient
-  const { data: activeOrganization } = useSuspenseQuery(
-    setActiveOrganizationQueryOptions({ organizationId: null }),
-  );
+  const activeOrganization = React.use(activeOrganizationPromise);
+  const organizations = React.use(organizationsPromise);
 
   const { setActiveOrganization } = useAppSidebarCtx();
 
@@ -39,14 +37,14 @@ function DashboardPage() {
       <TypographyH2>Dashboard</TypographyH2>
       {!activeOrganization && <div>No Org!!</div>}
       {session.user.role === "admin" && (
-        <section>
+        <div>
           <Button
             nativeButton={false}
             render={<Link to="/dashboard/admin"></Link>}
           >
             Admin panel
           </Button>
-        </section>
+        </div>
       )}
       <div className="flex gap-2">
         <Button

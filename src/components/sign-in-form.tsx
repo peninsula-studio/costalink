@@ -40,7 +40,8 @@ export function SignInForm({
   ...props
 }: React.ComponentProps<"div"> & {
   onSuccess?: () => void;
-  callbackUrl?: FileRouteTypes["to"];
+  // callbackUrl?: FileRouteTypes["to"];
+  callbackUrl?: string;
 }) {
   const router = useRouter();
 
@@ -63,6 +64,7 @@ export function SignInForm({
       toast.error("Credenciales incorrectas");
     },
     onSuccess: (data) => {
+      router.invalidate();
       toast.success(`Welcome ${data.user.name}`);
       router.navigate({ to: callbackUrl });
     },

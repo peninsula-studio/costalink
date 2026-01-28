@@ -7,10 +7,10 @@ import z from "zod";
 import { auth } from "@/lib/auth";
 import { MEMBER_ROLE_ENUM } from "@/lib/db/schema";
 import { memberKeys, type OrganizationSelect } from "@/lib/fn/keys";
-import { authMiddleware } from "@/middleware/auth";
+// import { authMiddleware } from "@/middleware/auth";
 
 export const getActiveMemberFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .handler(async () => {
     try {
       const member = await auth.api.getActiveMember({
@@ -31,7 +31,7 @@ export const getActiveMemberQueryOptions = () =>
   });
 
 export const listMembersFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .inputValidator(
     zodValidator(
       z.object({
@@ -70,7 +70,7 @@ export const listMembersQueryOptions = (props: OrganizationSelect) =>
   });
 
 export const addMemberFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .inputValidator(
     zodValidator(
       z.object({
@@ -102,7 +102,7 @@ export const addMemberFn = createServerFn()
   });
 
 export const removeMemberFn = createServerFn()
-  .middleware([authMiddleware])
+  // .middleware([authMiddleware])
   .inputValidator(
     zodValidator(
       z.object({

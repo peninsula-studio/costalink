@@ -23,8 +23,6 @@ function HomePage() {
             </Button>
           </div>
         </div>
-
-        <section className="flex w-full flex-col flex-wrap gap-4"></section>
       </div>
     </main>
   );
