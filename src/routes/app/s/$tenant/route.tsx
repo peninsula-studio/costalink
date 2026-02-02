@@ -22,9 +22,5 @@ export const Route = createFileRoute("/app/s/$tenant")({
 });
 
 function TenantLayout() {
-  return (
-    <main className="flex size-full flex-col gap-y-6 p-4">
-      <Outlet />
-    </main>
-  );
+  return <Outlet />;
 }

@@ -32,7 +32,7 @@ function TenantPage() {
   const { activeOrganization } = Route.useRouteContext();
 
   return (
-    <>
+    <main className="flex size-full flex-col gap-y-6 p-6">
       <TypographyH2>{activeOrganization?.name}</TypographyH2>
       <TypographyLarge>{activeOrganization?.id}</TypographyLarge>
 
@@ -46,7 +46,7 @@ function TenantPage() {
           )}
         </React.Suspense>
       </section>
-    </>
+    </main>
   );
 }
 
