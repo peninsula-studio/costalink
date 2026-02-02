@@ -9,20 +9,22 @@ import {
   organizationKeys,
 } from "@/lib/fn/keys";
 
-export const getListOrganizationsFn = createServerFn()
-  .handler(async () => {
-    try {
-      const organizationList = await auth.api.listOrganizations({
-        headers: getRequestHeaders(),
-      });
-      return organizationList;
-    } catch (e) {
-      console.error(
-        `Error getting list of organizations: ${(e as Error).message}`,
-      );
-      throw new Error("Error getting organizations");
-    }
-  });
+export const getListOrganizationsFn = createServerFn().handler(async () => {
+  try {
+    const organizationList = await auth.api.listOrganizations({
+      headers: getRequestHeaders(),
+    });
+    return organizationList;
+  } catch (error) {
+    // Re-throw redirects (they're intentional, not errors)
+    if (isRedirect(error)) throw error;
+    // Setting active Organization failed (network error, etc.) - redirect to dashboard
+    console.error(
+      `Error getting Organization list: ${(error as Error).message}`,
+    );
+    throw redirect({ to: "/" });
+  }
+});
 
 export const listOrganizationsQueryOptions = queryOptions({
   queryKey: organizationKeys.list(),
@@ -43,9 +45,9 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
       if (isRedirect(error)) throw error;
       // Setting active Organization failed (network error, etc.) - redirect to dashboard
       console.error(
-        `Error setting active Organization: ${(error as Error).message}`,
+        `fn: Error setting active Organization: ${(error as Error).message}`,
       );
-      throw redirect({ to: "/dashboard" });
+      throw redirect({ to: "/app" });
     }
   });
 
@@ -53,8 +55,10 @@ export const setActiveOrganizationQueryOptions = (
   props: ActiveOrganizationSelect,
 ) =>
   queryOptions({
-    queryKey: organizationKeys.setActive(props),
-    queryFn: () => setActiveOrganizationFn({ data: props }),
+    // queryKey: organizationKeys.setActive(props),
+    // queryKey: organizationKeys.setActive(),
+    queryKey: organizationKeys.active(),
+    queryFn: async () => await setActiveOrganizationFn({ data: props }),
   });
 
 export const getFullOrganizationQueryOptions = (
@@ -83,7 +87,7 @@ export const getFullOrganizationFn = createServerFn()
       return organization;
     } catch (e) {
       console.error(`Error getting organization info: ${(e as Error).message}`);
-      throw redirect({ to: "/dashboard" });
+      throw redirect({ to: "/app/dashboard" });
     }
   });
 
@@ -94,7 +98,6 @@ export const fullOrganizationQueryOptions = (props: OrganizationSelect) =>
   });
 
 export const getActiveOrganizationFn = createServerFn()
-  // .middleware([authMiddleware])
   .handler(async () => {
     try {
       const organization = await auth.api.getFullOrganization({
@@ -103,13 +106,13 @@ export const getActiveOrganizationFn = createServerFn()
       return organization;
     } catch (e) {
       console.error(`Error getting organization info: ${(e as Error).message}`);
-      throw redirect({ to: "/dashboard" });
+      throw redirect({ to: "/app/dashboard" });
     }
   });
 
 export const getActiveOrganizationQueryOptions = queryOptions({
   queryKey: organizationKeys.active(),
-  queryFn: async () => await getFullOrganizationFn(),
+  queryFn: async () => await getActiveOrganizationFn(),
 });
 
 // export const setActiveOrganizationIsomorphic = createIsomorphicFn()

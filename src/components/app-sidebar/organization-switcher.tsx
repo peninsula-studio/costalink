@@ -1,7 +1,6 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useRouteContext } from "@tanstack/react-router";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { Link, useRouteContext, useRouterState } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
-import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,51 +13,53 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import type { auth } from "@/lib/auth";
+import { organizationKeys } from "@/lib/fn/keys";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
-  const { session } = useRouteContext({ from: "/_authed" });
+  const { session, organizations } = useRouteContext({
+    from: "/app",
+  });
 
-  const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions,
-  );
-
-  const { activeOrganization, setActiveOrganization } = useAppSidebarCtx();
+  const qc = useQueryClient();
+  const activeOrganization = qc.getQueryData(organizationKeys.active()) as
+    | typeof auth.$Infer.ActiveOrganization
+    | null;
+  const isFetching = useIsFetching({ queryKey: organizationKeys.active() });
+  const routerState = useRouterState();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          // INFO: This is the only way to show loading state without unmounting the component and thus losing the fade out animation on the dropdown menu content
-          activeOrganization === undefined ? (
-            <SidebarMenuButton
-              className="pointer-events-none **:data-[slot=skeleton]:bg-sidebar-accent"
-              size="lg"
-            >
-              <Skeleton className="aspect-square size-8" />
-              <div className="flex w-full flex-col gap-1">
-                <Skeleton className="h-3 w-full max-w-14" />
-                <Skeleton className="h-3 w-full max-w-32" />
-              </div>
-            </SidebarMenuButton>
-          ) : (
-            <SidebarMenuButton
-              className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
-              size="lg"
-            >
-              <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
-                <UserIcon className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  {activeOrganization?.name || session.user.name}
-                </span>
-              </div>
-              <ChevronsUpDown className="ml-auto" />
-            </SidebarMenuButton>
-          )
+          <SidebarMenuButton
+            className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
+            size="lg"
+          >
+            {routerState.status !== "idle" || isFetching ? (
+              <>
+                <Skeleton className="aspect-square size-8" />
+                <div className="flex w-full flex-col gap-1">
+                  <Skeleton className="h-3 w-full max-w-14" />
+                  <Skeleton className="h-3 w-full max-w-32" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
+                  <UserIcon className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">
+                    {activeOrganization?.name || session.user.name}
+                  </span>
+                </div>
+                <ChevronsUpDown className="ml-auto" />
+              </>
+            )}
+          </SidebarMenuButton>
         }
       />
       <DropdownMenuContent
@@ -69,14 +70,10 @@ export function OrganizationSwitcher() {
       >
         <DropdownMenuGroup>
           <DropdownMenuItem
-            aria-selected={!activeOrganization}
+            // aria-selected={!activeOrganization}
             className="gap-2 p-2"
             render={
-              <Link
-                onClick={() => setActiveOrganization(undefined)}
-                preload={false}
-                to="/dashboard"
-              >
+              <Link preload={false} to="/app">
                 <div className="flex size-6 items-center justify-center rounded-md border">
                   <UserIcon className="size-3.5 shrink-0" />
                 </div>
@@ -93,9 +90,6 @@ export function OrganizationSwitcher() {
           <DropdownMenuLabel className="text-muted-foreground text-xs">
             Organizations
           </DropdownMenuLabel>
-          {/*   <OrganizationList activeOrganization={activeOrganization} /> */}
-          {/* </Suspense> */}
-
           {organizations?.map((o, index) => (
             <DropdownMenuItem
               // aria-selected={o.id === activeOrganization?.id}
@@ -104,10 +98,10 @@ export function OrganizationSwitcher() {
               key={o.name}
               render={
                 <Link
-                  onClick={() => setActiveOrganization(undefined)}
+                  // onClick={() => mutate(o.id)}
                   params={{ tenant: o.slug }}
                   preload={false}
-                  to="/s/$tenant"
+                  to="/app/s/$tenant"
                 >
                   <div className="flex size-6 items-center justify-center rounded-md border">
                     <Building2 className="size-3.5 shrink-0" />
@@ -119,7 +113,73 @@ export function OrganizationSwitcher() {
             ></DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
+
+        {/* <React.Suspense fallback={<div>Loading...</div>}> */}
+        {/*   <OrgList /> */}
+        {/* </React.Suspense> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
+// const CurrentOrg = () => {
+//   const { session } = useRouteContext({
+//     from: "/app",
+//   });
+//
+//   const { data: activeOrganization } = useSuspenseQuery(
+//     getActiveOrganizationQueryOptions,
+//   );
+//
+//   return (
+//     <>
+//       <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
+//         <UserIcon className="size-4" />
+//       </div>
+//       <div className="grid flex-1 text-left text-sm leading-tight">
+//         <span className="truncate font-medium">
+//           {activeOrganization?.name || session.user.name}
+//         </span>
+//       </div>
+//       <ChevronsUpDown className="ml-auto" />
+//     </>
+//   );
+// };
+
+// const OrgList = () => {
+//   const { organizations } = useRouteContext({ from: "/app" });
+//
+//   const { data: activeOrganization } = useSuspenseQuery(
+//     getActiveOrganizationQueryOptions,
+//   );
+//
+//   return (
+//     <DropdownMenuGroup>
+//       <DropdownMenuLabel className="text-muted-foreground text-xs">
+//         Organizations
+//       </DropdownMenuLabel>
+//       {organizations?.map((o, index) => (
+//         <DropdownMenuItem
+//           // aria-selected={o.id === activeOrganization?.id}
+//           aria-selected={o.id === activeOrganization?.id}
+//           className="gap-2 p-2"
+//           key={o.name}
+//           render={
+//             <Link
+//               // onClick={() => mutate(o.id)}
+//               params={{ tenant: o.slug }}
+//               preload={false}
+//               to="/app/s/$tenant"
+//             >
+//               <div className="flex size-6 items-center justify-center rounded-md border">
+//                 <Building2 className="size-3.5 shrink-0" />
+//               </div>
+//               {o.name}
+//               <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+//             </Link>
+//           }
+//         ></DropdownMenuItem>
+//       ))}
+//     </DropdownMenuGroup>
+//   );
+// };

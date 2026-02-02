@@ -15,10 +15,7 @@ function HomePage() {
 
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center justify-center gap-4">
-            <Button
-              nativeButton={false}
-              render={<Link to={"/dashboard"}></Link>}
-            >
+            <Button nativeButton={false} render={<Link to="/app"></Link>}>
               Dashboard
             </Button>
           </div>

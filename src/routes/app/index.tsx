@@ -1,36 +1,31 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
-import React from "react";
 import { toast } from "sonner";
-import { useAppSidebarCtx } from "@/components/app-sidebar/context";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { TypographyH2 } from "@/components/ui/typography";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import {
+  getActiveOrganizationQueryOptions,
+  listOrganizationsQueryOptions,
+} from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/_authed/dashboard/")({
-  component: DashboardPage,
-  loader: async ({ context }) => {
-    const organizationsPromise = context.queryClient.ensureQueryData(
+export const Route = createFileRoute("/app/")({
+  component: AppIndexPage,
+  beforeLoad: async ({ context }) => {
+    const organizations = await context.queryClient.ensureQueryData(
       listOrganizationsQueryOptions,
     );
-    return { organizationsPromise };
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions,
+    );
+
+    return { organizations, activeOrganization };
   },
 });
 
-function DashboardPage() {
-  const { session, activeOrganizationPromise } = Route.useRouteContext();
-  const { organizationsPromise } = Route.useLoaderData();
-
-  const activeOrganization = React.use(activeOrganizationPromise);
-  const organizations = React.use(organizationsPromise);
-
-  const { setActiveOrganization } = useAppSidebarCtx();
-
-  React.useEffect(() => {
-    setActiveOrganization(activeOrganization);
-  }, [setActiveOrganization, activeOrganization]);
+function AppIndexPage() {
+  const { session, organizations, activeOrganization } =
+    Route.useRouteContext();
 
   return (
     <div className="flex flex-col gap-y-6">
@@ -38,10 +33,7 @@ function DashboardPage() {
       {!activeOrganization && <div>No Org!!</div>}
       {session.user.role === "admin" && (
         <div>
-          <Button
-            nativeButton={false}
-            render={<Link to="/dashboard/admin"></Link>}
-          >
+          <Button nativeButton={false} render={<Link to="/app/admin"></Link>}>
             Admin panel
           </Button>
         </div>
@@ -66,7 +58,13 @@ function DashboardPage() {
             className="flex w-fit items-center"
             key={o.name}
             nativeButton={false}
-            render={<Link params={{ tenant: o.slug }} to="/s/$tenant"></Link>}
+            render={
+              <Link
+                params={{ tenant: o.slug }}
+                preload={false}
+                to="/app/s/$tenant"
+              ></Link>
+            }
           >
             <Building2 className="stroke-white/80" />
             {o.name}

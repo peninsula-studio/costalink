@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useRouteContext, useRouter } from "@tanstack/react-router";
+import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
   Bell,
@@ -43,16 +43,13 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
 
   const { theme, setTheme } = useTheme();
 
-  const { session } = useRouteContext({ from: "/_authed" });
+  const { session } = useRouteContext({ from: "/app" });
 
   const router = useRouter();
 
-  const { mutateAsync } = useMutation({
+  const { mutate } = useMutation({
     mutationKey: ["signOut"],
-    mutationFn: async () =>
-      await authClient.signOut({
-        // query: { callbackURL },
-      }),
+    mutationFn: async () => await authClient.signOut(),
     onError: (error) => {
       console.error(`Sign-out error: ${error.message}`);
       toast.error("Error", {
@@ -61,10 +58,11 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
           "Error al cerrar sesión. Contacte con el adminsitrador.",
       });
     },
-    onSuccess: () => {
-      router.invalidate();
+    onSuccess: async () => {
+      await router.invalidate();
       toast.info("Sesión cerrada");
       router.navigate({ to: "/sign-in" });
+      return;
     },
   });
 
@@ -126,10 +124,14 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link to="/app/account">
+                    <BadgeCheck />
+                    Account
+                  </Link>
+                }
+              ></DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
                 Billing
@@ -168,10 +170,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
               </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={async () => await mutateAsync()}
-              variant="destructive"
-            >
+            <DropdownMenuItem onClick={() => mutate()} variant="destructive">
               <LogOut />
               Sign Out
             </DropdownMenuItem>

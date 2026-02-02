@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
 import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/_authed/dashboard/admin/organization/")({
+export const Route = createFileRoute("/app/admin/organization/")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const organizations = await context.queryClient.ensureQueryData(
@@ -22,7 +22,7 @@ function RouteComponent() {
         <Link
           key={org.id}
           params={{ organizationId: org.id }}
-          to="/dashboard/admin/organization/$organizationId"
+          to="/app/admin/organization/$organizationId"
         >
           <Card>
             <CardHeader>

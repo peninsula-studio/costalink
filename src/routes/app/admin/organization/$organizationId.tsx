@@ -21,7 +21,7 @@ import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { listUsersQueryOptions } from "@/lib/fn/user";
 
 export const Route = createFileRoute(
-  "/_authed/dashboard/admin/organization/$organizationId",
+  "/app/admin/organization/$organizationId",
 )({
   component: RouteComponent,
 });

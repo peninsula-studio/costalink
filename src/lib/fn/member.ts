@@ -20,7 +20,7 @@ export const getActiveMemberFn = createServerFn()
       return member;
     } catch (e) {
       console.error(`Error getting active member: ${(e as Error).message}`);
-      throw redirect({ to: "/dashboard" });
+      throw redirect({ to: "/app/dashboard" });
     }
   });
 

@@ -138,9 +138,9 @@ export const NavMain = ({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              isActive={pathName === "/dashboard"}
+              isActive={pathName === "/app"}
               render={
-                <Link to={"/dashboard"}>
+                <Link to={"/app"}>
                   <HomeIcon />
                   Dashboard
                 </Link>
@@ -148,15 +148,10 @@ export const NavMain = ({
             ></SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              isActive={pathName === "/dashboard/torrevieja"}
-              render={
-                <Link to={"/dashboard/torrevieja"}>
-                  <UsersIcon />
-                  Bolsas
-                </Link>
-              }
-            ></SidebarMenuButton>
+            <SidebarMenuButton>
+              <UsersIcon />
+              Bolsas
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroup>

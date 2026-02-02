@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/typography";
 import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/_authed/dashboard/admin/")({
+export const Route = createFileRoute("/app/admin/")({
   component: RouteComponent,
   // beforeLoad: async ({ context }) => {
   //   if (context.user.role !== "admin") {
@@ -35,7 +35,7 @@ function RouteComponent() {
           <Button
             className="w-fit"
             render={
-              <Link to="/dashboard/admin/organization/create">
+              <Link to="/app/admin/organization/create">
                 <PlusIcon /> Create
               </Link>
             }
@@ -46,7 +46,7 @@ function RouteComponent() {
             <Link
               key={org.id}
               params={{ organizationId: org.id }}
-              to="/dashboard/admin/organization/$organizationId"
+              to="/app/admin/organization/$organizationId"
             >
               <Card>
                 <CardHeader>

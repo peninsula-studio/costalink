@@ -1,5 +1,6 @@
 import { Separator } from "@base-ui/react";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppSidebarCtxProvider } from "@/components/app-sidebar/context";
 import { LoadingIndicator } from "@/components/app-sidebar/loading-indicator";
@@ -16,14 +17,18 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import {
+  getActiveOrganizationQueryOptions,
+  listOrganizationsQueryOptions,
+} from "@/lib/fn/organization";
 import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
 
-export const Route = createFileRoute("/_authed")({
-  component: AuthedLayout,
+export const Route = createFileRoute("/app")({
+  component: AppLayout,
   beforeLoad: async ({ context, location }) => {
-    const session = await context.queryClient.ensureQueryData(
+    const session = await context.queryClient.fetchQuery(
       getSessionQueryOptions(),
     );
     if (!session) {
@@ -34,16 +39,18 @@ export const Route = createFileRoute("/_authed")({
         },
       });
     }
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      setActiveOrganizationQueryOptions({
-        organizationId: session.session.activeOrganizationId,
-      }),
+    const organizations = await context.queryClient.ensureQueryData(
+      listOrganizationsQueryOptions,
     );
-    return { session, activeOrganization };
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions,
+    );
+    return { session, organizations, activeOrganization };
   },
+  pendingComponent: () => <Outlet />,
 });
 
-function AuthedLayout() {
+function AppLayout() {
   return (
     <AppSidebarCtxProvider>
       <SidebarProvider>
@@ -72,7 +79,11 @@ function AuthedLayout() {
               </Breadcrumb>
             </div>
           </header>
-          <Outlet />
+          <main className="p-6">
+            <React.Suspense>
+              <Outlet />
+            </React.Suspense>
+          </main>
         </SidebarInset>
       </SidebarProvider>
     </AppSidebarCtxProvider>

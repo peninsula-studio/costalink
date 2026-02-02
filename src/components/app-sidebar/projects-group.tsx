@@ -55,7 +55,7 @@ export function ProjectsMenu({ className }: { className?: ClassNameValue }) {
 }
 
 function ProjectsSidebarMenu() {
-  const { session } = useRouteContext({ from: "/_authed" });
+  const { session } = useRouteContext({ from: "/app" });
 
   const { data: projects } = useSuspenseQuery({
     queryKey: ["teams", session.user.id],

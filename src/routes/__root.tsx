@@ -15,6 +15,12 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  // beforeLoad: async ({ context }) => {
+  //   const session = await context.queryClient.fetchQuery(
+  //     getSessionQueryOptions(),
+  //   );
+  //   return { session };
+  // },
   loader: () => getThemeServerFn(),
   head: () => ({
     meta: [

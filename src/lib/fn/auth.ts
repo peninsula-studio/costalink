@@ -11,27 +11,18 @@ import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 export const getSessionFn = createServerFn().handler(async () => {
   try {
     const session = await auth.api.getSession({ headers: getRequestHeaders() });
-    if (!session) {
-      throw redirect({
-        to: "/sign-in",
-        search: { callbackUrl: location.href },
-      });
-    }
     return session;
   } catch (error) {
     // Re-throw redirects (they're intentional, not errors)
     if (isRedirect(error)) throw error;
     // Auth check failed (network error, etc.) - redirect to login
-    throw redirect({
-      to: "/sign-in",
-      search: { callbackUrl: location.href },
-    });
+    throw redirect({ to: "/sign-in" });
   }
 });
 
 export const getSessionQueryOptions = () =>
   queryOptions({
-    queryKey: [userKeys.session()],
+    queryKey: userKeys.session(),
     queryFn: getSessionFn,
   });
 
