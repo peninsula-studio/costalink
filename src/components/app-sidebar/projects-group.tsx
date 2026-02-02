@@ -34,56 +34,32 @@ export function ProjectsMenu({ className }: { className?: ClassNameValue }) {
       className={cn("group-data-[collapsible=icon]:hidden", className)}
     >
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
-      <React.Suspense
-        fallback={
-          <SidebarMenu className="w-full">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <SidebarMenuItem
-                className="w-full **:data-[slot=skeleton]:bg-sidebar-accent"
-                key={`project-menu-skeleton-${index}`}
-              >
-                <SidebarMenuSkeleton />
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        }
-      >
-        <ProjectsSidebarMenu />
-      </React.Suspense>
+      <ProjectsSidebarMenu />
     </SidebarGroup>
   );
 }
 
+const PROJECTS = [
+  {
+    name: "Design Engineering",
+    url: "#",
+  },
+  {
+    name: "Sales & Marketing",
+    url: "#",
+  },
+  {
+    name: "Travel",
+    url: "#",
+  },
+];
+
 function ProjectsSidebarMenu() {
-  const { session } = useRouteContext({ from: "/app" });
-
-  const { data: projects } = useSuspenseQuery({
-    queryKey: ["teams", session.user.id],
-    queryFn: async () => {
-      // await new Promise((resolve) => setTimeout(resolve, 1500));
-      const data = [
-        {
-          name: "Design Engineering",
-          url: "#",
-        },
-        {
-          name: "Sales & Marketing",
-          url: "#",
-        },
-        {
-          name: "Travel",
-          url: "#",
-        },
-      ];
-      return data;
-    },
-  });
-
   const { isMobile } = useSidebar();
 
   return (
     <SidebarMenu>
-      {projects.map((item) => (
+      {PROJECTS.map((item) => (
         <SidebarMenuItem key={item.name}>
           <SidebarMenuButton
             render={

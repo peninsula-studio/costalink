@@ -1,4 +1,4 @@
-import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { useIsFetching, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouteContext, useRouterState } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
 import {
@@ -15,6 +15,7 @@ import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { auth } from "@/lib/auth";
 import { organizationKeys } from "@/lib/fn/keys";
+import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
@@ -22,6 +23,10 @@ export function OrganizationSwitcher() {
   const { session, organizations } = useRouteContext({
     from: "/app",
   });
+
+  // const { data: activeOrganization } = useQuery(
+  //   getActiveOrganizationQueryOptions,
+  // );
 
   const qc = useQueryClient();
   const activeOrganization = qc.getQueryData(organizationKeys.active()) as

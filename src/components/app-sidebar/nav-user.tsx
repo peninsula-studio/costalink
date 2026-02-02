@@ -36,6 +36,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth/client";
+import { signOutFn } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 
 export function NavUser({ className }: { className?: ClassNameValue }) {
@@ -49,18 +50,16 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
 
   const { mutate } = useMutation({
     mutationKey: ["signOut"],
-    mutationFn: async () => await authClient.signOut(),
+    mutationFn: async () => await signOutFn(),
     onError: (error) => {
       console.error(`Sign-out error: ${error.message}`);
       toast.error("Error", {
-        description:
-          error.message ||
-          "Error al cerrar sesión. Contacte con el adminsitrador.",
+        description: error.message || "Error while signing out",
       });
     },
     onSuccess: async () => {
       await router.invalidate();
-      toast.info("Sesión cerrada");
+      toast.info("Signed out successfully");
       router.navigate({ to: "/sign-in" });
       return;
     },
