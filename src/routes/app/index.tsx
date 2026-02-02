@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import {
   getActiveOrganizationQueryOptions,
@@ -11,6 +12,11 @@ import {
 
 export const Route = createFileRoute("/app/")({
   component: AppIndexPage,
+  pendingComponent: () => (
+    <div className="flex size-full p-6">
+      <Skeleton className="h-10 w-full" />
+    </div>
+  ),
   beforeLoad: async ({ context }) => {
     const organizations = await context.queryClient.ensureQueryData(
       listOrganizationsQueryOptions,
@@ -28,7 +34,7 @@ function AppIndexPage() {
     Route.useRouteContext();
 
   return (
-    <div className="flex flex-col gap-y-6">
+    <main className="flex flex-col gap-y-6 p-6">
       <TypographyH2>Dashboard</TypographyH2>
       {!activeOrganization && <div>No Org!!</div>}
       {session.user.role === "admin" && (
@@ -74,6 +80,6 @@ function AppIndexPage() {
           </Button>
         ))}
       </div>
-    </div>
+    </main>
   );
 }

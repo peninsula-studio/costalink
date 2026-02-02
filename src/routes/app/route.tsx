@@ -1,9 +1,6 @@
 import { Separator } from "@base-ui/react";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { AppSidebarCtxProvider } from "@/components/app-sidebar/context";
-import { LoadingIndicator } from "@/components/app-sidebar/loading-indicator";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,8 +10,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
+  Sidebar,
+  SidebarHeader,
   SidebarInset,
-  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,7 +25,23 @@ import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
+  pendingComponent: () => (
+    <>
+      <Sidebar className="flex min-h-lvh">
+        <SidebarHeader>
+          <Skeleton className="h-12 w-full" />
+        </SidebarHeader>
+      </Sidebar>
+      <SidebarInset>
+        <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <Skeleton className="h-6 w-full" />
+        </header>
+        <Outlet />
+      </SidebarInset>
+    </>
+  ),
   beforeLoad: async ({ context, location }) => {
+    // await new Promise((res) => setTimeout(res, 93500));
     const session = await context.queryClient.fetchQuery(
       getSessionQueryOptions(),
     );
@@ -47,45 +61,37 @@ export const Route = createFileRoute("/app")({
     );
     return { session, organizations, activeOrganization };
   },
-  pendingComponent: () => <Outlet />,
 });
 
 function AppLayout() {
   return (
-    <AppSidebarCtxProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-            <LoadingIndicator />
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator
-                className="mr-2 data-[orientation=vertical]:h-4"
-                orientation="vertical"
-              />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-          </header>
-          <main className="p-6">
-            <React.Suspense>
-              <Outlet />
-            </React.Suspense>
-          </main>
-        </SidebarInset>
-      </SidebarProvider>
-    </AppSidebarCtxProvider>
+    <>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              className="mr-2 data-[orientation=vertical]:h-4"
+              orientation="vertical"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Building Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <Outlet />
+      </SidebarInset>
+    </>
   );
 }
