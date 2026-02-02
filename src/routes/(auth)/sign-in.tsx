@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { SignInForm } from "@/components/sign-in-form";
-import { getSessionFn } from "@/lib/fn/auth";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 
 export type SignInRouteSearch = {
   // callbackUrl?: FileRouteTypes["to"];
@@ -8,9 +8,12 @@ export type SignInRouteSearch = {
 };
 
 export const Route = createFileRoute("/(auth)/sign-in")({
-  beforeLoad: async () => {
-    const session = await getSessionFn();
-    if (session) throw redirect({ to: "/dashboard" });
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+    console.log(session);
+    if (session) throw redirect({ to: "/app/dashboard" });
   },
   // validateSearch: zodValidator(z.object({ callbackUrl: z.string() })),
   validateSearch: (search: Record<string, unknown>): SignInRouteSearch => {

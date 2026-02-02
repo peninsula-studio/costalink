@@ -1,5 +1,4 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { SignInForm } from "@/components/sign-in-form";
 import { SignUpForm } from "@/components/sign-up-form";
 import { getSessionFn } from "@/lib/fn/auth";
 import type { FileRouteTypes } from "@/routeTree.gen";
@@ -11,7 +10,7 @@ export type SignInRouteSearch = {
 export const Route = createFileRoute("/(auth)/sign-up")({
   beforeLoad: async () => {
     const session = await getSessionFn();
-    if (session) throw redirect({ to: "/dashboard" });
+    if (session) throw redirect({ to: "/app" });
   },
   // validateSearch: zodValidator(z.object({ callbackUrl: z.string() })),
   validateSearch: (search: Record<string, unknown>): SignInRouteSearch => {
