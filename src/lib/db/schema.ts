@@ -32,53 +32,60 @@ export const memberRoleEnum = pgEnum("memberRole", [
 ]);
 export const planEnum = pgEnum("plan", ["free", "pro", "enterprise"]);
 
-export const property = pgTable("property", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  reference: text("reference").unique(),
-  price: integer("price").notNull(),
-  type: text("type").notNull(),
-  town: text("town").notNull(),
-  province: text("province").notNull(),
-  // -- Optional / Conditional Fields --
-  priceFreq: integer("price_freq"),
-  currency: text("currency"),
-  partOwnership: boolean("part_ownership").default(false),
-  leasehold: boolean("leasehold").default(false),
-  newBuild: boolean("new_build").default(false),
-  locationDetail: text("location_detail"),
-  beds: integer("beds").notNull(),
-  baths: integer("baths").notNull(),
-  pool: boolean("pool").default(false),
-  // -- Nested Objects --
-  surfaceArea: jsonb("surface_area").$type<KyeroSurfaceArea>(),
-  energyRating: jsonb("energy_rating").$type<KyeroEnergyRating>(),
-  url: text("url"),
-  notes: text("notes"),
-  // -- Description and Features (Multi-language) --
-  desc: jsonb("desc").$type<KyeroMultiLanguageString>(),
-  features: jsonb("features").$type<KyeroMultiLanguageString>(),
-  // -- Arrays --
-  images: jsonb("images").$type<KyeroImage[]>(),
-  // -- V3.5+ Additions --
-  videoUrl: text("video_url"),
-  virtualTourUrl: text("virtual_tour_url"),
-  catastral: text("catastral"),
-  // -- V3.7+ Additions --
-  email: text("email"),
-  // -- V3.8+ Additions --
-  prime: boolean("prime").default(false),
-  // -- V3.9+ Additions --
-  contactNumber: text("contact_number"),
-  whatsappNumber: text("whatsapp_number"),
-  // -- Standard fields for created and updated timestamps
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .$defaultFn(() => new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const property = pgTable(
+  "property",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    reference: text("reference").unique(),
+    price: integer("price").notNull(),
+    type: text("type").notNull(),
+    town: text("town").notNull(),
+    province: text("province").notNull(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    // -- Optional / Conditional Fields --
+    priceFreq: integer("price_freq"),
+    currency: text("currency"),
+    partOwnership: boolean("part_ownership").default(false),
+    leasehold: boolean("leasehold").default(false),
+    newBuild: boolean("new_build").default(false),
+    locationDetail: text("location_detail"),
+    beds: integer("beds").notNull(),
+    baths: integer("baths").notNull(),
+    pool: boolean("pool").default(false),
+    // -- Nested Objects --
+    surfaceArea: jsonb("surface_area").$type<KyeroSurfaceArea>(),
+    energyRating: jsonb("energy_rating").$type<KyeroEnergyRating>(),
+    url: text("url"),
+    notes: text("notes"),
+    // -- Description and Features (Multi-language) --
+    desc: jsonb("desc").$type<KyeroMultiLanguageString>(),
+    features: jsonb("features").$type<KyeroMultiLanguageString>(),
+    // -- Arrays --
+    images: jsonb("images").$type<KyeroImage[]>(),
+    // -- V3.5+ Additions --
+    videoUrl: text("video_url"),
+    virtualTourUrl: text("virtual_tour_url"),
+    catastral: text("catastral"),
+    // -- V3.7+ Additions --
+    email: text("email"),
+    // -- V3.8+ Additions --
+    prime: boolean("prime").default(false),
+    // -- V3.9+ Additions --
+    contactNumber: text("contact_number"),
+    whatsappNumber: text("whatsapp_number"),
+    // -- Standard fields for created and updated timestamps
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [index("property_organizationId_idx").on(table.organizationId)],
+);
 
 // *****************************************************************
 // ******************** BETTER AUTH ********************************
@@ -91,14 +98,18 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
+  defaultOrganizationId: text("default_organization_id").references(
+    () => organization.id,
+    { onDelete: "cascade" },
+  ),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  banned: boolean("banned").default(false),
-  banReason: text("ban_reason"),
-  banExpires: timestamp("ban_expires"),
 });
 
 export const session = pgTable(
