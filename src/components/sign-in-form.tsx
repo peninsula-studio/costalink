@@ -21,11 +21,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
-import { authClient } from "@/lib/auth/client";
 import { signInFn } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
-import type { FileRouteTypes } from "@/routeTree.gen";
 
 export const signInFormSchema = z.object({
   email: emailSchema,
@@ -36,7 +34,7 @@ export const signInFormSchema = z.object({
 export function SignInForm({
   className,
   onSuccess,
-  callbackUrl = "/dashboard",
+  callbackUrl = "/app",
   ...props
 }: React.ComponentProps<"div"> & {
   onSuccess?: () => void;
@@ -53,7 +51,7 @@ export function SignInForm({
     resolver: zodResolver(signInFormSchema),
   });
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
       clearErrors();
       return await signInFn({ data });
@@ -63,10 +61,11 @@ export function SignInForm({
       console.error(`Sign-in error -> "/sign-in": ${e.message}`);
       toast.error("Credenciales incorrectas");
     },
-    onSuccess: (data) => {
-      router.invalidate();
+    onSuccess: async (data) => {
+      await router.invalidate();
       toast.success(`Welcome ${data.user.name}`);
-      router.navigate({ to: callbackUrl });
+      router.navigate({ to: "/app" });
+      return;
     },
   });
 
@@ -83,7 +82,7 @@ export function SignInForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
             className="p-4 md:p-6"
-            onSubmit={handleSubmit((data) => mutate(data))}
+            onSubmit={handleSubmit(async (data) => await mutateAsync(data))}
           >
             <FieldSet>
               <FieldLegend className="text-center">

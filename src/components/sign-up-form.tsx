@@ -1,14 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
-import { CheckIcon, Eye, EyeClosed } from "lucide-react";
+import { setPassword } from "better-auth/api";
+import { CheckCircle2, CheckIcon, Eye, EyeClosed, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type * as z from "zod";
+import { InputPasswordCheck } from "@/components/input-password-check";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldDescription,
@@ -19,17 +20,16 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
-import type { auth } from "@/lib/auth";
-import { authClient } from "@/lib/auth/client";
 import { signUpFn } from "@/lib/fn/auth";
-import { userKeys } from "@/lib/fn/keys";
+import { cn } from "@/lib/utils";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 export function SignUpForm({
   onSuccess,
-  callbackUrl = "/dashboard",
+  callbackUrl = "/app",
   ...props
 }: React.ComponentProps<typeof Card> & {
   onSuccess?: () => void;
@@ -39,33 +39,53 @@ export function SignUpForm({
 
   const router = useRouter();
 
-  // const submit = async ({
-  //   email,
-  //   password,
-  //   name,
-  // }: z.infer<typeof signUpFormSchema>) => {
-  //   clearErrors();
-  //   const { data, error } = await authClient.signUp.email({
-  //     name,
-  //     email,
-  //     password,
-  //   });
-  //   if (error) {
-  //     setError("root", { message: "Credenciales incorrectas" });
-  //     console.error(`Sign-up error -> "/sign-up": ${error.message}`);
-  //     toast.error("Credenciales incorrectas");
-  //   }
-  //   if (data) {
-  //     toast.success(`Bienvenido ${data?.user.name}`);
-  //     router.navigate({ to: callbackUrl });
-  //   }
-  // };
+  const { formState, handleSubmit, register, clearErrors, setError, watch } =
+    useForm({
+      defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+      mode: "onSubmit",
+      resolver: zodResolver(signUpFormSchema),
+    });
 
-  const { formState, handleSubmit, register, clearErrors, setError } = useForm({
-    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
-    mode: "onSubmit",
-    resolver: zodResolver(signUpFormSchema),
-  });
+  const passwordValue = watch("password");
+
+  const validations = [
+    { text: "At least 8 characters", valid: passwordValue.length >= 8 },
+    { text: "Contains a number", valid: /\d/.test(passwordValue) },
+    {
+      text: "Contains uppercase letter",
+      valid: /[A-Z]/.test(passwordValue),
+    },
+    {
+      text: "Contains special character",
+      valid: /[!@#$%^&*]/.test(passwordValue),
+    },
+  ];
+
+  const strength = validations.filter((v) => v.valid).length;
+
+  const getStrengthColor = (score: number) => {
+    if (score === 0) return "bg-muted";
+    if (score <= 1) return "bg-destructive";
+    if (score <= 2) return "bg-warning";
+    if (score <= 3) return "bg-success";
+    return "bg-success";
+  };
+
+  const getStrengthText = (score: number) => {
+    if (score === 0) return "";
+    if (score <= 1) return "Weak";
+    if (score <= 2) return "Moderate";
+    if (score <= 3) return "Strong";
+    return "Very Strong";
+  };
+
+  const getStrengthTextColor = (score: number) => {
+    if (score === 0) return "text-muted-foreground";
+    if (score <= 1) return "text-destructive";
+    if (score <= 2) return "text-warning";
+    if (score <= 3) return "text-success";
+    return "text-success";
+  };
 
   const { mutate } = useMutation({
     mutationFn: async (data: z.infer<typeof signUpFormSchema>) => {
@@ -92,10 +112,7 @@ export function SignUpForm({
       {/*   </CardDescription> */}
       {/* </CardHeader> */}
       <CardContent>
-        <form
-          // onSubmit={handleSubmit(async (data) => await submit(data))}
-          onSubmit={handleSubmit((data) => mutate(data))}
-        >
+        <form onSubmit={handleSubmit((data) => mutate(data))}>
           <FieldSet>
             <FieldLegend className="text-center">Create an account</FieldLegend>
             <FieldDescription className="text-center">
@@ -141,26 +158,72 @@ export function SignUpForm({
                 <FieldLabel className="w-full" htmlFor="password">
                   Password
                 </FieldLabel>
-                <div className="flex gap-2">
-                  <Input
-                    aria-invalid={!!formState.errors.password}
-                    autoComplete="password"
-                    id="password"
-                    required
-                    type={showPassword ? "text" : "password"}
-                    {...register("password")}
-                  />
-                  <Button
-                    aria-description="Toggle password visibility"
-                    className="bg-secondary text-foreground!"
-                    onClick={() => setShowPassword((v) => !v)}
-                    size="icon"
-                    variant="outline"
-                  >
-                    {showPassword ? <EyeClosed /> : <Eye />}
-                  </Button>
+                <div className="flex flex-col gap-y-2">
+                  <InputGroup className="relative">
+                    <InputGroupInput
+                      aria-invalid={!!formState.errors.password}
+                      autoComplete="password"
+                      id="password"
+                      required
+                      type={showPassword ? "text" : "password"}
+                      {...register("password")}
+                    />
+                    <Button
+                      className="absolute top-0 right-0 h-full px-3 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                    >
+                      {showPassword ? (
+                        <Eye className="size-4 text-muted-foreground" />
+                      ) : (
+                        <EyeClosed className="size-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </InputGroup>
+                  <div className="flex flex-col gap-y-2">
+                    <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-secondary">
+                      <div
+                        className={`h-full transition-all duration-500 ease-out ${getStrengthColor(
+                          strength,
+                        )}`}
+                        style={{ width: `${(strength / 4) * 100}%` }}
+                      ></div>
+                    </div>
+                    <div className="flex items-center justify-between font-medium text-xs">
+                      <span className="text-muted-foreground">
+                        Password must contain
+                      </span>
+                      <span className={getStrengthTextColor(strength)}>
+                        {getStrengthText(strength)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-y-1">
+                    {validations.map((validation, index) => (
+                      <div
+                        className={cn(
+                          "flex items-center gap-2 text-muted-foreground text-sm transition-colors duration-200",
+                          { "text-success": validation.valid },
+                          {
+                            "text-destructive":
+                              formState.errors.password && !validation.valid,
+                          },
+                        )}
+                        key={index}
+                      >
+                        {validation.valid ? (
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                        ) : (
+                          <X className="h-3.5 w-3.5" />
+                        )}
+                        <span className="text-[13px]">{validation.text}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <FieldError errors={[formState.errors.password]} />
               </Field>
 
               <Field data-invalid={!!formState.errors.confirmPassword}>
