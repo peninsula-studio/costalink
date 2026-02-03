@@ -38,6 +38,7 @@ export const signUpFn = createServerFn()
     try {
       const data = await auth.api.signUpEmail({
         body: { name, email, password },
+        headers: getRequestHeaders(),
       });
       return data;
     } catch (e) {
@@ -58,6 +59,7 @@ export const signInFn = createServerFn()
     try {
       const data = await auth.api.signInEmail({
         body: { email, password, rememberMe },
+        headers: getRequestHeaders(),
       });
       return data;
     } catch (e) {
@@ -65,3 +67,13 @@ export const signInFn = createServerFn()
       throw e;
     }
   });
+
+export const signOutFn = createServerFn().handler(async () => {
+  try {
+    const data = await auth.api.signOut({ headers: getRequestHeaders() });
+    return data;
+  } catch (e) {
+    console.error(`Error signing out: ${(e as Error).cause}`);
+    throw e;
+  }
+});

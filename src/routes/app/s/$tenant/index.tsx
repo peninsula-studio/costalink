@@ -8,6 +8,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import * as React from "react";
+import { PropertyCard } from "@/components/property-card";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -70,9 +71,13 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent className="flex-row justify-center gap-2">
-            <Button>
-              <PlusIcon /> Add Property
-            </Button>
+            <Button
+              render={
+                <Link to="/app/s/$tenant/property/create" params={}>
+                  <PlusIcon /> Add Property
+                </Link>
+              }
+            ></Button>
             <Button variant="outline">
               <ImportIcon /> Import Properties
             </Button>
@@ -90,7 +95,14 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
           />
         </Empty>
       ) : (
-        properties.map((property) => <div key={property.id}>{property.id}</div>)
+        <>
+          {properties.map((property) => (
+            <PropertyCard key={property.id} />
+          ))}
+          <Button>
+            <PlusIcon /> Add Property
+          </Button>
+        </>
       )}
     </div>
   );

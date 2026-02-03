@@ -9,29 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
+import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
-import { Route as AuthedDashboardRouteRouteImport } from './routes/_authed/dashboard/route'
-import { Route as AuthedDashboardIndexRouteImport } from './routes/_authed/dashboard/index'
+import { Route as AppDashboardRouteRouteImport } from './routes/app/dashboard/route'
+import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
+import { Route as AppDashboardIndexRouteImport } from './routes/app/dashboard/index'
+import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
+import { Route as AppAccountIndexRouteImport } from './routes/app/account/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AuthedSTenantRouteRouteImport } from './routes/_authed/s/$tenant/route'
-import { Route as AuthedDashboardAdminRouteRouteImport } from './routes/_authed/dashboard/admin/route'
-import { Route as AuthedSTenantIndexRouteImport } from './routes/_authed/s/$tenant/index'
-import { Route as AuthedDashboardAdminIndexRouteImport } from './routes/_authed/dashboard/admin/index'
-import { Route as AuthedDashboardAdminOrganizationIndexRouteImport } from './routes/_authed/dashboard/admin/organization/index'
-import { Route as AuthedDashboardAdminOrganizationCreateRouteImport } from './routes/_authed/dashboard/admin/organization/create'
-import { Route as AuthedDashboardAdminOrganizationOrganizationIdRouteImport } from './routes/_authed/dashboard/admin/organization/$organizationId'
+import { Route as AppSTenantRouteRouteImport } from './routes/app/s/$tenant/route'
+import { Route as AppSTenantIndexRouteImport } from './routes/app/s/$tenant/index'
+import { Route as AppAdminOrganizationIndexRouteImport } from './routes/app/admin/organization/index'
+import { Route as AppAdminOrganizationCreateRouteImport } from './routes/app/admin/organization/create'
+import { Route as AppAdminOrganizationOrganizationIdRouteImport } from './routes/app/admin/organization/$organizationId'
 
-const AuthedRouteRoute = AuthedRouteRouteImport.update({
-  id: '/_authed',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const authSignUpRoute = authSignUpRouteImport.update({
   id: '/(auth)/sign-up',
@@ -43,155 +51,172 @@ const authSignInRoute = authSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedDashboardRouteRoute = AuthedDashboardRouteRouteImport.update({
+const AppDashboardRouteRoute = AppDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => AuthedRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const AuthedDashboardIndexRoute = AuthedDashboardIndexRouteImport.update({
+const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthedDashboardRouteRoute,
+  getParentRoute: () => AppDashboardRouteRoute,
+} as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedSTenantRouteRoute = AuthedSTenantRouteRouteImport.update({
+const AppSTenantRouteRoute = AppSTenantRouteRouteImport.update({
   id: '/s/$tenant',
   path: '/s/$tenant',
-  getParentRoute: () => AuthedRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const AuthedDashboardAdminRouteRoute =
-  AuthedDashboardAdminRouteRouteImport.update({
-    id: '/admin',
-    path: '/admin',
-    getParentRoute: () => AuthedDashboardRouteRoute,
-  } as any)
-const AuthedSTenantIndexRoute = AuthedSTenantIndexRouteImport.update({
+const AppSTenantIndexRoute = AppSTenantIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthedSTenantRouteRoute,
+  getParentRoute: () => AppSTenantRouteRoute,
 } as any)
-const AuthedDashboardAdminIndexRoute =
-  AuthedDashboardAdminIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthedDashboardAdminRouteRoute,
-  } as any)
-const AuthedDashboardAdminOrganizationIndexRoute =
-  AuthedDashboardAdminOrganizationIndexRouteImport.update({
+const AppAdminOrganizationIndexRoute =
+  AppAdminOrganizationIndexRouteImport.update({
     id: '/organization/',
     path: '/organization/',
-    getParentRoute: () => AuthedDashboardAdminRouteRoute,
+    getParentRoute: () => AppAdminRouteRoute,
   } as any)
-const AuthedDashboardAdminOrganizationCreateRoute =
-  AuthedDashboardAdminOrganizationCreateRouteImport.update({
+const AppAdminOrganizationCreateRoute =
+  AppAdminOrganizationCreateRouteImport.update({
     id: '/organization/create',
     path: '/organization/create',
-    getParentRoute: () => AuthedDashboardAdminRouteRoute,
+    getParentRoute: () => AppAdminRouteRoute,
   } as any)
-const AuthedDashboardAdminOrganizationOrganizationIdRoute =
-  AuthedDashboardAdminOrganizationOrganizationIdRouteImport.update({
+const AppAdminOrganizationOrganizationIdRoute =
+  AppAdminOrganizationOrganizationIdRouteImport.update({
     id: '/organization/$organizationId',
     path: '/organization/$organizationId',
-    getParentRoute: () => AuthedDashboardAdminRouteRoute,
+    getParentRoute: () => AppAdminRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof AuthedDashboardRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
+  '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/app/dashboard': typeof AppDashboardRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
-  '/dashboard/admin': typeof AuthedDashboardAdminRouteRouteWithChildren
-  '/s/$tenant': typeof AuthedSTenantRouteRouteWithChildren
+  '/app/': typeof AppIndexRoute
+  '/app/s/$tenant': typeof AppSTenantRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/dashboard/': typeof AuthedDashboardIndexRoute
-  '/dashboard/admin/': typeof AuthedDashboardAdminIndexRoute
-  '/s/$tenant/': typeof AuthedSTenantIndexRoute
-  '/dashboard/admin/organization/$organizationId': typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
-  '/dashboard/admin/organization/create': typeof AuthedDashboardAdminOrganizationCreateRoute
-  '/dashboard/admin/organization/': typeof AuthedDashboardAdminOrganizationIndexRoute
+  '/app/account/': typeof AppAccountIndexRoute
+  '/app/admin/': typeof AppAdminIndexRoute
+  '/app/dashboard/': typeof AppDashboardIndexRoute
+  '/app/admin/organization/$organizationId': typeof AppAdminOrganizationOrganizationIdRoute
+  '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
+  '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
+  '/app/s/$tenant/': typeof AppSTenantIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/app': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/dashboard': typeof AuthedDashboardIndexRoute
-  '/dashboard/admin': typeof AuthedDashboardAdminIndexRoute
-  '/s/$tenant': typeof AuthedSTenantIndexRoute
-  '/dashboard/admin/organization/$organizationId': typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
-  '/dashboard/admin/organization/create': typeof AuthedDashboardAdminOrganizationCreateRoute
-  '/dashboard/admin/organization': typeof AuthedDashboardAdminOrganizationIndexRoute
+  '/app/account': typeof AppAccountIndexRoute
+  '/app/admin': typeof AppAdminIndexRoute
+  '/app/dashboard': typeof AppDashboardIndexRoute
+  '/app/admin/organization/$organizationId': typeof AppAdminOrganizationOrganizationIdRoute
+  '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
+  '/app/admin/organization': typeof AppAdminOrganizationIndexRoute
+  '/app/s/$tenant': typeof AppSTenantIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authed': typeof AuthedRouteRouteWithChildren
-  '/_authed/dashboard': typeof AuthedDashboardRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
+  '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/app/dashboard': typeof AppDashboardRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
-  '/_authed/dashboard/admin': typeof AuthedDashboardAdminRouteRouteWithChildren
-  '/_authed/s/$tenant': typeof AuthedSTenantRouteRouteWithChildren
+  '/app/': typeof AppIndexRoute
+  '/app/s/$tenant': typeof AppSTenantRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/_authed/dashboard/': typeof AuthedDashboardIndexRoute
-  '/_authed/dashboard/admin/': typeof AuthedDashboardAdminIndexRoute
-  '/_authed/s/$tenant/': typeof AuthedSTenantIndexRoute
-  '/_authed/dashboard/admin/organization/$organizationId': typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
-  '/_authed/dashboard/admin/organization/create': typeof AuthedDashboardAdminOrganizationCreateRoute
-  '/_authed/dashboard/admin/organization/': typeof AuthedDashboardAdminOrganizationIndexRoute
+  '/app/account/': typeof AppAccountIndexRoute
+  '/app/admin/': typeof AppAdminIndexRoute
+  '/app/dashboard/': typeof AppDashboardIndexRoute
+  '/app/admin/organization/$organizationId': typeof AppAdminOrganizationOrganizationIdRoute
+  '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
+  '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
+  '/app/s/$tenant/': typeof AppSTenantIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/dashboard'
+    | '/app'
+    | '/app/admin'
+    | '/app/dashboard'
     | '/sign-in'
     | '/sign-up'
-    | '/dashboard/admin'
-    | '/s/$tenant'
+    | '/app/'
+    | '/app/s/$tenant'
     | '/api/auth/$'
-    | '/dashboard/'
-    | '/dashboard/admin/'
-    | '/s/$tenant/'
-    | '/dashboard/admin/organization/$organizationId'
-    | '/dashboard/admin/organization/create'
-    | '/dashboard/admin/organization/'
+    | '/app/account/'
+    | '/app/admin/'
+    | '/app/dashboard/'
+    | '/app/admin/organization/$organizationId'
+    | '/app/admin/organization/create'
+    | '/app/admin/organization/'
+    | '/app/s/$tenant/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/sign-in'
     | '/sign-up'
+    | '/app'
     | '/api/auth/$'
-    | '/dashboard'
-    | '/dashboard/admin'
-    | '/s/$tenant'
-    | '/dashboard/admin/organization/$organizationId'
-    | '/dashboard/admin/organization/create'
-    | '/dashboard/admin/organization'
+    | '/app/account'
+    | '/app/admin'
+    | '/app/dashboard'
+    | '/app/admin/organization/$organizationId'
+    | '/app/admin/organization/create'
+    | '/app/admin/organization'
+    | '/app/s/$tenant'
   id:
     | '__root__'
     | '/'
-    | '/_authed'
-    | '/_authed/dashboard'
+    | '/app'
+    | '/app/admin'
+    | '/app/dashboard'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
-    | '/_authed/dashboard/admin'
-    | '/_authed/s/$tenant'
+    | '/app/'
+    | '/app/s/$tenant'
     | '/api/auth/$'
-    | '/_authed/dashboard/'
-    | '/_authed/dashboard/admin/'
-    | '/_authed/s/$tenant/'
-    | '/_authed/dashboard/admin/organization/$organizationId'
-    | '/_authed/dashboard/admin/organization/create'
-    | '/_authed/dashboard/admin/organization/'
+    | '/app/account/'
+    | '/app/admin/'
+    | '/app/dashboard/'
+    | '/app/admin/organization/$organizationId'
+    | '/app/admin/organization/create'
+    | '/app/admin/organization/'
+    | '/app/s/$tenant/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthedRouteRoute: typeof AuthedRouteRouteWithChildren
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   authSignInRoute: typeof authSignInRoute
   authSignUpRoute: typeof authSignUpRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -199,11 +224,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authed': {
-      id: '/_authed'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthedRouteRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -212,6 +237,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/(auth)/sign-up': {
       id: '/(auth)/sign-up'
@@ -227,19 +259,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/dashboard': {
-      id: '/_authed/dashboard'
+    '/app/dashboard': {
+      id: '/app/dashboard'
       path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthedDashboardRouteRouteImport
-      parentRoute: typeof AuthedRouteRoute
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_authed/dashboard/': {
-      id: '/_authed/dashboard/'
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/dashboard/': {
+      id: '/app/dashboard/'
       path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof AuthedDashboardIndexRouteImport
-      parentRoute: typeof AuthedDashboardRouteRoute
+      fullPath: '/app/dashboard/'
+      preLoaderRoute: typeof AppDashboardIndexRouteImport
+      parentRoute: typeof AppDashboardRouteRoute
+    }
+    '/app/admin/': {
+      id: '/app/admin/'
+      path: '/'
+      fullPath: '/app/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/app/account/': {
+      id: '/app/account/'
+      path: '/account'
+      fullPath: '/app/account/'
+      preLoaderRoute: typeof AppAccountIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -248,122 +301,109 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/s/$tenant': {
-      id: '/_authed/s/$tenant'
+    '/app/s/$tenant': {
+      id: '/app/s/$tenant'
       path: '/s/$tenant'
-      fullPath: '/s/$tenant'
-      preLoaderRoute: typeof AuthedSTenantRouteRouteImport
-      parentRoute: typeof AuthedRouteRoute
+      fullPath: '/app/s/$tenant'
+      preLoaderRoute: typeof AppSTenantRouteRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_authed/dashboard/admin': {
-      id: '/_authed/dashboard/admin'
-      path: '/admin'
-      fullPath: '/dashboard/admin'
-      preLoaderRoute: typeof AuthedDashboardAdminRouteRouteImport
-      parentRoute: typeof AuthedDashboardRouteRoute
-    }
-    '/_authed/s/$tenant/': {
-      id: '/_authed/s/$tenant/'
+    '/app/s/$tenant/': {
+      id: '/app/s/$tenant/'
       path: '/'
-      fullPath: '/s/$tenant/'
-      preLoaderRoute: typeof AuthedSTenantIndexRouteImport
-      parentRoute: typeof AuthedSTenantRouteRoute
+      fullPath: '/app/s/$tenant/'
+      preLoaderRoute: typeof AppSTenantIndexRouteImport
+      parentRoute: typeof AppSTenantRouteRoute
     }
-    '/_authed/dashboard/admin/': {
-      id: '/_authed/dashboard/admin/'
-      path: '/'
-      fullPath: '/dashboard/admin/'
-      preLoaderRoute: typeof AuthedDashboardAdminIndexRouteImport
-      parentRoute: typeof AuthedDashboardAdminRouteRoute
-    }
-    '/_authed/dashboard/admin/organization/': {
-      id: '/_authed/dashboard/admin/organization/'
+    '/app/admin/organization/': {
+      id: '/app/admin/organization/'
       path: '/organization'
-      fullPath: '/dashboard/admin/organization/'
-      preLoaderRoute: typeof AuthedDashboardAdminOrganizationIndexRouteImport
-      parentRoute: typeof AuthedDashboardAdminRouteRoute
+      fullPath: '/app/admin/organization/'
+      preLoaderRoute: typeof AppAdminOrganizationIndexRouteImport
+      parentRoute: typeof AppAdminRouteRoute
     }
-    '/_authed/dashboard/admin/organization/create': {
-      id: '/_authed/dashboard/admin/organization/create'
+    '/app/admin/organization/create': {
+      id: '/app/admin/organization/create'
       path: '/organization/create'
-      fullPath: '/dashboard/admin/organization/create'
-      preLoaderRoute: typeof AuthedDashboardAdminOrganizationCreateRouteImport
-      parentRoute: typeof AuthedDashboardAdminRouteRoute
+      fullPath: '/app/admin/organization/create'
+      preLoaderRoute: typeof AppAdminOrganizationCreateRouteImport
+      parentRoute: typeof AppAdminRouteRoute
     }
-    '/_authed/dashboard/admin/organization/$organizationId': {
-      id: '/_authed/dashboard/admin/organization/$organizationId'
+    '/app/admin/organization/$organizationId': {
+      id: '/app/admin/organization/$organizationId'
       path: '/organization/$organizationId'
-      fullPath: '/dashboard/admin/organization/$organizationId'
-      preLoaderRoute: typeof AuthedDashboardAdminOrganizationOrganizationIdRouteImport
-      parentRoute: typeof AuthedDashboardAdminRouteRoute
+      fullPath: '/app/admin/organization/$organizationId'
+      preLoaderRoute: typeof AppAdminOrganizationOrganizationIdRouteImport
+      parentRoute: typeof AppAdminRouteRoute
     }
   }
 }
 
-interface AuthedDashboardAdminRouteRouteChildren {
-  AuthedDashboardAdminIndexRoute: typeof AuthedDashboardAdminIndexRoute
-  AuthedDashboardAdminOrganizationOrganizationIdRoute: typeof AuthedDashboardAdminOrganizationOrganizationIdRoute
-  AuthedDashboardAdminOrganizationCreateRoute: typeof AuthedDashboardAdminOrganizationCreateRoute
-  AuthedDashboardAdminOrganizationIndexRoute: typeof AuthedDashboardAdminOrganizationIndexRoute
+interface AppAdminRouteRouteChildren {
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+  AppAdminOrganizationOrganizationIdRoute: typeof AppAdminOrganizationOrganizationIdRoute
+  AppAdminOrganizationCreateRoute: typeof AppAdminOrganizationCreateRoute
+  AppAdminOrganizationIndexRoute: typeof AppAdminOrganizationIndexRoute
 }
 
-const AuthedDashboardAdminRouteRouteChildren: AuthedDashboardAdminRouteRouteChildren =
-  {
-    AuthedDashboardAdminIndexRoute: AuthedDashboardAdminIndexRoute,
-    AuthedDashboardAdminOrganizationOrganizationIdRoute:
-      AuthedDashboardAdminOrganizationOrganizationIdRoute,
-    AuthedDashboardAdminOrganizationCreateRoute:
-      AuthedDashboardAdminOrganizationCreateRoute,
-    AuthedDashboardAdminOrganizationIndexRoute:
-      AuthedDashboardAdminOrganizationIndexRoute,
-  }
-
-const AuthedDashboardAdminRouteRouteWithChildren =
-  AuthedDashboardAdminRouteRoute._addFileChildren(
-    AuthedDashboardAdminRouteRouteChildren,
-  )
-
-interface AuthedDashboardRouteRouteChildren {
-  AuthedDashboardAdminRouteRoute: typeof AuthedDashboardAdminRouteRouteWithChildren
-  AuthedDashboardIndexRoute: typeof AuthedDashboardIndexRoute
+const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
+  AppAdminIndexRoute: AppAdminIndexRoute,
+  AppAdminOrganizationOrganizationIdRoute:
+    AppAdminOrganizationOrganizationIdRoute,
+  AppAdminOrganizationCreateRoute: AppAdminOrganizationCreateRoute,
+  AppAdminOrganizationIndexRoute: AppAdminOrganizationIndexRoute,
 }
 
-const AuthedDashboardRouteRouteChildren: AuthedDashboardRouteRouteChildren = {
-  AuthedDashboardAdminRouteRoute: AuthedDashboardAdminRouteRouteWithChildren,
-  AuthedDashboardIndexRoute: AuthedDashboardIndexRoute,
+const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
+  AppAdminRouteRouteChildren,
+)
+
+interface AppDashboardRouteRouteChildren {
+  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
 }
 
-const AuthedDashboardRouteRouteWithChildren =
-  AuthedDashboardRouteRoute._addFileChildren(AuthedDashboardRouteRouteChildren)
-
-interface AuthedSTenantRouteRouteChildren {
-  AuthedSTenantIndexRoute: typeof AuthedSTenantIndexRoute
+const AppDashboardRouteRouteChildren: AppDashboardRouteRouteChildren = {
+  AppDashboardIndexRoute: AppDashboardIndexRoute,
 }
 
-const AuthedSTenantRouteRouteChildren: AuthedSTenantRouteRouteChildren = {
-  AuthedSTenantIndexRoute: AuthedSTenantIndexRoute,
+const AppDashboardRouteRouteWithChildren =
+  AppDashboardRouteRoute._addFileChildren(AppDashboardRouteRouteChildren)
+
+interface AppSTenantRouteRouteChildren {
+  AppSTenantIndexRoute: typeof AppSTenantIndexRoute
 }
 
-const AuthedSTenantRouteRouteWithChildren =
-  AuthedSTenantRouteRoute._addFileChildren(AuthedSTenantRouteRouteChildren)
-
-interface AuthedRouteRouteChildren {
-  AuthedDashboardRouteRoute: typeof AuthedDashboardRouteRouteWithChildren
-  AuthedSTenantRouteRoute: typeof AuthedSTenantRouteRouteWithChildren
+const AppSTenantRouteRouteChildren: AppSTenantRouteRouteChildren = {
+  AppSTenantIndexRoute: AppSTenantIndexRoute,
 }
 
-const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
-  AuthedDashboardRouteRoute: AuthedDashboardRouteRouteWithChildren,
-  AuthedSTenantRouteRoute: AuthedSTenantRouteRouteWithChildren,
+const AppSTenantRouteRouteWithChildren = AppSTenantRouteRoute._addFileChildren(
+  AppSTenantRouteRouteChildren,
+)
+
+interface AppRouteRouteChildren {
+  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
+  AppDashboardRouteRoute: typeof AppDashboardRouteRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+  AppSTenantRouteRoute: typeof AppSTenantRouteRouteWithChildren
+  AppAccountIndexRoute: typeof AppAccountIndexRoute
 }
 
-const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(
-  AuthedRouteRouteChildren,
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
+  AppDashboardRouteRoute: AppDashboardRouteRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
+  AppSTenantRouteRoute: AppSTenantRouteRouteWithChildren,
+  AppAccountIndexRoute: AppAccountIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthedRouteRoute: AuthedRouteRouteWithChildren,
+  AppRouteRoute: AppRouteRouteWithChildren,
   authSignInRoute: authSignInRoute,
   authSignUpRoute: authSignUpRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

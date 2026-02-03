@@ -15,6 +15,7 @@ export const getRouter = () => {
       ...rqContext,
     },
     defaultPreload: "intent",
+    defaultPendingMs: 0,
   });
 
   setupRouterSsrQueryIntegration({
