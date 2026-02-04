@@ -9,7 +9,5 @@ export const Route = createFileRoute("/app/s/$tenant")({
       setActiveOrganizationQueryOptions({ organizationSlug: params.tenant }),
     );
   },
-  pendingComponent: () => (
-<Outlet />
-  ),
+  pendingComponent: () => <Outlet />
 });
