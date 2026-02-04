@@ -56,6 +56,7 @@ export function OrganizationSwitcher() {
 
   return (
     <DropdownMenu>
+      {session.session.activeOrganizationId}
       <DropdownMenuTrigger
         render={
           <SidebarMenuButton
@@ -92,7 +93,7 @@ export function OrganizationSwitcher() {
         side={isMobile ? "bottom" : "left"}
         sideOffset={4}
       >
-        <DropdownMenuGroup>
+        {/* <DropdownMenuGroup>
           <DropdownMenuItem
             // aria-selected={!activeOrganization}
             className="gap-2 p-2"
@@ -106,14 +107,14 @@ export function OrganizationSwitcher() {
               </Link>
             }
           ></DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
 
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator /> */}
 
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-muted-foreground text-xs">
+          {/* <DropdownMenuLabel className="text-muted-foreground text-xs">
             Organizations
-          </DropdownMenuLabel>
+          </DropdownMenuLabel> */}
           {organizations?.map((o, index) => (
             <DropdownMenuItem
               // aria-selected={o.id === activeOrganization?.id}
