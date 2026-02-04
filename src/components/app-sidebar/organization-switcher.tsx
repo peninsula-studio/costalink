@@ -1,6 +1,12 @@
-import { useIsFetching, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useIsFetching,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Link, useRouteContext, useRouterState } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
+import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,27 +19,40 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { auth } from "@/lib/auth";
 import { organizationKeys } from "@/lib/fn/keys";
-import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import {
+  getActiveOrganizationQueryOptions,
+  listOrganizationsQueryOptions,
+} from "@/lib/fn/organization";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
-  const { session, organizations } = useRouteContext({
+  const { session } = useRouteContext({
     from: "/app",
   });
 
-  // const { data: activeOrganization } = useQuery(
-  //   getActiveOrganizationQueryOptions,
-  // );
+  const {
+    location: { pathname },
+  } = useRouterState();
 
-  const qc = useQueryClient();
-  const activeOrganization = qc.getQueryData(organizationKeys.active()) as
-    | typeof auth.$Infer.ActiveOrganization
-    | null;
-  const isFetching = useIsFetching({ queryKey: organizationKeys.active() });
-  const routerState = useRouterState();
+  // const qc = useQueryClient();
+
+  // useEffect(() => {
+  //   qc.invalidateQueries({ queryKey: organizationKeys.active() });
+  //   qc.refetchQueries({ queryKey: organizationKeys.active() });
+  // }, [pathname, qc.refetchQueries]);
+
+  const { data: activeOrganization, isFetching } = useSuspenseQuery(
+    getActiveOrganizationQueryOptions,
+  );
+  const { data: organizations } = useSuspenseQuery(
+    listOrganizationsQueryOptions(),
+  );
+
+  const isKeyFetching = useIsFetching({
+    queryKey: organizationKeys.setActive({}),
+  });
 
   return (
     <DropdownMenu>
@@ -43,7 +62,7 @@ export function OrganizationSwitcher() {
             className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
             size="lg"
           >
-            {routerState.status !== "idle" || isFetching ? (
+            {isFetching || isKeyFetching ? (
               <>
                 <Skeleton className="aspect-square size-8" />
                 <div className="flex w-full flex-col gap-1">
