@@ -18,33 +18,48 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH3,
   TypographyLarge,
 } from "@/components/ui/typography";
+import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/s/$tenant/")({
+  pendingComponent: () => (
+    <div className="flex flex-col gap-y-6 p-4">
+      <Skeleton className="h-12 w-md" />
+      <div className="flex w-full gap-x-2">
+        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-40 w-full" />
+      </div>
+    </div>
+  ),
   component: TenantPage,
 });
 
 function TenantPage() {
-  const { activeOrganization } = Route.useRouteContext();
+  const { tenant } = Route.useParams();
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
+  );
+
+  if (!activeOrganization) return null;
 
   return (
     <main className="flex size-full flex-col gap-y-6 p-6">
-      <TypographyH2>{activeOrganization?.name}</TypographyH2>
-      <TypographyLarge>{activeOrganization?.id}</TypographyLarge>
+      <TypographyH2>{activeOrganization.name}</TypographyH2>
+      <TypographyLarge>{activeOrganization.id}</TypographyLarge>
 
       <section className="flex flex-col gap-y-6">
         <TypographyH3 className="inline-flex">
           <HouseIcon className="inline-flex" /> Properties
         </TypographyH3>
         <React.Suspense fallback={<div>Loading...</div>}>
-          {activeOrganization && (
-            <PropertySection organizationId={activeOrganization.id} />
-          )}
+          <PropertySection organizationId={activeOrganization.id} />
         </React.Suspense>
       </section>
     </main>
@@ -52,9 +67,17 @@ function TenantPage() {
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
+  const { tenant } = Route.useParams();
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
+  );
+
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
   );
+
+  if (!activeOrganization) return null;
 
   return (
     <div className="flex items-start gap-2 *:max-w-md *:border *:border-border">
@@ -72,8 +95,12 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
           </EmptyHeader>
           <EmptyContent className="flex-row justify-center gap-2">
             <Button
+              nativeButton={false}
               render={
-                <Link to="/app/s/$tenant/property/create" params={}>
+                <Link
+                  params={{ tenant: activeOrganization.slug }}
+                  to="/app/s/$tenant/property/create"
+                >
                   <PlusIcon /> Add Property
                 </Link>
               }
