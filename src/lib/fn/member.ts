@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { redirect } from "@tanstack/react-router";
+import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { zodValidator } from "@tanstack/zod-adapter";
@@ -16,11 +16,20 @@ export const getActiveMemberFn = createServerFn()
       const member = await auth.api.getActiveMember({
         headers: getRequestHeaders(),
       });
-      console.info(`Getting active member for user: ${member?.user.name}`);
+      if (!member) {
+        console.error("Not a member of the organization");
+        throw redirect({ to: "/app" });
+      }
+      console.info(`Getting active member for user: ${member.user.name}`);
       return member;
-    } catch (e) {
-      console.error(`Error getting active member: ${(e as Error).message}`);
-      throw redirect({ to: "/app/dashboard" });
+    } catch (error) {
+      // Re-throw redirects (they're intentional, not errors)
+      if (isRedirect(error)) throw error;
+      // Setting active Organization failed (network error, etc.) - redirect to dashboard
+      console.error(
+        `fn: Error getting active member: ${(error as Error).message}`,
+      );
+      throw redirect({ to: "/app" });
     }
   });
 

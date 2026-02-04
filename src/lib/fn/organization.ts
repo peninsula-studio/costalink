@@ -26,10 +26,11 @@ export const getListOrganizationsFn = createServerFn().handler(async () => {
   }
 });
 
-export const listOrganizationsQueryOptions = queryOptions({
-  queryKey: organizationKeys.list(),
-  queryFn: () => getListOrganizationsFn(),
-});
+export const listOrganizationsQueryOptions = () =>
+  queryOptions({
+    queryKey: organizationKeys.list(),
+    queryFn: () => getListOrganizationsFn(),
+  });
 
 export const setActiveOrganizationFn = createServerFn({ method: "POST" })
   .inputValidator((data: ActiveOrganizationSelect) => data)
@@ -39,6 +40,7 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
         body: { organizationId, organizationSlug },
         headers: getRequestHeaders(),
       });
+      if (organizationId === null) return null;
       return data;
     } catch (error) {
       // Re-throw redirects (they're intentional, not errors)
@@ -55,9 +57,9 @@ export const setActiveOrganizationQueryOptions = (
   props: ActiveOrganizationSelect,
 ) =>
   queryOptions({
-    // queryKey: organizationKeys.setActive(props),
+    queryKey: organizationKeys.setActive(props),
     // queryKey: organizationKeys.setActive(),
-    queryKey: organizationKeys.active(),
+    // queryKey: organizationKeys.active(),
     queryFn: async () => await setActiveOrganizationFn({ data: props }),
   });
 
@@ -97,18 +99,17 @@ export const fullOrganizationQueryOptions = (props: OrganizationSelect) =>
     queryFn: () => getFullOrganizationFn({ data: props }),
   });
 
-export const getActiveOrganizationFn = createServerFn()
-  .handler(async () => {
-    try {
-      const organization = await auth.api.getFullOrganization({
-        headers: getRequestHeaders(),
-      });
-      return organization;
-    } catch (e) {
-      console.error(`Error getting organization info: ${(e as Error).message}`);
-      throw redirect({ to: "/app/dashboard" });
-    }
-  });
+export const getActiveOrganizationFn = createServerFn().handler(async () => {
+  try {
+    const organization = await auth.api.getFullOrganization({
+      headers: getRequestHeaders(),
+    });
+    return organization;
+  } catch (e) {
+    console.error(`Error getting organization info: ${(e as Error).message}`);
+    throw redirect({ to: "/app/dashboard" });
+  }
+});
 
 export const getActiveOrganizationQueryOptions = queryOptions({
   queryKey: organizationKeys.active(),

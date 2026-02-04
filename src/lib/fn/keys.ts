@@ -7,6 +7,7 @@ export const userKeys = {
 
 export type ActiveOrganizationSelect = {
   organizationSlug?: string;
+} & {
   organizationId?: string | null;
 };
 
@@ -25,7 +26,14 @@ export const organizationKeys = {
       "fullOrganization",
       data.organizationId || data.organizationSlug,
     ] as const,
-  setActive: () => [...organizationKeys.all(), "active", "set"] as const,
+  setActive: (data: ActiveOrganizationSelect) =>
+    [
+      ...organizationKeys.all(),
+      "setActive",
+      // "set",
+      data.organizationId,
+      data.organizationSlug,
+    ] as const,
 };
 
 export const memberKeys = {
