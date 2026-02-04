@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background text-foreground">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <h1 className="font-extrabold text-5xl tracking-tight">
           Join CostaLink

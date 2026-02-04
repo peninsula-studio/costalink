@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Building, Building2, PlusIcon } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Building2, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -21,11 +21,11 @@ export const Route = createFileRoute("/app/admin/")({
 
 function RouteComponent() {
   const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions,
+    listOrganizationsQueryOptions(),
   );
 
   return (
-    <div className="flex flex-col gap-y-8">
+    <main className="flex flex-col gap-y-8 p-6">
       <TypographyH2>Admin</TypographyH2>
       <div className="flex flex-col gap-y-6">
         <div className="flex flex-col gap-y-2">
@@ -61,6 +61,6 @@ function RouteComponent() {
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

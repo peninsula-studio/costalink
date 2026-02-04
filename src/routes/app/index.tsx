@@ -1,4 +1,5 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,27 +12,27 @@ import {
 } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
-  component: AppIndexPage,
+  beforeLoad: ({ context }) => {
+    context.queryClient.ensureQueryData(listOrganizationsQueryOptions());
+    context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
+  },
   pendingComponent: () => (
     <div className="flex size-full p-6">
       <Skeleton className="h-10 w-full" />
     </div>
   ),
-  beforeLoad: async ({ context }) => {
-    const organizations = await context.queryClient.ensureQueryData(
-      listOrganizationsQueryOptions,
-    );
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions,
-    );
-
-    return { organizations, activeOrganization };
-  },
+  component: AppIndexPage,
 });
 
 function AppIndexPage() {
-  const { session, organizations, activeOrganization } =
-    Route.useRouteContext();
+  const { session } = Route.useRouteContext();
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    getActiveOrganizationQueryOptions,
+  );
+  const { data: organizations } = useSuspenseQuery(
+    listOrganizationsQueryOptions(),
+  );
 
   return (
     <main className="flex flex-col gap-y-6 p-6">

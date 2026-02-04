@@ -41,8 +41,7 @@ export const Route = createFileRoute("/app")({
     </>
   ),
   beforeLoad: async ({ context, location }) => {
-    // await new Promise((res) => setTimeout(res, 93500));
-    const session = await context.queryClient.fetchQuery(
+    const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
     if (!session) {
@@ -53,13 +52,9 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
-    const organizations = await context.queryClient.ensureQueryData(
-      listOrganizationsQueryOptions,
-    );
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions,
-    );
-    return { session, organizations, activeOrganization };
+    context.queryClient.ensureQueryData(listOrganizationsQueryOptions());
+    context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
+    return { session };
   },
 });
 

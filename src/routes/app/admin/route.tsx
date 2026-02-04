@@ -3,7 +3,7 @@ import { getSessionQueryOptions } from "@/lib/fn/auth";
 
 export const Route = createFileRoute("/app/admin")({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.fetchQuery(
+    const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
     if (session?.user.role !== "admin") {

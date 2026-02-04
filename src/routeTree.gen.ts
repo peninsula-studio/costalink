@@ -25,6 +25,8 @@ import { Route as AppSTenantIndexRouteImport } from './routes/app/s/$tenant/inde
 import { Route as AppAdminOrganizationIndexRouteImport } from './routes/app/admin/organization/index'
 import { Route as AppAdminOrganizationCreateRouteImport } from './routes/app/admin/organization/create'
 import { Route as AppAdminOrganizationOrganizationIdRouteImport } from './routes/app/admin/organization/$organizationId'
+import { Route as AppSTenantPropertyIndexRouteImport } from './routes/app/s/$tenant/property/index'
+import { Route as AppSTenantPropertyCreateRouteImport } from './routes/app/s/$tenant/property/create'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
@@ -109,6 +111,17 @@ const AppAdminOrganizationOrganizationIdRoute =
     path: '/organization/$organizationId',
     getParentRoute: () => AppAdminRouteRoute,
   } as any)
+const AppSTenantPropertyIndexRoute = AppSTenantPropertyIndexRouteImport.update({
+  id: '/property/',
+  path: '/property/',
+  getParentRoute: () => AppSTenantRouteRoute,
+} as any)
+const AppSTenantPropertyCreateRoute =
+  AppSTenantPropertyCreateRouteImport.update({
+    id: '/property/create',
+    path: '/property/create',
+    getParentRoute: () => AppSTenantRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -127,6 +140,8 @@ export interface FileRoutesByFullPath {
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
   '/app/s/$tenant/': typeof AppSTenantIndexRoute
+  '/app/s/$tenant/property/create': typeof AppSTenantPropertyCreateRoute
+  '/app/s/$tenant/property/': typeof AppSTenantPropertyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,6 +156,8 @@ export interface FileRoutesByTo {
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization': typeof AppAdminOrganizationIndexRoute
   '/app/s/$tenant': typeof AppSTenantIndexRoute
+  '/app/s/$tenant/property/create': typeof AppSTenantPropertyCreateRoute
+  '/app/s/$tenant/property': typeof AppSTenantPropertyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -160,6 +177,8 @@ export interface FileRoutesById {
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
   '/app/s/$tenant/': typeof AppSTenantIndexRoute
+  '/app/s/$tenant/property/create': typeof AppSTenantPropertyCreateRoute
+  '/app/s/$tenant/property/': typeof AppSTenantPropertyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +199,8 @@ export interface FileRouteTypes {
     | '/app/admin/organization/create'
     | '/app/admin/organization/'
     | '/app/s/$tenant/'
+    | '/app/s/$tenant/property/create'
+    | '/app/s/$tenant/property/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -194,6 +215,8 @@ export interface FileRouteTypes {
     | '/app/admin/organization/create'
     | '/app/admin/organization'
     | '/app/s/$tenant'
+    | '/app/s/$tenant/property/create'
+    | '/app/s/$tenant/property'
   id:
     | '__root__'
     | '/'
@@ -212,6 +235,8 @@ export interface FileRouteTypes {
     | '/app/admin/organization/create'
     | '/app/admin/organization/'
     | '/app/s/$tenant/'
+    | '/app/s/$tenant/property/create'
+    | '/app/s/$tenant/property/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -336,6 +361,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminOrganizationOrganizationIdRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
+    '/app/s/$tenant/property/': {
+      id: '/app/s/$tenant/property/'
+      path: '/property'
+      fullPath: '/app/s/$tenant/property/'
+      preLoaderRoute: typeof AppSTenantPropertyIndexRouteImport
+      parentRoute: typeof AppSTenantRouteRoute
+    }
+    '/app/s/$tenant/property/create': {
+      id: '/app/s/$tenant/property/create'
+      path: '/property/create'
+      fullPath: '/app/s/$tenant/property/create'
+      preLoaderRoute: typeof AppSTenantPropertyCreateRouteImport
+      parentRoute: typeof AppSTenantRouteRoute
+    }
   }
 }
 
@@ -371,10 +410,14 @@ const AppDashboardRouteRouteWithChildren =
 
 interface AppSTenantRouteRouteChildren {
   AppSTenantIndexRoute: typeof AppSTenantIndexRoute
+  AppSTenantPropertyCreateRoute: typeof AppSTenantPropertyCreateRoute
+  AppSTenantPropertyIndexRoute: typeof AppSTenantPropertyIndexRoute
 }
 
 const AppSTenantRouteRouteChildren: AppSTenantRouteRouteChildren = {
   AppSTenantIndexRoute: AppSTenantIndexRoute,
+  AppSTenantPropertyCreateRoute: AppSTenantPropertyCreateRoute,
+  AppSTenantPropertyIndexRoute: AppSTenantPropertyIndexRoute,
 }
 
 const AppSTenantRouteRouteWithChildren = AppSTenantRouteRoute._addFileChildren(

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/app/admin/organization/")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const organizations = await context.queryClient.ensureQueryData(
-      listOrganizationsQueryOptions,
+      listOrganizationsQueryOptions(),
     );
     return { organizations };
   },
