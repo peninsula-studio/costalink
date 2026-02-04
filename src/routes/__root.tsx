@@ -7,6 +7,7 @@ import {
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { Providers } from "@/components/providers";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { getThemeServerFn } from "@/lib/fn/theme";
 import appCss from "@/styles/globals.css?url";
 
@@ -15,12 +16,13 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  // beforeLoad: async ({ context }) => {
-  //   const session = await context.queryClient.fetchQuery(
-  //     getSessionQueryOptions(),
-  //   );
-  //   return { session };
-  // },
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData({
+      ...getSessionQueryOptions(),
+      revalidateIfStale: true,
+    });
+    return { session };
+  },
   loader: () => getThemeServerFn(),
   head: () => ({
     meta: [

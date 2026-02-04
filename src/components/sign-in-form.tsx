@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,9 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
 import { signInFn } from "@/lib/fn/auth";
+import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
-import { userKeys } from "@/lib/fn/keys";
 
 export const signInFormSchema = z.object({
   email: emailSchema,
@@ -43,7 +43,7 @@ export function SignInForm({
   callbackUrl?: string;
 }) {
   const router = useRouter();
-  const qc = useQueryClient()
+  const qc = useQueryClient();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -65,7 +65,7 @@ export function SignInForm({
     },
     onSuccess: async (data) => {
       await router.invalidate();
-      await qc.invalidateQueries({queryKey: userKeys.session()});
+      await qc.resetQueries({ queryKey: userKeys.session() });
       toast.success(`Welcome ${data.user.name}`);
       router.history.push(callbackUrl);
       return;

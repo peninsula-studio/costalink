@@ -16,24 +16,15 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getSessionFn, getSessionQueryOptions } from "@/lib/fn/auth";
 import {
   getActiveOrganizationQueryOptions,
   listOrganizationsQueryOptions,
 } from "@/lib/fn/organization";
 import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
-import { userKeys } from "@/lib/fn/keys";
 
 export const Route = createFileRoute("/app")({
   beforeLoad: async ({ context, location }) => {
-      const session = await context.queryClient.ensureQueryData({
-        queryKey: userKeys.session(),
-        queryFn: () => getSessionFn(),
-        revalidateIfStale: true,
-      }
-      // getSessionQueryOptions(),
-    );
-    if (!session) {
+    if (!context.session) {
       throw redirect({
         to: "/sign-in",
         search: {
@@ -41,16 +32,13 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
-    context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
-    );
     context.queryClient.ensureQueryData(listOrganizationsQueryOptions());
     context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
-    return { session };
+    return { session: context.session };
   },
-    pendingComponent: () => (
+  pendingComponent: () => (
     <>
-      <Sidebar className="flex min-h-lvh min-w-full">
+      <Sidebar>
         <SidebarHeader>
           <Skeleton className="h-12 w-full" />
         </SidebarHeader>

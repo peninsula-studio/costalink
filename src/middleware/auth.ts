@@ -4,7 +4,7 @@ import { getSessionFn } from "@/lib/fn/auth";
 
 export const authMiddleware = createMiddleware().server(
   async ({ next }) => {
-    console.log("Getting session from middleware...");
+    console.log(`Getting session from middleware... ${(new Date()).toLocaleTimeString()}`);
     const session = await getSessionFn();
     if (!session) {
       throw redirect({ to: "/sign-in" });

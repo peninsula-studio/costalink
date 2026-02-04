@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
@@ -35,8 +35,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth/client";
 import { signOutFn } from "@/lib/fn/auth";
+import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 
 export function NavUser({ className }: { className?: ClassNameValue }) {
@@ -47,6 +47,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
   const { session } = useRouteContext({ from: "/app" });
 
   const router = useRouter();
+  const qc = useQueryClient();
 
   const { mutate } = useMutation({
     mutationKey: ["signOut"],
@@ -59,8 +60,10 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
     },
     onSuccess: async () => {
       await router.invalidate();
+      await qc.resetQueries({ queryKey: userKeys.session() });
       toast.info("Signed out successfully");
-      router.navigate({ to: "/sign-in" });
+      // router.navigate({ to: "/sign-in" });
+      router.history.push("/sign-in");
       return;
     },
   });
@@ -76,7 +79,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                 size="lg"
               >
                 <Avatar>
-                  <AvatarImage alt={session.user.name} />
+                  <AvatarImage alt={session?.user.name} />
                   <AvatarFallback>
                     <UserIcon />
                   </AvatarFallback>

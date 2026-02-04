@@ -18,36 +18,23 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH3,
   TypographyLarge,
 } from "@/components/ui/typography";
-import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/s/$tenant/")({
-  pendingComponent: () => (
-    <div className="flex flex-col gap-y-6 p-4">
-      <Skeleton className="h-12 w-md" />
-      <div className="flex w-full gap-x-2">
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-      </div>
-    </div>
-  ),
+  beforeLoad: ({ context }) => {
+    context.queryClient.ensureQueryData(getActiveMemberQueryOptions());
+  },
   component: TenantPage,
 });
 
 function TenantPage() {
-  const { tenant } = Route.useParams();
-
-  const { data: activeOrganization } = useSuspenseQuery(
-    setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
-  );
-
-  if (!activeOrganization) return null;
+  const { activeOrganization } = Route.useRouteContext();
 
   return (
     <main className="flex size-full flex-col gap-y-6 p-6">
@@ -67,17 +54,16 @@ function TenantPage() {
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
-  const { tenant } = Route.useParams();
+  const { activeOrganization } = Route.useRouteContext();
+  // const { tenant } = Route.useParams();
 
-  const { data: activeOrganization } = useSuspenseQuery(
-    setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
-  );
+  // const { data: activeOrganization } = useSuspenseQuery(
+  //   setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
+  // );
 
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
   );
-
-  if (!activeOrganization) return null;
 
   return (
     <div className="flex items-start gap-2 *:max-w-md *:border *:border-border">

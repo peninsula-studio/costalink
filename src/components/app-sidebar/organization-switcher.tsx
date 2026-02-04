@@ -1,24 +1,21 @@
 import {
   useIsFetching,
   useQuery,
-  useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { Link, useRouteContext, useRouterState } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
-import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { organizationKeys } from "@/lib/fn/keys";
 import {
   getActiveOrganizationQueryOptions,
@@ -28,20 +25,7 @@ import {
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
-  const { session } = useRouteContext({
-    from: "/app",
-  });
-
-  const {
-    location: { pathname },
-  } = useRouterState();
-
-  // const qc = useQueryClient();
-
-  // useEffect(() => {
-  //   qc.invalidateQueries({ queryKey: organizationKeys.active() });
-  //   qc.refetchQueries({ queryKey: organizationKeys.active() });
-  // }, [pathname, qc.refetchQueries]);
+  const { session } = useRouteContext({ from: "/app" });
 
   const { data: activeOrganization, isFetching } = useSuspenseQuery(
     getActiveOrganizationQueryOptions,
@@ -56,7 +40,6 @@ export function OrganizationSwitcher() {
 
   return (
     <DropdownMenu>
-      {session.session.activeOrganizationId}
       <DropdownMenuTrigger
         render={
           <SidebarMenuButton
@@ -78,7 +61,7 @@ export function OrganizationSwitcher() {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {activeOrganization?.name || session.user.name}
+                    {activeOrganization?.name || session?.user.name}
                   </span>
                 </div>
                 <ChevronsUpDown className="ml-auto" />

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import {
   getActiveOrganizationQueryOptions,
   listOrganizationsQueryOptions,
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/app/")({
     context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
   },
   pendingComponent: () => (
-    <div className="flex size-full p-6">
+    <div className="flex size-full min-h-lvh p-6">
       <Skeleton className="h-10 w-full" />
     </div>
   ),
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/app/")({
 });
 
 function AppIndexPage() {
-  const { session } = Route.useRouteContext();
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
 
   const { data: activeOrganization } = useSuspenseQuery(
     getActiveOrganizationQueryOptions,
@@ -38,7 +39,7 @@ function AppIndexPage() {
     <main className="flex flex-col gap-y-6 p-6">
       <TypographyH2>Dashboard</TypographyH2>
       {!activeOrganization && <div>No Org!!</div>}
-      {session.user.role === "admin" && (
+      {session?.user.role === "admin" && (
         <div>
           <Button nativeButton={false} render={<Link to="/app/admin"></Link>}>
             Admin panel
