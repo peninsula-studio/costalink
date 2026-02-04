@@ -16,22 +16,22 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getSessionQueryOptions } from "@/lib/fn/auth";
+import { getSessionFn, getSessionQueryOptions } from "@/lib/fn/auth";
 import {
   getActiveOrganizationQueryOptions,
   listOrganizationsQueryOptions,
 } from "@/lib/fn/organization";
 import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
-import { authMiddleware } from "@/middleware/auth";
+import { userKeys } from "@/lib/fn/keys";
 
 export const Route = createFileRoute("/app")({
-  server: {
-    middleware: [authMiddleware],
-  },
-  beforeLoad: async ({ context, location, serverContext }) => {
-    // if(!serverContext?.session) throw redirect({to:"/sign-in"})
-    const session = await context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
+  beforeLoad: async ({ context, location }) => {
+      const session = await context.queryClient.ensureQueryData({
+        queryKey: userKeys.session(),
+        queryFn: () => getSessionFn(),
+        revalidateIfStale: true,
+      }
+      // getSessionQueryOptions(),
     );
     if (!session) {
       throw redirect({
@@ -41,6 +41,9 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
+    context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
     context.queryClient.ensureQueryData(listOrganizationsQueryOptions());
     context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
     return { session };

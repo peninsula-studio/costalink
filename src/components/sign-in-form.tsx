@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -24,6 +24,7 @@ import { TypographyH1 } from "@/components/ui/typography";
 import { signInFn } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
+import { userKeys } from "@/lib/fn/keys";
 
 export const signInFormSchema = z.object({
   email: emailSchema,
@@ -42,6 +43,7 @@ export function SignInForm({
   callbackUrl?: string;
 }) {
   const router = useRouter();
+  const qc = useQueryClient()
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -51,7 +53,7 @@ export function SignInForm({
     resolver: zodResolver(signInFormSchema),
   });
 
-  const { mutateAsync } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
       clearErrors();
       return await signInFn({ data });
@@ -63,8 +65,9 @@ export function SignInForm({
     },
     onSuccess: async (data) => {
       await router.invalidate();
+      await qc.invalidateQueries({queryKey: userKeys.session()});
       toast.success(`Welcome ${data.user.name}`);
-      router.navigate({ to: "/app" });
+      router.history.push(callbackUrl);
       return;
     },
   });
@@ -82,7 +85,7 @@ export function SignInForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
             className="p-4 md:p-6"
-            onSubmit={handleSubmit(async (data) => await mutateAsync(data))}
+            onSubmit={handleSubmit((data) => mutate(data))}
           >
             <FieldSet>
               <FieldLegend className="text-center">
