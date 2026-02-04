@@ -13,7 +13,7 @@ export const Route = createFileRoute("/(auth)/sign-in")({
       getSessionQueryOptions(),
     );
     console.log(session);
-    if (session) throw redirect({ to: "/app/dashboard" });
+    if (session) throw redirect({ to: "/app" });
   },
   // validateSearch: zodValidator(z.object({ callbackUrl: z.string() })),
   validateSearch: (search: Record<string, unknown>): SignInRouteSearch => {

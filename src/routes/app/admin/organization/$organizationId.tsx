@@ -11,7 +11,6 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { TypographyH3 } from "@/components/ui/typography";
-import { authClient } from "@/lib/auth/client";
 import {
   addMemberFn,
   listMembersQueryOptions,

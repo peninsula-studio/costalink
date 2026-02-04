@@ -2,7 +2,7 @@ import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { getSessionFn } from "@/lib/fn/auth";
 
-export const authMiddleware = createMiddleware({ type: "function" }).server(
+export const authMiddleware = createMiddleware().server(
   async ({ next }) => {
     console.log("Getting session from middleware...");
     const session = await getSessionFn();

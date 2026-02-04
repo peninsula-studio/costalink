@@ -22,25 +22,14 @@ import {
   listOrganizationsQueryOptions,
 } from "@/lib/fn/organization";
 import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
+import { authMiddleware } from "@/middleware/auth";
 
 export const Route = createFileRoute("/app")({
-  component: AppLayout,
-  pendingComponent: () => (
-    <>
-      <Sidebar className="flex min-h-lvh">
-        <SidebarHeader>
-          <Skeleton className="h-12 w-full" />
-        </SidebarHeader>
-      </Sidebar>
-      <SidebarInset>
-        <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <Skeleton className="h-6 w-full" />
-        </header>
-        <Outlet />
-      </SidebarInset>
-    </>
-  ),
-  beforeLoad: async ({ context, location }) => {
+  server: {
+    middleware: [authMiddleware],
+  },
+  beforeLoad: async ({ context, location, serverContext }) => {
+    // if(!serverContext?.session) throw redirect({to:"/sign-in"})
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
@@ -56,6 +45,22 @@ export const Route = createFileRoute("/app")({
     context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
     return { session };
   },
+    pendingComponent: () => (
+    <>
+      <Sidebar className="flex min-h-lvh min-w-full">
+        <SidebarHeader>
+          <Skeleton className="h-12 w-full" />
+        </SidebarHeader>
+      </Sidebar>
+      <SidebarInset>
+        <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <Skeleton className="h-6 w-full" />
+        </header>
+        <Outlet />
+      </SidebarInset>
+    </>
+  ),
+  component: AppLayout,
 });
 
 function AppLayout() {

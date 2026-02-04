@@ -140,7 +140,7 @@ export const NavMain = ({
             <SidebarMenuButton
               isActive={pathName === "/app"}
               render={
-                <Link to={"/app"}>
+                <Link preload={false} to={"/app"}>
                   <HomeIcon />
                   Dashboard
                 </Link>

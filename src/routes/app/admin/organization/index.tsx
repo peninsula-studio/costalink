@@ -2,19 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
 import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/app/admin/organization/")({
   component: RouteComponent,
   loader: async ({ context }) => {
-    const organizations = await context.queryClient.ensureQueryData(
+   context.queryClient.ensureQueryData(
       listOrganizationsQueryOptions(),
     );
-    return { organizations };
   },
 });
 
 function RouteComponent() {
-  const { organizations } = Route.useLoaderData();
+  const { data:organizations } = useSuspenseQuery(listOrganizationsQueryOptions());
 
   return (
     <div>
