@@ -20,13 +20,13 @@ import { Route as AppDashboardIndexRouteImport } from './routes/app/dashboard/in
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAccountIndexRouteImport } from './routes/app/account/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AppSTenantRouteRouteImport } from './routes/app/s/$tenant/route'
-import { Route as AppSTenantIndexRouteImport } from './routes/app/s/$tenant/index'
+import { Route as AppSOrganizationIdRouteRouteImport } from './routes/app/s/$organizationId/route'
+import { Route as AppSOrganizationIdIndexRouteImport } from './routes/app/s/$organizationId/index'
 import { Route as AppAdminOrganizationIndexRouteImport } from './routes/app/admin/organization/index'
 import { Route as AppAdminOrganizationCreateRouteImport } from './routes/app/admin/organization/create'
 import { Route as AppAdminOrganizationOrganizationIdRouteImport } from './routes/app/admin/organization/$organizationId'
-import { Route as AppSTenantPropertyIndexRouteImport } from './routes/app/s/$tenant/property/index'
-import { Route as AppSTenantPropertyCreateRouteImport } from './routes/app/s/$tenant/property/create'
+import { Route as AppSOrganizationIdPropertyIndexRouteImport } from './routes/app/s/$organizationId/property/index'
+import { Route as AppSOrganizationIdPropertyCreateRouteImport } from './routes/app/s/$organizationId/property/create'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
@@ -83,15 +83,15 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppSTenantRouteRoute = AppSTenantRouteRouteImport.update({
-  id: '/s/$tenant',
-  path: '/s/$tenant',
+const AppSOrganizationIdRouteRoute = AppSOrganizationIdRouteRouteImport.update({
+  id: '/s/$organizationId',
+  path: '/s/$organizationId',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppSTenantIndexRoute = AppSTenantIndexRouteImport.update({
+const AppSOrganizationIdIndexRoute = AppSOrganizationIdIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppSTenantRouteRoute,
+  getParentRoute: () => AppSOrganizationIdRouteRoute,
 } as any)
 const AppAdminOrganizationIndexRoute =
   AppAdminOrganizationIndexRouteImport.update({
@@ -111,16 +111,17 @@ const AppAdminOrganizationOrganizationIdRoute =
     path: '/organization/$organizationId',
     getParentRoute: () => AppAdminRouteRoute,
   } as any)
-const AppSTenantPropertyIndexRoute = AppSTenantPropertyIndexRouteImport.update({
-  id: '/property/',
-  path: '/property/',
-  getParentRoute: () => AppSTenantRouteRoute,
-} as any)
-const AppSTenantPropertyCreateRoute =
-  AppSTenantPropertyCreateRouteImport.update({
+const AppSOrganizationIdPropertyIndexRoute =
+  AppSOrganizationIdPropertyIndexRouteImport.update({
+    id: '/property/',
+    path: '/property/',
+    getParentRoute: () => AppSOrganizationIdRouteRoute,
+  } as any)
+const AppSOrganizationIdPropertyCreateRoute =
+  AppSOrganizationIdPropertyCreateRouteImport.update({
     id: '/property/create',
     path: '/property/create',
-    getParentRoute: () => AppSTenantRouteRoute,
+    getParentRoute: () => AppSOrganizationIdRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -131,7 +132,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/app/': typeof AppIndexRoute
-  '/app/s/$tenant': typeof AppSTenantRouteRouteWithChildren
+  '/app/s/$organizationId': typeof AppSOrganizationIdRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/account/': typeof AppAccountIndexRoute
   '/app/admin/': typeof AppAdminIndexRoute
@@ -139,9 +140,9 @@ export interface FileRoutesByFullPath {
   '/app/admin/organization/$organizationId': typeof AppAdminOrganizationOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
-  '/app/s/$tenant/': typeof AppSTenantIndexRoute
-  '/app/s/$tenant/property/create': typeof AppSTenantPropertyCreateRoute
-  '/app/s/$tenant/property/': typeof AppSTenantPropertyIndexRoute
+  '/app/s/$organizationId/': typeof AppSOrganizationIdIndexRoute
+  '/app/s/$organizationId/property/create': typeof AppSOrganizationIdPropertyCreateRoute
+  '/app/s/$organizationId/property/': typeof AppSOrganizationIdPropertyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -155,9 +156,9 @@ export interface FileRoutesByTo {
   '/app/admin/organization/$organizationId': typeof AppAdminOrganizationOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization': typeof AppAdminOrganizationIndexRoute
-  '/app/s/$tenant': typeof AppSTenantIndexRoute
-  '/app/s/$tenant/property/create': typeof AppSTenantPropertyCreateRoute
-  '/app/s/$tenant/property': typeof AppSTenantPropertyIndexRoute
+  '/app/s/$organizationId': typeof AppSOrganizationIdIndexRoute
+  '/app/s/$organizationId/property/create': typeof AppSOrganizationIdPropertyCreateRoute
+  '/app/s/$organizationId/property': typeof AppSOrganizationIdPropertyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -168,7 +169,7 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/app/': typeof AppIndexRoute
-  '/app/s/$tenant': typeof AppSTenantRouteRouteWithChildren
+  '/app/s/$organizationId': typeof AppSOrganizationIdRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/account/': typeof AppAccountIndexRoute
   '/app/admin/': typeof AppAdminIndexRoute
@@ -176,9 +177,9 @@ export interface FileRoutesById {
   '/app/admin/organization/$organizationId': typeof AppAdminOrganizationOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
-  '/app/s/$tenant/': typeof AppSTenantIndexRoute
-  '/app/s/$tenant/property/create': typeof AppSTenantPropertyCreateRoute
-  '/app/s/$tenant/property/': typeof AppSTenantPropertyIndexRoute
+  '/app/s/$organizationId/': typeof AppSOrganizationIdIndexRoute
+  '/app/s/$organizationId/property/create': typeof AppSOrganizationIdPropertyCreateRoute
+  '/app/s/$organizationId/property/': typeof AppSOrganizationIdPropertyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,7 +191,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/app/'
-    | '/app/s/$tenant'
+    | '/app/s/$organizationId'
     | '/api/auth/$'
     | '/app/account/'
     | '/app/admin/'
@@ -198,9 +199,9 @@ export interface FileRouteTypes {
     | '/app/admin/organization/$organizationId'
     | '/app/admin/organization/create'
     | '/app/admin/organization/'
-    | '/app/s/$tenant/'
-    | '/app/s/$tenant/property/create'
-    | '/app/s/$tenant/property/'
+    | '/app/s/$organizationId/'
+    | '/app/s/$organizationId/property/create'
+    | '/app/s/$organizationId/property/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -214,9 +215,9 @@ export interface FileRouteTypes {
     | '/app/admin/organization/$organizationId'
     | '/app/admin/organization/create'
     | '/app/admin/organization'
-    | '/app/s/$tenant'
-    | '/app/s/$tenant/property/create'
-    | '/app/s/$tenant/property'
+    | '/app/s/$organizationId'
+    | '/app/s/$organizationId/property/create'
+    | '/app/s/$organizationId/property'
   id:
     | '__root__'
     | '/'
@@ -226,7 +227,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/app/'
-    | '/app/s/$tenant'
+    | '/app/s/$organizationId'
     | '/api/auth/$'
     | '/app/account/'
     | '/app/admin/'
@@ -234,9 +235,9 @@ export interface FileRouteTypes {
     | '/app/admin/organization/$organizationId'
     | '/app/admin/organization/create'
     | '/app/admin/organization/'
-    | '/app/s/$tenant/'
-    | '/app/s/$tenant/property/create'
-    | '/app/s/$tenant/property/'
+    | '/app/s/$organizationId/'
+    | '/app/s/$organizationId/property/create'
+    | '/app/s/$organizationId/property/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -326,19 +327,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/s/$tenant': {
-      id: '/app/s/$tenant'
-      path: '/s/$tenant'
-      fullPath: '/app/s/$tenant'
-      preLoaderRoute: typeof AppSTenantRouteRouteImport
+    '/app/s/$organizationId': {
+      id: '/app/s/$organizationId'
+      path: '/s/$organizationId'
+      fullPath: '/app/s/$organizationId'
+      preLoaderRoute: typeof AppSOrganizationIdRouteRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/s/$tenant/': {
-      id: '/app/s/$tenant/'
+    '/app/s/$organizationId/': {
+      id: '/app/s/$organizationId/'
       path: '/'
-      fullPath: '/app/s/$tenant/'
-      preLoaderRoute: typeof AppSTenantIndexRouteImport
-      parentRoute: typeof AppSTenantRouteRoute
+      fullPath: '/app/s/$organizationId/'
+      preLoaderRoute: typeof AppSOrganizationIdIndexRouteImport
+      parentRoute: typeof AppSOrganizationIdRouteRoute
     }
     '/app/admin/organization/': {
       id: '/app/admin/organization/'
@@ -361,19 +362,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminOrganizationOrganizationIdRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
-    '/app/s/$tenant/property/': {
-      id: '/app/s/$tenant/property/'
+    '/app/s/$organizationId/property/': {
+      id: '/app/s/$organizationId/property/'
       path: '/property'
-      fullPath: '/app/s/$tenant/property/'
-      preLoaderRoute: typeof AppSTenantPropertyIndexRouteImport
-      parentRoute: typeof AppSTenantRouteRoute
+      fullPath: '/app/s/$organizationId/property/'
+      preLoaderRoute: typeof AppSOrganizationIdPropertyIndexRouteImport
+      parentRoute: typeof AppSOrganizationIdRouteRoute
     }
-    '/app/s/$tenant/property/create': {
-      id: '/app/s/$tenant/property/create'
+    '/app/s/$organizationId/property/create': {
+      id: '/app/s/$organizationId/property/create'
       path: '/property/create'
-      fullPath: '/app/s/$tenant/property/create'
-      preLoaderRoute: typeof AppSTenantPropertyCreateRouteImport
-      parentRoute: typeof AppSTenantRouteRoute
+      fullPath: '/app/s/$organizationId/property/create'
+      preLoaderRoute: typeof AppSOrganizationIdPropertyCreateRouteImport
+      parentRoute: typeof AppSOrganizationIdRouteRoute
     }
   }
 }
@@ -408,27 +409,30 @@ const AppDashboardRouteRouteChildren: AppDashboardRouteRouteChildren = {
 const AppDashboardRouteRouteWithChildren =
   AppDashboardRouteRoute._addFileChildren(AppDashboardRouteRouteChildren)
 
-interface AppSTenantRouteRouteChildren {
-  AppSTenantIndexRoute: typeof AppSTenantIndexRoute
-  AppSTenantPropertyCreateRoute: typeof AppSTenantPropertyCreateRoute
-  AppSTenantPropertyIndexRoute: typeof AppSTenantPropertyIndexRoute
+interface AppSOrganizationIdRouteRouteChildren {
+  AppSOrganizationIdIndexRoute: typeof AppSOrganizationIdIndexRoute
+  AppSOrganizationIdPropertyCreateRoute: typeof AppSOrganizationIdPropertyCreateRoute
+  AppSOrganizationIdPropertyIndexRoute: typeof AppSOrganizationIdPropertyIndexRoute
 }
 
-const AppSTenantRouteRouteChildren: AppSTenantRouteRouteChildren = {
-  AppSTenantIndexRoute: AppSTenantIndexRoute,
-  AppSTenantPropertyCreateRoute: AppSTenantPropertyCreateRoute,
-  AppSTenantPropertyIndexRoute: AppSTenantPropertyIndexRoute,
-}
+const AppSOrganizationIdRouteRouteChildren: AppSOrganizationIdRouteRouteChildren =
+  {
+    AppSOrganizationIdIndexRoute: AppSOrganizationIdIndexRoute,
+    AppSOrganizationIdPropertyCreateRoute:
+      AppSOrganizationIdPropertyCreateRoute,
+    AppSOrganizationIdPropertyIndexRoute: AppSOrganizationIdPropertyIndexRoute,
+  }
 
-const AppSTenantRouteRouteWithChildren = AppSTenantRouteRoute._addFileChildren(
-  AppSTenantRouteRouteChildren,
-)
+const AppSOrganizationIdRouteRouteWithChildren =
+  AppSOrganizationIdRouteRoute._addFileChildren(
+    AppSOrganizationIdRouteRouteChildren,
+  )
 
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
   AppDashboardRouteRoute: typeof AppDashboardRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
-  AppSTenantRouteRoute: typeof AppSTenantRouteRouteWithChildren
+  AppSOrganizationIdRouteRoute: typeof AppSOrganizationIdRouteRouteWithChildren
   AppAccountIndexRoute: typeof AppAccountIndexRoute
 }
 
@@ -436,7 +440,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
   AppDashboardRouteRoute: AppDashboardRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  AppSTenantRouteRoute: AppSTenantRouteRouteWithChildren,
+  AppSOrganizationIdRouteRoute: AppSOrganizationIdRouteRouteWithChildren,
   AppAccountIndexRoute: AppAccountIndexRoute,
 }
 

@@ -33,9 +33,11 @@ export const getActiveMemberFn = createServerFn()
     }
   });
 
-export const getActiveMemberQueryOptions = () =>
+export const getActiveMemberQueryOptions = (
+  props: Parameters<typeof memberKeys.active>[0],
+) =>
   queryOptions({
-    queryKey: memberKeys.active(),
+    queryKey: memberKeys.active(props),
     queryFn: () => getActiveMemberFn(),
   });
 

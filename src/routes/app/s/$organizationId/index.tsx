@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import {
   ArrowUpRightIcon,
   FolderCode,
@@ -7,7 +7,7 @@ import {
   ImportIcon,
   PlusIcon,
 } from "lucide-react";
-import * as React from "react";
+import { Suspense } from "react";
 import { PropertyCard } from "@/components/property-card";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,20 +24,31 @@ import {
   TypographyLarge,
 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
+import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/s/$tenant/")({
-  beforeLoad: ({ context }) => {
-    context.queryClient.ensureQueryData(getActiveMemberQueryOptions());
+export const Route = createFileRoute("/app/s/$organizationId/")({
+  loader: async ({ context }) => {
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions({ userId: context.user.id }),
+    );
+    if (!activeOrganization) throw redirect({ to: "/app" });
+    context.queryClient.ensureQueryData(
+      getActiveMemberQueryOptions({
+        userId: context.user.id,
+        organizationId: activeOrganization.id,
+      }),
+    );
+    return { activeOrganization };
   },
-  component: TenantPage,
+  component: OrganizationPage,
 });
 
-function TenantPage() {
-  const { activeOrganization } = Route.useRouteContext();
+function OrganizationPage() {
+  const { activeOrganization } = Route.useLoaderData();
 
   return (
-    <main className="flex size-full flex-col gap-y-6 p-6">
+    <>
       <TypographyH2>{activeOrganization.name}</TypographyH2>
       <TypographyLarge>{activeOrganization.id}</TypographyLarge>
 
@@ -45,21 +56,16 @@ function TenantPage() {
         <TypographyH3 className="inline-flex">
           <HouseIcon className="inline-flex" /> Properties
         </TypographyH3>
-        <React.Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
           <PropertySection organizationId={activeOrganization.id} />
-        </React.Suspense>
+        </Suspense>
       </section>
-    </main>
+    </>
   );
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
-  const { activeOrganization } = Route.useRouteContext();
-  // const { tenant } = Route.useParams();
-
-  // const { data: activeOrganization } = useSuspenseQuery(
-  //   setActiveOrganizationQueryOptions({ organizationSlug: tenant }),
-  // );
+  const { activeOrganization } = Route.useLoaderData();
 
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
@@ -84,8 +90,8 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
               nativeButton={false}
               render={
                 <Link
-                  params={{ tenant: activeOrganization.slug }}
-                  to="/app/s/$tenant/property/create"
+                  params={{ organizationId: activeOrganization.id }}
+                  to="/app/s/$organizationId/property/create"
                 >
                   <PlusIcon /> Add Property
                 </Link>

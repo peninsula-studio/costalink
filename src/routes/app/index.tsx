@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
@@ -7,15 +6,17 @@ import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import {
-  getActiveOrganizationQueryOptions,
-  listOrganizationsQueryOptions,
-} from "@/lib/fn/organization";
+import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
-  beforeLoad: ({ context }) => {
-    context.queryClient.ensureQueryData(listOrganizationsQueryOptions());
-    context.queryClient.ensureQueryData(getActiveOrganizationQueryOptions);
+  loader: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+    const organizations = await context.queryClient.ensureQueryData(
+      listOrganizationsQueryOptions(),
+    );
+    return { session, organizations };
   },
   pendingComponent: () => (
     <div className="flex size-full min-h-lvh p-6">
@@ -26,19 +27,11 @@ export const Route = createFileRoute("/app/")({
 });
 
 function AppIndexPage() {
-  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
-
-  const { data: activeOrganization } = useSuspenseQuery(
-    getActiveOrganizationQueryOptions,
-  );
-  const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions(),
-  );
+  const { session, organizations } = Route.useLoaderData();
 
   return (
     <main className="flex flex-col gap-y-6 p-6">
       <TypographyH2>Dashboard</TypographyH2>
-      {!activeOrganization && <div>No Org!!</div>}
       {session?.user.role === "admin" && (
         <div>
           <Button nativeButton={false} render={<Link to="/app/admin"></Link>}>
@@ -68,9 +61,9 @@ function AppIndexPage() {
             nativeButton={false}
             render={
               <Link
-                params={{ tenant: o.slug }}
+                params={{ organizationId: o.id }}
                 preload={false}
-                to="/app/s/$tenant"
+                to="/app/s/$organizationId"
               ></Link>
             }
           >

@@ -1,7 +1,7 @@
-import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
   HeadContent,
+  Outlet,
   Scripts,
 } from "@tanstack/react-router";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
@@ -9,19 +9,12 @@ import { NotFound } from "@/components/not-found";
 import { Providers } from "@/components/providers";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { getThemeServerFn } from "@/lib/fn/theme";
+import type { MyRouterContext } from "@/router";
 import appCss from "@/styles/globals.css?url";
-
-interface MyRouterContext {
-  queryClient: QueryClient;
-}
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData({
-      ...getSessionQueryOptions(),
-      revalidateIfStale: true,
-    });
-    return { session };
+    context.queryClient.ensureQueryData(getSessionQueryOptions());
   },
   loader: () => getThemeServerFn(),
   head: () => ({
@@ -41,15 +34,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   errorComponent: (props) => {
-    return (
-      <RootDocument>
-        <DefaultCatchBoundary {...props} />
-      </RootDocument>
-    );
+    return <DefaultCatchBoundary {...props} />;
   },
   notFoundComponent: () => <NotFound />,
-  shellComponent: RootDocument,
+  shellComponent: RootComponent,
 });
+
+function RootComponent() {
+  const theme = Route.useLoaderData();
+  return (
+    <RootDocument>
+      <Providers theme={theme}>
+        <Outlet />
+      </Providers>
+    </RootDocument>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const theme = Route.useLoaderData();
@@ -59,10 +59,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Providers theme={theme}>
-          {children}
-          <Scripts />
-        </Providers>
+        {children}
+        <Scripts />
       </body>
     </html>
   );

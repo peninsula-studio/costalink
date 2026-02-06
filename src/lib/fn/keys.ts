@@ -1,8 +1,8 @@
-export const userKeys = {
-  all: () => ["user"] as const,
-  session: () => [...userKeys.all(), "session"] as const,
-  list: () => [...userKeys.all(), "list"] as const,
-  // signUp: () => ["signUp"] as const,
+type UserId = { userId: string };
+
+export type OrganizationSelect = {
+  organizationSlug?: string;
+  organizationId?: string;
 };
 
 export type ActiveOrganizationSelect = {
@@ -11,15 +11,18 @@ export type ActiveOrganizationSelect = {
   organizationId?: string | null;
 };
 
-export type OrganizationSelect = {
-  organizationSlug?: string;
-  organizationId?: string;
+export const userKeys = {
+  all: () => ["user"] as const,
+  session: () => [...userKeys.all(), "session"] as const,
+  list: () => [...userKeys.all(), "list"] as const,
+  // signUp: () => ["signUp"] as const,
 };
 
 export const organizationKeys = {
   all: () => ["organization"] as const,
   list: () => [...organizationKeys.all(), "list"] as const,
-  active: () => [...organizationKeys.all(), "active"] as const,
+  active: ({ userId }: UserId) =>
+    [...organizationKeys.all(), "active", userId] as const,
   fullOrganization: (data: OrganizationSelect = {}) =>
     [
       ...organizationKeys.all(),
@@ -38,7 +41,13 @@ export const organizationKeys = {
 
 export const memberKeys = {
   all: () => ["member"] as const,
-  active: () => [...memberKeys.all(), "active"] as const,
+  active: ({
+    userId,
+    organizationId,
+  }: {
+    userId: string;
+    organizationId: string;
+  }) => [...memberKeys.all(), "active", userId, organizationId] as const,
   list: (data: OrganizationSelect) =>
     [
       ...memberKeys.all(),

@@ -1,5 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { Link, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
   Bell,
@@ -35,7 +39,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOutFn } from "@/lib/fn/auth";
+import { getSessionQueryOptions, signOutFn } from "@/lib/fn/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +48,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
 
   const { theme, setTheme } = useTheme();
 
-  const { session } = useRouteContext({ from: "/app" });
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
 
   const router = useRouter();
   const qc = useQueryClient();
@@ -59,7 +63,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
       });
     },
     onSuccess: async () => {
-      await router.invalidate();
+      // await router.invalidate();
       await qc.resetQueries({ queryKey: userKeys.session() });
       toast.info("Signed out successfully");
       // router.navigate({ to: "/sign-in" });
@@ -67,6 +71,8 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
       return;
     },
   });
+
+  if (!session) return null;
 
   return (
     <SidebarMenu className={cn(className)}>

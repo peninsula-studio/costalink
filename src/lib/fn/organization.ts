@@ -108,7 +108,10 @@ export const getActiveOrganizationFn = createServerFn().handler(async () => {
   }
 });
 
-export const getActiveOrganizationQueryOptions = queryOptions({
-  queryKey: organizationKeys.active(),
-  queryFn: async () => await getActiveOrganizationFn(),
-});
+export const getActiveOrganizationQueryOptions = (
+  props: Parameters<typeof organizationKeys.active>[0],
+) =>
+  queryOptions({
+    queryKey: organizationKeys.active(props),
+    queryFn: async () => await getActiveOrganizationFn(),
+  });
