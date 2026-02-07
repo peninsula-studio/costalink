@@ -40,8 +40,12 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
         body: { organizationId, organizationSlug },
         headers: getRequestHeaders(),
       });
-      if (organizationId === null) return null;
-      return data;
+      if (organizationId === null || organizationSlug !== undefined) {
+        return null;
+      } else {
+        if (data === null) throw redirect({ to: "/app" });
+        return data;
+      }
     } catch (error) {
       // Re-throw redirects (they're intentional, not errors)
       if (isRedirect(error)) throw error;

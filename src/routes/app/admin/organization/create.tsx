@@ -4,11 +4,11 @@ import { CreateOrganizationForm } from "@/components/create-organization-form";
 export const Route = createFileRoute("/app/admin/organization/create")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
-    if (context.session.user.role === "admin") {
-      return { session: context.session };
-    } else {
+    if (context.user.role !== "admin") {
       throw redirect({ to: "/app" });
     }
+    const user = { ...context.user, role: "admin" as const };
+    return { user };
   },
 });
 

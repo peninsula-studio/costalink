@@ -5,7 +5,7 @@ import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/app/s/$organizationId/property/create")({
+export const Route = createFileRoute("/app/s/$organizationSlug/property/create")({
   loader: async ({ context }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
@@ -45,8 +45,8 @@ function RouteComponent() {
         nativeButton={false}
         render={
           <Link
-            params={{ organizationId: `${activeOrganization.id}` }}
-            to="/app/s/$organizationId/property"
+            params={{ organizationSlug: `${activeOrganization.id}` }}
+            to="/app/s/$organizationSlug/property"
           >
             Property list
           </Link>

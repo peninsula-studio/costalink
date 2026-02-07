@@ -1,20 +1,19 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import {
   getActiveOrganizationQueryOptions,
   setActiveOrganizationQueryOptions,
 } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/app/s/$organizationId")({
-  beforeLoad: async ({ context, params: { organizationId } }) => {
+export const Route = createFileRoute("/app/s/$organizationSlug")({
+  beforeLoad: async ({ context, params: { organizationSlug } }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
-    if (activeOrganization?.id !== organizationId) {
+    if (activeOrganization?.slug !== organizationSlug) {
       await context.queryClient.fetchQuery(
-        setActiveOrganizationQueryOptions({ organizationId }),
+        setActiveOrganizationQueryOptions({ organizationSlug }),
       );
       context.queryClient.invalidateQueries(getSessionQueryOptions());
       context.queryClient.resetQueries(

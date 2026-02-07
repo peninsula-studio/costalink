@@ -27,7 +27,7 @@ import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/s/$organizationId/")({
+export const Route = createFileRoute("/app/s/$organizationSlug/")({
   loader: async ({ context }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
@@ -90,8 +90,8 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
               nativeButton={false}
               render={
                 <Link
-                  params={{ organizationId: activeOrganization.id }}
-                  to="/app/s/$organizationId/property/create"
+                  params={{ organizationSlug: activeOrganization.slug }}
+                  to="/app/s/$organizationSlug/property/create"
                 >
                   <PlusIcon /> Add Property
                 </Link>

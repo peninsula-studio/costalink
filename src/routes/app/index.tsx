@@ -54,23 +54,23 @@ function AppIndexPage() {
         </Button>
       </div>
       <div className="flex flex-col gap-4 py-10">
-        {organizations?.map((o, index) => (
+        {organizations?.map((o, i) => (
           <Button
             className="flex w-fit items-center"
             key={o.name}
             nativeButton={false}
             render={
               <Link
-                params={{ organizationId: o.id }}
+                params={{ organizationSlug: o.slug }}
                 preload={false}
-                to="/app/s/$organizationId"
+                to="/app/s/$organizationSlug"
               ></Link>
             }
           >
             <Building2 className="stroke-white/80" />
             {o.name}
             <DropdownMenuShortcut className="text-white/70">
-              ⌘{index + 1}
+              ⌘{i + 1}
             </DropdownMenuShortcut>
           </Button>
         ))}

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TypographyLarge } from "@/components/ui/typography";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/app/s/$organizationId/property/")({
+export const Route = createFileRoute("/app/s/$organizationSlug/property/")({
   loader: async ({ context }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
@@ -20,15 +20,15 @@ function RouteComponent() {
   return (
     <>
       <TypographyLarge>
-        Hello "/app/s/$organizationId/property/"!
+        Hello "/app/s/$organizationSlug/property/"!
       </TypographyLarge>
       <Button
         className="w-fit"
         nativeButton={false}
         render={
           <Link
-            params={{ organizationId: `${activeOrganization.id}` }}
-            to="/app/s/$organizationId/property/create"
+            params={{ organizationSlug: `${activeOrganization.slug}` }}
+            to="/app/s/$organizationSlug/property/create"
           >
             Property list
           </Link>

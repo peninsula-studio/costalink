@@ -172,7 +172,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                     aria-selected={theme === "system"}
                     onClick={() => setTheme("system")}
                   >
-                    <Monitor /> Automático
+                    <Monitor /> Auto
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>

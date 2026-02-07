@@ -13,12 +13,11 @@ export type Theme = z.infer<typeof themeValidator>;
 
 export const THEME_STORAGE_KEY = "_preferred-theme" as const;
 
+
 export const getThemeServerFn = createServerFn().handler(
   async () => (getCookie(THEME_STORAGE_KEY) || "light") as Theme,
 );
 
 export const setThemeServerFn = createServerFn({ method: "POST" })
   .inputValidator(themeValidator)
-  .handler(async ({ data }) =>
-    setCookie(THEME_STORAGE_KEY, data === "system" ? "" : data),
-  );
+  .handler(async ({ data }) => setCookie(THEME_STORAGE_KEY, data));

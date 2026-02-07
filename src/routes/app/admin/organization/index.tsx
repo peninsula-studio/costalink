@@ -21,8 +21,8 @@ function RouteComponent() {
       {organizations?.map((org) => (
         <Link
           key={org.id}
-          params={{ organizationId: org.id }}
-          to="/app/admin/organization/$organizationId"
+          params={{ id: org.id }}
+          to="/app/admin/organization/$id"
         >
           <Card>
             <CardHeader>

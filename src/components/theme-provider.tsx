@@ -1,5 +1,11 @@
 import { useRouter } from "@tanstack/react-router";
-import { createContext, type PropsWithChildren, use } from "react";
+import {
+  createContext,
+  type PropsWithChildren,
+  use,
+  useEffect,
+  useEffectEvent,
+} from "react";
 import { setThemeServerFn, type Theme } from "@/lib/fn/theme";
 
 type ThemeContextVal = { theme: Theme; setTheme: (val: Theme) => void };
@@ -13,6 +19,18 @@ export function ThemeProvider({ children, theme }: Props) {
   function setTheme(val: Theme) {
     setThemeServerFn({ data: val }).then(() => router.invalidate());
   }
+
+  const preferMediaToggle = useEffectEvent(async (theme: Theme) => {
+    const shouldToggleDarkMode =
+      theme !== "light" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    document.documentElement.classList.toggle("dark", shouldToggleDarkMode);
+  });
+
+  useEffect(() => {
+    preferMediaToggle(theme);
+  }, [theme]);
 
   return <ThemeContext value={{ theme, setTheme }}>{children}</ThemeContext>;
 }
