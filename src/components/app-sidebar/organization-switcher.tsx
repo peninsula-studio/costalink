@@ -97,9 +97,9 @@ export function OrganizationSwitcher() {
               key={o.name}
               render={
                 <Link
-                  params={{ organizationSlug: o.slug }}
+                  params={{ slug: o.slug }}
                   preload={false}
-                  to="/app/s/$organizationSlug"
+                  to="/app/agency/$slug"
                 >
                   <div className="flex size-6 items-center justify-center rounded-md border">
                     <Building2 className="size-3.5 shrink-0" />

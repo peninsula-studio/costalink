@@ -40,10 +40,10 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
         body: { organizationId, organizationSlug },
         headers: getRequestHeaders(),
       });
-      if (organizationId === null || organizationSlug !== undefined) {
+      if (organizationId === null) {
         return null;
       } else {
-        if (data === null) throw redirect({ to: "/app" });
+        if (data === null) throw new Error("Data should not be null");
         return data;
       }
     } catch (error) {

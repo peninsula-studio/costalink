@@ -61,9 +61,9 @@ function AppIndexPage() {
             nativeButton={false}
             render={
               <Link
-                params={{ organizationSlug: o.slug }}
+                params={{ slug: o.slug }}
                 preload={false}
-                to="/app/s/$organizationSlug"
+                to="/app/agency/$slug"
               ></Link>
             }
           >

@@ -27,25 +27,25 @@ import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/s/$organizationSlug/")({
+export const Route = createFileRoute("/app/agency/$slug/")({
   loader: async ({ context }) => {
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    );
-    if (!activeOrganization) throw redirect({ to: "/app" });
+    // const activeOrganization = await context.queryClient.ensureQueryData(
+    //   getActiveOrganizationQueryOptions({ userId: context.user.id }),
+    // );
+    // if (!activeOrganization) throw redirect({ to: "/app" });
     context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
-        organizationId: activeOrganization.id,
+        organizationId: context.activeOrganization.id,
       }),
     );
-    return { activeOrganization };
+    // return { activeOrganization };
   },
   component: OrganizationPage,
 });
 
 function OrganizationPage() {
-  const { activeOrganization } = Route.useLoaderData();
+  const { activeOrganization } = Route.useRouteContext();
 
   return (
     <>
@@ -65,7 +65,7 @@ function OrganizationPage() {
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
-  const { activeOrganization } = Route.useLoaderData();
+  const { activeOrganization } = Route.useRouteContext();
 
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
@@ -90,8 +90,8 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
               nativeButton={false}
               render={
                 <Link
-                  params={{ organizationSlug: activeOrganization.slug }}
-                  to="/app/s/$organizationSlug/property/create"
+                  params={{ slug: activeOrganization.slug }}
+                  to="/app/agency/$slug/property/create"
                 >
                   <PlusIcon /> Add Property
                 </Link>

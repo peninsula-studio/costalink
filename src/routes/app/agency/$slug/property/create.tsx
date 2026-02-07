@@ -5,19 +5,19 @@ import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/app/s/$organizationSlug/property/create")({
+export const Route = createFileRoute("/app/agency/$slug/property/create")({
   loader: async ({ context }) => {
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    );
-    if (!activeOrganization) throw redirect({ to: "/app" });
+    // const activeOrganization = await context.queryClient.ensureQueryData(
+    //   getActiveOrganizationQueryOptions({ userId: context.user.id }),
+    // );
+    // if (!activeOrganization) throw redirect({ to: "/app" });
     const member = await context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
-        organizationId: activeOrganization.id,
+        organizationId: context.activeOrganization.id,
       }),
     );
-    return { activeOrganization, member };
+    return { member };
   },
   pendingComponent: () => (
     <>
@@ -33,7 +33,8 @@ export const Route = createFileRoute("/app/s/$organizationSlug/property/create")
 });
 
 function RouteComponent() {
-  const { activeOrganization, member } = Route.useLoaderData();
+  const { activeOrganization } = Route.useRouteContext();
+  const { member } = Route.useLoaderData();
 
   return (
     <>
@@ -45,8 +46,8 @@ function RouteComponent() {
         nativeButton={false}
         render={
           <Link
-            params={{ organizationSlug: `${activeOrganization.id}` }}
-            to="/app/s/$organizationSlug/property"
+            params={{ slug: activeOrganization.slug }}
+            to="/app/agency/$slug/property"
           >
             Property list
           </Link>

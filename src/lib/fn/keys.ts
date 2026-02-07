@@ -33,9 +33,7 @@ export const organizationKeys = {
     [
       ...organizationKeys.all(),
       "setActive",
-      // "set",
-      data.organizationId,
-      data.organizationSlug,
+      data.organizationId || data.organizationSlug,
     ] as const,
 };
 
