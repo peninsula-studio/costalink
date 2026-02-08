@@ -9,12 +9,8 @@ export type SignInRouteSearch = {
 
 export const Route = createFileRoute("/(auth)/sign-up")({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
-    );
-    if (session) throw redirect({ to: "/app" });
+    if (context.user) throw redirect({ to: "/app" });
   },
-  // validateSearch: zodValidator(z.object({ callbackUrl: z.string() })),
   validateSearch: (search: Record<string, unknown>): SignInRouteSearch => {
     const parsedSearch = { ...search } as SignInRouteSearch;
     return parsedSearch;

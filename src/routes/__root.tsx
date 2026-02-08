@@ -4,7 +4,6 @@ import {
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { Providers } from "@/components/providers";
@@ -15,7 +14,11 @@ import appCss from "@/styles/globals.css?url";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ context }) => {
-    context.queryClient.ensureQueryData(getSessionQueryOptions());
+    const session = await context.queryClient.ensureQueryData({
+      ...getSessionQueryOptions(),
+      revalidateIfStale: true,
+    });
+    return { user: session?.user };
   },
   loader: () => getThemeServerFn(),
   head: () => ({
@@ -42,12 +45,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootComponent() {
-  const theme = Route.useLoaderData();
   return (
     <RootDocument>
-      <Providers theme={theme}>
-        <Outlet />
-      </Providers>
+      <Outlet />
     </RootDocument>
   );
 }
@@ -60,8 +60,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
-        <Scripts />
+        <Providers theme={theme}>
+          {children}
+          <Scripts />
+        </Providers>
       </body>
     </html>
   );
