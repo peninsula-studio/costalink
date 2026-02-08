@@ -19,6 +19,11 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
 import { signInFn } from "@/lib/fn/auth";
@@ -114,8 +119,8 @@ export function SignInForm({
                   <FieldLabel className="w-full" htmlFor="password">
                     Contraseña
                   </FieldLabel>
-                  <div className="flex gap-2">
-                    <Input
+                  <InputGroup className="flex gap-2">
+                    <InputGroupInput
                       aria-invalid={!!formState.errors.password}
                       autoComplete="password"
                       id="password"
@@ -123,16 +128,15 @@ export function SignInForm({
                       type={showPassword ? "text" : "password"}
                       {...register("password")}
                     />
-                    <Button
+                    <InputGroupButton
                       aria-description="Toggle password visibility"
-                      className="bg-secondary text-foreground!"
                       onClick={() => setShowPassword((v) => !v)}
-                      size="icon"
-                      variant="outline"
+                      size="sm"
+                      variant="ghost"
                     >
                       {showPassword ? <EyeClosed /> : <Eye />}
-                    </Button>
-                  </div>
+                    </InputGroupButton>
+                  </InputGroup>
                   <FieldError errors={[formState.errors.password]} />
                 </Field>
 

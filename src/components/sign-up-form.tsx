@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type * as z from "zod";
-import { InputPasswordCheck } from "@/components/input-password-check";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -20,7 +19,11 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { signUpFn } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
@@ -168,10 +171,9 @@ export function SignUpForm({
                       type={showPassword ? "text" : "password"}
                       {...register("password")}
                     />
-                    <Button
-                      className="absolute top-0 right-0 h-full px-3 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                      size="icon"
+                    <InputGroupButton
+                      onClick={() => setShowPassword((v) => !v)}
+                      size="sm"
                       type="button"
                       variant="ghost"
                     >
@@ -180,7 +182,7 @@ export function SignUpForm({
                       ) : (
                         <EyeClosed className="size-4 text-muted-foreground" />
                       )}
-                    </Button>
+                    </InputGroupButton>
                   </InputGroup>
                   <div className="flex flex-col gap-y-2">
                     <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-secondary">
