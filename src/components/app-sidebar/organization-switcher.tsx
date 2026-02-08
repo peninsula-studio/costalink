@@ -1,6 +1,7 @@
-import { useIsFetching, useQuery } from "@tanstack/react-query";
-import { Link, useRouteContext } from "@tanstack/react-router";
+import { useIsFetching } from "@tanstack/react-query";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
+import { useAppCtx } from "@/components/app-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,33 +12,40 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getActiveOrganizationQueryOptions,
-  listOrganizationsQueryOptions,
-} from "@/lib/fn/organization";
+import type { auth } from "@/lib/auth";
+import { organizationKeys } from "@/lib/fn/keys";
 
-export function OrganizationSwitcher() {
+export function OrganizationSwitcher({
+  // activeOrganization,
+  organizations,
+  user,
+}: {
+  activeOrganization: typeof auth.$Infer.ActiveOrganization | null | undefined;
+  organizations: (typeof auth.$Infer.Organization)[] | undefined;
+  user: (typeof auth.$Infer.Session)["user"];
+}) {
   const { isMobile } = useSidebar();
-  const { user } = useRouteContext({ from: "/app" });
-
-  const { data: organizations } = useQuery(listOrganizationsQueryOptions());
-  const { data: activeOrganization, isFetching } = useQuery(
-    getActiveOrganizationQueryOptions({ userId: user.id }),
-  );
-
-  const setActiveFetching = useIsFetching({
-    queryKey: ["organization", "setActive"],
+  const isFetching = useIsFetching({
+    queryKey: organizationKeys.active({ userId: user.id }),
   });
+  const isFetching2 = useIsFetching({
+    queryKey: organizationKeys.setActive({ userId: user.id }),
+  });
+  const pending = useRouterState({
+    select: (state) => state.status === "pending",
+  });
+
+  const { activeOrganization } = useAppCtx();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
           <SidebarMenuButton
-            className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
+            className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
             size="lg"
           >
-            {isFetching || setActiveFetching ? (
+            {(isFetching || isFetching2) && pending ? (
               <>
                 <Skeleton className="aspect-square size-8" />
                 <div className="flex w-full flex-col gap-1">
@@ -63,35 +71,13 @@ export function OrganizationSwitcher() {
       />
       <DropdownMenuContent
         align={isMobile ? "center" : "start"}
-        className="w-(--anchor-width) min-w-56 rounded-lg"
+        // className="w-(--anchor-width) min-w-56 rounded-lg"
         side={isMobile ? "bottom" : "left"}
         sideOffset={4}
       >
-        {/* <DropdownMenuGroup>
-          <DropdownMenuItem
-            // aria-selected={!activeOrganization}
-            className="gap-2 p-2"
-            render={
-              <Link preload={false} to="/app">
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                  <UserIcon className="size-3.5 shrink-0" />
-                </div>
-                {session.user.name}
-                <DropdownMenuShortcut>⌘0</DropdownMenuShortcut>
-              </Link>
-            }
-          ></DropdownMenuItem>
-        </DropdownMenuGroup> */}
-
-        {/* <DropdownMenuSeparator /> */}
-
         <DropdownMenuGroup>
-          {/* <DropdownMenuLabel className="text-muted-foreground text-xs">
-            Organizations
-          </DropdownMenuLabel> */}
           {organizations?.map((o, index) => (
             <DropdownMenuItem
-              // aria-selected={o.id === activeOrganization?.id}
               aria-selected={o.id === activeOrganization?.id}
               className="gap-2 p-2"
               key={o.name}
@@ -101,9 +87,7 @@ export function OrganizationSwitcher() {
                   preload={false}
                   to="/app/agency/$slug"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-md border">
-                    <Building2 className="size-3.5 shrink-0" />
-                  </div>
+                  <Building2 className="size-3.5 shrink-0" />
                   {o.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </Link>
@@ -111,10 +95,6 @@ export function OrganizationSwitcher() {
             ></DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
-
-        {/* <React.Suspense fallback={<div>Loading...</div>}> */}
-        {/*   <OrgList /> */}
-        {/* </React.Suspense> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

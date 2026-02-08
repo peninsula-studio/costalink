@@ -18,34 +18,44 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH3,
   TypographyLarge,
 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
-import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/agency/$slug/")({
-  loader: async ({ context }) => {
-    // const activeOrganization = await context.queryClient.ensureQueryData(
-    //   getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    // );
-    // if (!activeOrganization) throw redirect({ to: "/app" });
+  loader: async ({ context, params }) => {
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
+    );
+    if (!activeOrganization) throw redirect({ to: "/app" });
     context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
-        organizationId: context.activeOrganization.id,
+        organizationId: activeOrganization.id,
       }),
     );
-    // return { activeOrganization };
+    return { activeOrganization };
   },
+  pendingComponent: () => (
+    <div className="flex flex-col gap-y-6 p-6">
+      <Skeleton className="h-12 w-md" />
+      <div className="flex w-full gap-x-2">
+        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-40 w-full" />
+      </div>
+    </div>
+  ),
   component: OrganizationPage,
 });
 
 function OrganizationPage() {
-  const { activeOrganization } = Route.useRouteContext();
+  const { activeOrganization } = Route.useLoaderData();
 
   return (
     <>
@@ -65,7 +75,7 @@ function OrganizationPage() {
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
-  const { activeOrganization } = Route.useRouteContext();
+  const { activeOrganization } = Route.useLoaderData();
 
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),

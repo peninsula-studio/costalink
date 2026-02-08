@@ -1,5 +1,6 @@
 import { Separator } from "@base-ui/react";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { AppProvider } from "@/components/app-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -16,12 +17,21 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { $checkSessionCookieFn, getSessionQueryOptions } from "@/lib/fn/auth";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
-import type { SignInRouteSearch } from "@/routes/(auth)/sign-in";
+import { sessionCookieMiddleware } from "@/middleware/auth";
+import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
 
 export const Route = createFileRoute("/app")({
+  server: {
+    middleware: [sessionCookieMiddleware],
+  },
   beforeLoad: async ({ context, location }) => {
-    if (!context.user) {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+    const sessionCookie = await $checkSessionCookieFn();
+    if (!sessionCookie || !session) {
       throw redirect({
         to: "/sign-in",
         search: {
@@ -29,10 +39,13 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
-    context.queryClient.ensureQueryData(
+    return { user: session.user };
+  },
+  loader: async ({ context }) => {
+    const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
-    return { user: context.user };
+    return { activeOrganization };
   },
   pendingComponent: () => (
     <>
@@ -45,7 +58,7 @@ export const Route = createFileRoute("/app")({
         <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <Skeleton className="h-6 w-full" />
         </header>
-        <Outlet />
+        <div>/app ROUTE SUSPENSE</div>
       </SidebarInset>
     </>
   ),
@@ -53,8 +66,10 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
+  const { activeOrganization } = Route.useLoaderData();
+
   return (
-    <>
+    <AppProvider initialOrg={activeOrganization}>
       <AppSidebar />
       <SidebarInset>
         <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -81,6 +96,6 @@ function AppLayout() {
         </header>
         <Outlet />
       </SidebarInset>
-    </>
+    </AppProvider>
   );
 }

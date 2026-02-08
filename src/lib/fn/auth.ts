@@ -1,12 +1,19 @@
 import { queryOptions } from "@tanstack/react-query";
 import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
+import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
+import { getSessionCookie } from "better-auth/cookies";
 import type z from "zod";
 import { signInFormSchema } from "@/components/sign-in-form";
 import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
+
+export const $checkSessionCookieFn = createServerFn().handler(() => {
+  const sessionCookie = getSessionCookie(getRequest());
+  console.info(sessionCookie);
+  return sessionCookie;
+});
 
 export const getSessionFn = createServerFn().handler(async () => {
   try {

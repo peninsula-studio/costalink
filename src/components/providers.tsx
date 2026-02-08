@@ -1,5 +1,4 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { AppProvider } from "@/components/app-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -12,18 +11,16 @@ type Props = {
 
 export const Providers = ({ children, theme }: Props) => {
   return (
-    <AppProvider>
-      <SidebarProvider>
-        <ReactQueryDevtools
-          buttonPosition="bottom-right"
-          initialIsOpen={false}
-          position="bottom"
-        />
-        <ThemeProvider theme={theme}>
-          <Toaster closeButton={true} richColors visibleToasts={5} />
-          {children}
-        </ThemeProvider>
-      </SidebarProvider>
-    </AppProvider>
+    <SidebarProvider>
+      <ReactQueryDevtools
+        buttonPosition="bottom-right"
+        initialIsOpen={false}
+        position="bottom"
+      />
+      <ThemeProvider theme={theme}>
+        <Toaster closeButton={true} richColors visibleToasts={5} />
+        {children}
+      </ThemeProvider>
+    </SidebarProvider>
   );
 };

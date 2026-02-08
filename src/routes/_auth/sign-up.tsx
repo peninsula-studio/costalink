@@ -1,16 +1,12 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SignUpForm } from "@/components/sign-up-form";
-import { getSessionQueryOptions } from "@/lib/fn/auth";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 export type SignInRouteSearch = {
   callbackUrl?: FileRouteTypes["to"];
 };
 
-export const Route = createFileRoute("/(auth)/sign-up")({
-  beforeLoad: async ({ context }) => {
-    if (context.user) throw redirect({ to: "/app" });
-  },
+export const Route = createFileRoute("/_auth/sign-up")({
   validateSearch: (search: Record<string, unknown>): SignInRouteSearch => {
     const parsedSearch = { ...search } as SignInRouteSearch;
     return parsedSearch;

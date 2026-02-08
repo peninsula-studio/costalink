@@ -1,15 +1,17 @@
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
-import { getSessionFn } from "@/lib/fn/auth";
+import { getSessionCookie } from "better-auth/cookies";
 
-export const authMiddleware = createMiddleware().server(
-  async ({ next }) => {
-    console.log(`Getting session from middleware... ${(new Date()).toLocaleTimeString()}`);
-    const session = await getSessionFn();
-    if (!session) {
+export const sessionCookieMiddleware = createMiddleware().server(
+  async ({ next, request }) => {
+    console.log(
+      `Getting session cookie from middleware... ${(new Date()).toLocaleTimeString()}`,
+    );
+    const sessionCookie = getSessionCookie(request);
+    if (!sessionCookie) {
       throw redirect({ to: "/sign-in" });
     }
-    return await next({ context: { session } });
+    return await next();
   },
 );
 

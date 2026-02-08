@@ -58,15 +58,18 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
   });
 
 export const setActiveOrganizationQueryOptions = (
-  props: ActiveOrganizationSelect,
+  props: ActiveOrganizationSelect &
+    Parameters<typeof organizationKeys.active>[0],
 ) =>
   queryOptions({
     queryKey: organizationKeys.setActive(props),
-    queryFn: async () => await setActiveOrganizationFn({ data: props }),
+    // queryKey: ["setActiveOrganization"],
+    // queryKey: organizationKeys.active(props),
+    queryFn: () => setActiveOrganizationFn({ data: props }),
   });
 
 export const getFullOrganizationQueryOptions = (
-  opts: OrganizationSelect = {},
+  opts: Parameters<typeof organizationKeys.fullOrganization>[0] = {},
 ) =>
   queryOptions({
     queryKey: organizationKeys.fullOrganization(opts),
@@ -117,5 +120,5 @@ export const getActiveOrganizationQueryOptions = (
 ) =>
   queryOptions({
     queryKey: organizationKeys.active(props),
-    queryFn: async () => await getActiveOrganizationFn(),
+    queryFn: () => getActiveOrganizationFn(),
   });

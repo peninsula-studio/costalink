@@ -29,11 +29,13 @@ export const organizationKeys = {
       "fullOrganization",
       data.organizationId || data.organizationSlug,
     ] as const,
-  setActive: (data: ActiveOrganizationSelect) =>
+  setActive: (data: UserId) =>
+    // setActive: (data: UserId & ActiveOrganizationSelect) =>
     [
       ...organizationKeys.all(),
       "setActive",
-      data.organizationId || data.organizationSlug,
+      data.userId,
+      // data.organizationId || data.organizationSlug,
     ] as const,
 };
 

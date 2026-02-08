@@ -3,14 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
-import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/agency/$slug/property/create")({
   loader: async ({ context }) => {
-    // const activeOrganization = await context.queryClient.ensureQueryData(
-    //   getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    // );
-    // if (!activeOrganization) throw redirect({ to: "/app" });
     const member = await context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
@@ -21,8 +16,9 @@ export const Route = createFileRoute("/app/agency/$slug/property/create")({
   },
   pendingComponent: () => (
     <>
+      <div>LOADING PROPERTIES...</div>
       <Skeleton className="h-12 w-sm" />
-      <div className="flex w-full max-w-lg flex-col gap-y-2 *:h-10">
+      <div className="flex w-full max-w-lg flex-col gap-y-2 bg-red-500 *:h-10">
         <Skeleton />
         <Skeleton />
       </div>

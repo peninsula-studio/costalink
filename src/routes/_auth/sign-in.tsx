@@ -1,14 +1,11 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SignInForm } from "@/components/sign-in-form";
 
 export type SignInRouteSearch = {
   callbackUrl?: string;
 };
 
-export const Route = createFileRoute("/(auth)/sign-in")({
-  beforeLoad: async ({ context }) => {
-    if (context.user) throw redirect({ to: "/app" });
-  },
+export const Route = createFileRoute("/_auth/sign-in")({
   validateSearch: (search: Record<string, unknown>): SignInRouteSearch => {
     const parsedSearch = { ...search } as SignInRouteSearch;
     return parsedSearch;

@@ -1,9 +1,11 @@
+import { useLocation, useRouter } from "@tanstack/react-router";
 import {
   createContext,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
   use,
+  useEffect,
   useState,
 } from "react";
 import type { auth } from "@/lib/auth";
@@ -20,9 +22,15 @@ type AppCtxProps = {
 
 const AppCtx = createContext({} as AppCtxProps);
 
-export function AppProvider({ children }: { children: Readonly<ReactNode> }) {
+export function AppProvider({
+  initialOrg,
+  children,
+}: {
+  initialOrg: ActiveOrganization;
+  children: Readonly<ReactNode>;
+}) {
   const [activeOrganization, setActiveOrganization] =
-    useState<AppCtxProps["activeOrganization"]>(undefined);
+    useState<AppCtxProps["activeOrganization"]>(initialOrg);
 
   return (
     <AppCtx value={{ activeOrganization, setActiveOrganization }}>
