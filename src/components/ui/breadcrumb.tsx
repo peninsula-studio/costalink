@@ -19,7 +19,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
       className={cn(
-        "flex flex-wrap items-center gap-1.5 break-words text-muted-foreground text-sm",
+        "wrap-break-word flex flex-wrap items-center gap-1.5 text-muted-foreground text-sm sm:gap-2.5",
         className,
       )}
       data-slot="breadcrumb-list"
@@ -31,7 +31,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
-      className={cn("inline-flex items-center gap-1", className)}
+      className={cn("inline-flex items-center gap-1.5", className)}
       data-slot="breadcrumb-item"
       {...props}
     />
@@ -60,7 +60,7 @@ function BreadcrumbLink({
 
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
-    // biome-ignore lint/a11y/useFocusableInteractive: <We set role="link" because we don't know if it will be an actual link or not and it is an internal link in a protected route under the /dashboard route>
+    // biome-ignore lint/a11y/useFocusableInteractive: <INFO: We set role="link" because we don't know if it will be an actual link or not and it is an internal link in a protected route under the /dashboard route>
     // biome-ignore lint/a11y/useSemanticElements: <see above>
     <span
       aria-current="page"

@@ -1,5 +1,3 @@
-"use client";
-
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 import { XIcon } from "lucide-react";
 import type * as React from "react";
@@ -66,12 +64,12 @@ function SheetContent({
                 className="absolute top-4 right-4"
                 size="icon-sm"
                 variant="ghost"
-              >
-                <XIcon />
-                <span className="sr-only">Close</span>
-              </Button>
+              />
             }
-          />
+          >
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Popup>
     </SheetPortal>
