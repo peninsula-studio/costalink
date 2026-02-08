@@ -20,7 +20,9 @@ export const getActiveMemberFn = createServerFn()
         console.error("Not a member of the organization");
         throw redirect({ to: "/app" });
       }
-      console.info(`Getting active member for user: ${member.user.name}`);
+      console.info(
+        `Getting active member for user: ${member.user.name} in org: ${member.organizationId}`,
+      );
       return member;
     } catch (error) {
       // Re-throw redirects (they're intentional, not errors)
