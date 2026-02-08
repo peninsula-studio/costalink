@@ -5,8 +5,8 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "src/styles.css",
-    "baseColor": "blue",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
@@ -19,4 +19,3 @@
   },
   "iconLibrary": "lucide"
 }
-
