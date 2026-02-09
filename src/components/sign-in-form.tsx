@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -69,8 +69,8 @@ export function SignInForm({
       toast.error("Credenciales incorrectas");
     },
     onSuccess: async (data) => {
-      await router.invalidate();
       await qc.resetQueries({ queryKey: userKeys.session() });
+      await router.invalidate();
       toast.success(`Welcome ${data.user.name}`);
       router.history.push(callbackUrl);
       return;

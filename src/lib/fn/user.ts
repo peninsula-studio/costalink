@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
 import { userKeys } from "@/lib/fn/keys";
-import { authMiddleware } from "@/middleware/auth";
+import { sessionCookieMiddleware } from "@/middleware/auth";
 // import { authMiddleware } from "@/middleware/auth";
 
 export const listUsersFn = createServerFn()
@@ -32,14 +32,14 @@ export const listUsersQueryOptions = () =>
   });
 
 export const setDefaultOrganizationFn = createServerFn()
-  .inputValidator((organizationId: string) => organizationId)
-  .middleware([authMiddleware])
-  .handler(async ({ data: organizationId, context }) => {
+  .inputValidator((data: { organizationId: string; userId: string }) => data)
+  .middleware([sessionCookieMiddleware])
+  .handler(async ({ data: { organizationId, userId } }) => {
     try {
       const updatedUser = await db
         .update(user)
         .set({ defaultOrganizationId: organizationId })
-        .where(eq(user.id, context.session.user.id))
+        .where(eq(user.id, userId))
         .returning({ updatedId: user.id });
       console.info("[ 󰊕]:listUsersFn", "Listing all Users...");
       return updatedUser;

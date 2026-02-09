@@ -30,13 +30,13 @@ export const Route = createFileRoute("/app/agency/$slug")({
       //   getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
       // );
     }
-    if (!activeOrganization) throw redirect({ to: "/app" });
     // return { activeOrganization };
   },
   loader: async ({ context, params }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
       getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
     );
+    if (!activeOrganization) throw redirect({ to: "/app" });
     return { activeOrganization };
   },
   pendingComponent: () => (

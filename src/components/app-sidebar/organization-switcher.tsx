@@ -45,7 +45,7 @@ export function OrganizationSwitcher({
             className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
             size="lg"
           >
-            {(isFetching || isFetching2) && pending ? (
+            {isFetching && isFetching2 && pending ? (
               <>
                 <Skeleton className="aspect-square size-8" />
                 <div className="flex w-full flex-col gap-1">

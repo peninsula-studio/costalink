@@ -10,7 +10,7 @@ export const Route = createFileRoute("/app/account/")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const organizations = await context.queryClient.ensureQueryData(
-      listOrganizationsQueryOptions,
+      listOrganizationsQueryOptions(),
     );
     return { organizations };
   },
@@ -19,9 +19,7 @@ export const Route = createFileRoute("/app/account/")({
 function RouteComponent() {
   const router = useRouter();
   const { organizations } = Route.useLoaderData();
-  const {
-    session: { user },
-  } = Route.useRouteContext();
+  const { user } = Route.useRouteContext();
 
   return (
     <div className="flex flex-col gap-6">
@@ -42,7 +40,9 @@ function RouteComponent() {
               <Button
                 disabled={user.defaultOrganizationId === org.id}
                 onClick={async () => {
-                  await setDefaultOrganizationFn({ data: org.id });
+                  await setDefaultOrganizationFn({
+                    data: { organizationId: org.id, userId: user.id },
+                  });
                   await router.invalidate();
                 }}
               >
