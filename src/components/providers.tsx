@@ -17,7 +17,7 @@ export const Providers = ({ children, theme }: Props) => {
         initialIsOpen={false}
         position="bottom"
       />
-      <ThemeProvider theme={theme}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Toaster closeButton={true} richColors visibleToasts={5} />
         {children}
       </ThemeProvider>
