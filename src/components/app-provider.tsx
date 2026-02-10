@@ -10,14 +10,13 @@ import {
 } from "react";
 import type { auth } from "@/lib/auth";
 
-type ActiveOrganization =
+export type ActiveOrganization =
   | typeof auth.$Infer.ActiveOrganization
-  | null
-  | undefined;
+  | null;
 
 type AppCtxProps = {
-  activeOrganization: ActiveOrganization;
-  setActiveOrganization: Dispatch<SetStateAction<ActiveOrganization>>;
+  activeOrganization: ActiveOrganization | undefined;
+  setActiveOrganization: Dispatch<SetStateAction<ActiveOrganization | undefined>>;
 };
 
 const AppCtx = createContext({} as AppCtxProps);
@@ -26,7 +25,7 @@ export function AppProvider({
   initialOrg,
   children,
 }: {
-  initialOrg: ActiveOrganization;
+  initialOrg: ActiveOrganization | undefined;
   children: Readonly<ReactNode>;
 }) {
   const [activeOrganization, setActiveOrganization] =

@@ -85,7 +85,6 @@ export const Route = createFileRoute("/app")({
 
 function AppLayout() {
   const { activeOrganization } = Route.useLoaderData();
-  const search = Route.useSearch();
 
   return (
     <AppProvider initialOrg={activeOrganization}>

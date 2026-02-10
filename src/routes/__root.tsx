@@ -8,8 +8,7 @@ import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { Providers } from "@/components/providers";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { getThemeServerFn } from "@/lib/fn/theme";
-import type { MyRouterContext } from "@/router";
+import { type MyRouterContext } from "@/router";
 import appCss from "@/styles/globals.css?url";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -19,7 +18,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     );
     return { session };
   },
-  loader: () => getThemeServerFn(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -52,14 +50,13 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const theme = Route.useLoaderData();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        <Providers theme={theme}>
+        <Providers>
           {children}
           <Scripts />
         </Providers>

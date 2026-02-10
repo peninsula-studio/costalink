@@ -11,7 +11,6 @@ import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 
 export const $checkSessionCookieFn = createServerFn().handler(() => {
   const sessionCookie = getSessionCookie(getRequest());
-  console.info(sessionCookie);
   return sessionCookie;
 });
 
