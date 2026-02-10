@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useRouteContext } from "@tanstack/react-router";
+import { useLoaderData, useRouteContext } from "@tanstack/react-router";
 import { type ComponentProps, Suspense } from "react";
 import {
   Sidebar,
@@ -8,9 +8,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
-  getActiveOrganizationQueryOptions,
   listOrganizationsQueryOptions,
 } from "@/lib/fn/organization";
 import { NavMain } from "./nav-main";
@@ -20,17 +18,15 @@ import { ProjectsMenu } from "./projects-group";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const { user } = useRouteContext({ from: "/app" });
+  const { activeOrganization } = useLoaderData({ from: "/app" });
 
   const { data: organizations } = useQuery(listOrganizationsQueryOptions());
-  const { data: activeOrganization } = useQuery(
-    getActiveOrganizationQueryOptions({ userId: user.id }),
-  );
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <OrganizationSwitcher
-          activeOrganization={activeOrganization}
+          initialOrganization={activeOrganization}
           organizations={organizations}
           user={user}
         />
@@ -40,15 +36,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>
-        <Suspense
-          fallback={
-            <div className="flex flex-col gap-2">
-              <Skeleton className="size-8" />
-            </div>
-          }
-        >
-          <NavUser />
-        </Suspense>
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

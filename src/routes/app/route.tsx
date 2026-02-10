@@ -84,10 +84,10 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
-  const { activeOrganization } = Route.useLoaderData();
+  // const { activeOrganization } = Route.useLoaderData();
 
   return (
-    <AppProvider initialOrg={activeOrganization}>
+    <AppProvider initialOrg={undefined}>
       <AppSidebar />
       <SidebarInset>
         {/* <div>Agency: {search?.agency}</div> */}

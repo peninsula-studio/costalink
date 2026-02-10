@@ -1,7 +1,5 @@
-import { useIsFetching } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
-import { useAppCtx } from "@/components/app-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,29 +11,21 @@ import {
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { auth } from "@/lib/auth";
-import { organizationKeys } from "@/lib/fn/keys";
 
 export function OrganizationSwitcher({
-  // activeOrganization,
+  initialOrganization,
   organizations,
   user,
 }: {
-  activeOrganization: typeof auth.$Infer.ActiveOrganization | null | undefined;
+  initialOrganization: typeof auth.$Infer.ActiveOrganization | null | undefined;
   organizations: (typeof auth.$Infer.Organization)[] | undefined;
   user: (typeof auth.$Infer.Session)["user"];
 }) {
   const { isMobile } = useSidebar();
-  const isFetching = useIsFetching({
-    queryKey: organizationKeys.active({ userId: user.id }),
-  });
-  const isFetching2 = useIsFetching({
-    queryKey: organizationKeys.setActive({ userId: user.id }),
-  });
-  const pending = useRouterState({
-    select: (state) => state.status === "pending",
-  });
 
-  const { activeOrganization } = useAppCtx();
+  const matches = useRouterState({ select: (s) => s.matches })
+  const agencyRoutes = matches.find(m=>m.routeId==="/app/agency/$slug");
+  const activeOrganization = agencyRoutes?.context.activeOrganization || initialOrganization;
 
   return (
     <DropdownMenu>
@@ -45,7 +35,7 @@ export function OrganizationSwitcher({
             className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
             size="lg"
           >
-            {isFetching && isFetching2 && pending ? (
+            {agencyRoutes?.status ==="pending" ? (
               <>
                 <Skeleton className="aspect-square size-8" />
                 <div className="flex w-full flex-col gap-1">

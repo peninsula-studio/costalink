@@ -1,9 +1,8 @@
 import {
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
 } from "@tanstack/react-query";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
   Bell,
@@ -39,16 +38,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { getSessionQueryOptions, signOutFn } from "@/lib/fn/auth";
+import { signOutFn } from "@/lib/fn/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 
 export function NavUser({ className }: { className?: ClassNameValue }) {
+  const { user } = useRouteContext({ from: "/app" })
+
   const { isMobile } = useSidebar();
 
   const { theme, setTheme } = useTheme();
-
-  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
 
   const router = useRouter();
   const qc = useQueryClient();
@@ -72,8 +71,6 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
     },
   });
 
-  if (!session) return null;
-
   return (
     <SidebarMenu className={cn(className)}>
       <SidebarMenuItem>
@@ -85,16 +82,16 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                 size="lg"
               >
                 <Avatar>
-                  <AvatarImage alt={session?.user.name} />
+                  <AvatarImage alt={user.name} />
                   <AvatarFallback>
                     <UserIcon />
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {session.user.name}
+                    {user.name}
                   </span>
-                  <span className="truncate text-xs">{session.user.email}</span>
+                  <span className="truncate text-xs">{user.email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
@@ -110,16 +107,16 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
             <DropdownMenuGroup>
               <DropdownMenuLabel className="flex items-center gap-2 font-light text-sm">
                 <Avatar>
-                  <AvatarImage alt={session.user.name} />
+                  <AvatarImage alt={user.name} />
                   <AvatarFallback>
                     <UserIcon className="size-4" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {session.user.name}
+                    {user.name}
                   </span>
-                  <span className="truncate text-xs">{session.user.email}</span>
+                  <span className="truncate text-xs">{user.email}</span>
                 </div>
               </DropdownMenuLabel>
             </DropdownMenuGroup>

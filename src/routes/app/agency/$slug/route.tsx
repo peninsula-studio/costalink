@@ -1,40 +1,32 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { useLayoutEffect } from "react";
-import { useAppCtx } from "@/components/app-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   getActiveOrganizationQueryOptions,
-  getFullOrganizationQueryOptions,
   setActiveOrganizationQueryOptions,
 } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/agency/$slug")({
   beforeLoad: async ({ context, params }) => {
-    const activeOrganization = await context.queryClient.ensureQueryData(
+    let activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
     if (activeOrganization?.slug !== params.slug) {
-      context.queryClient
+     activeOrganization = await context.queryClient
         .fetchQuery(
           setActiveOrganizationQueryOptions({
             userId: context.user.id,
             organizationSlug: params.slug,
           }),
         )
-        .then(() =>
-          context.queryClient.resetQueries(
-            getActiveOrganizationQueryOptions({ userId: context.user.id }),
-          ),
+        context.queryClient.resetQueries(
+          getActiveOrganizationQueryOptions({ userId: context.user.id }),
         );
-      // activeOrganization = await context.queryClient.ensureQueryData(
-      //   getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
-      // );
     }
-    // return { activeOrganization };
+    return {activeOrganization}
   },
-  loader: async ({ context, params }) => {
+  loader: async ({ context }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
-      getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
+      getActiveOrganizationQueryOptions({ userId: context.user.id })
     );
     if (!activeOrganization) throw redirect({ to: "/app" });
     return { activeOrganization };
@@ -53,11 +45,11 @@ export const Route = createFileRoute("/app/agency/$slug")({
 });
 
 function OrganizationLayout() {
-  const { activeOrganization } = Route.useLoaderData();
-  const { setActiveOrganization } = useAppCtx();
-  useLayoutEffect(() => {
-    setActiveOrganization(activeOrganization);
-  }, [activeOrganization, setActiveOrganization]);
+  // const { activeOrganization } = Route.useLoaderData();
+  // const { setActiveOrganization } = useAppCtx();
+  // useLayoutEffect(() => {
+  //   setActiveOrganization(activeOrganization);
+  // }, [activeOrganization, setActiveOrganization]);
 
   return (
     <main className="flex flex-col gap-y-6 p-6">

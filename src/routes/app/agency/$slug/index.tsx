@@ -25,13 +25,16 @@ import {
   TypographyLarge,
 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
-import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
+import { getActiveOrganizationQueryOptions, getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/agency/$slug/")({
   loader: async ({ context, params }) => {
+    // const activeOrganization = await context.queryClient.ensureQueryData(
+    //   getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
+    // );
     const activeOrganization = await context.queryClient.ensureQueryData(
-      getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
+      getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
     if (!activeOrganization) throw redirect({ to: "/app" });
     context.queryClient.ensureQueryData(
