@@ -1,3 +1,6 @@
+// Brought over form the following Gist which adapts next-theme to Tanstack Start:
+// https://gist.github.com/WellDone2094/16107a2a9476b28a5b394bee3fa1b8a3
+
 /*
   This file is adapted from next-themes to work with tanstack start.
   next-themes can be found at https://github.com/pacocoursey/next-themes under the MIT license.

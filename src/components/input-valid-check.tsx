@@ -7,20 +7,26 @@ import { Spinner } from "@/components/ui/spinner";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export function InputValidCheck({
-  isValidFn,
+  validCheckFn: isValidFn,
   ...props
 }: React.ComponentProps<typeof InputGroupInput> & {
-  isValidFn: (value: string) => Promise<boolean>;
+  validCheckFn: (value: string) => Promise<boolean>;
 }) {
   const [value, setValue] = React.useState<string>("");
+
+  React.useEffect(() => {
+    if (props.value) {
+      setValue(String(props.value));
+    } else {
+      setValue("");
+    }
+  }, [props.value]);
 
   const debouncedValue = useDebounce(value);
 
   const { data: isValid, isPending } = useQuery({
     queryKey: ["checkSlug", debouncedValue],
-    queryFn: async () => {
-      return await isValidFn(debouncedValue);
-    },
+    queryFn: async () => await isValidFn(debouncedValue),
   });
 
   return (

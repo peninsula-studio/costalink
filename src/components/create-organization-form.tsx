@@ -50,13 +50,13 @@ export function CreateOrganizationForm({
       resolver: zodResolver(createOrganizationFormSchema),
     });
 
-  const isValidFn = React.cache(async (val: string) => {
+  const validCheckFn = React.useCallback(async (val: string) => {
     const { data, error } = await authClient.organization.checkSlug({
       slug: val,
     });
     const result = error ? false : data.status;
     return result;
-  });
+  }, []);
 
   const submit = async ({
     name,
@@ -126,8 +126,8 @@ export function CreateOrganizationForm({
                     aria-invalid={!!formState.errors.slug}
                     autoComplete=""
                     id="slug"
-                    isValidFn={isValidFn}
                     placeholder=""
+                    validCheckFn={validCheckFn}
                     {...register("slug", {
                       required: true,
                       onChange: (e) => {

@@ -23,9 +23,10 @@ export function OrganizationSwitcher({
 }) {
   const { isMobile } = useSidebar();
 
-  const matches = useRouterState({ select: (s) => s.matches })
-  const agencyRoutes = matches.find(m=>m.routeId==="/app/agency/$slug");
-  const activeOrganization = agencyRoutes?.context.activeOrganization || initialOrganization;
+  const matches = useRouterState({ select: (s) => s.matches });
+  const agencyRoutes = matches.find((m) => m.routeId === "/app/agency/$slug");
+  const activeOrganization =
+    agencyRoutes?.context.activeOrganization || initialOrganization;
 
   return (
     <DropdownMenu>
@@ -35,7 +36,7 @@ export function OrganizationSwitcher({
             className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
             size="lg"
           >
-            {agencyRoutes?.status ==="pending" ? (
+            {agencyRoutes?.status === "pending" ? (
               <>
                 <Skeleton className="aspect-square size-8" />
                 <div className="flex w-full flex-col gap-1">

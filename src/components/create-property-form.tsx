@@ -126,7 +126,7 @@ export function CreatePropertyForm({
                     aria-invalid={!!formState.errors.slug}
                     autoComplete=""
                     id="slug"
-                    isValidFn={isValidFn}
+                    validCheckFn={isValidFn}
                     placeholder=""
                     {...register("slug", {
                       required: true,
