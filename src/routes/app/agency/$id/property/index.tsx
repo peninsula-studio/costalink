@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { TypographyLarge } from "@/components/ui/typography";
 
-export const Route = createFileRoute("/app/agency/$slug/property/")({
+export const Route = createFileRoute("/app/agency/$id/property/")({
   component: RouteComponent,
 });
 
@@ -11,14 +11,14 @@ function RouteComponent() {
 
   return (
     <>
-      <TypographyLarge>Hello "/app/agency/$slug/property/"!</TypographyLarge>
+      <TypographyLarge>Hello "/app/agency/$id/property/"!</TypographyLarge>
       <Button
         className="w-fit"
         nativeButton={false}
         render={
           <Link
-            params={{ slug: `${activeOrganization.slug}` }}
-            to="/app/agency/$slug/property/create"
+            params={{ id: `${activeOrganization.id}` }}
+            to="/app/agency/$id/property/create"
           >
             Property list
           </Link>

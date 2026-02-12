@@ -1,12 +1,14 @@
 import { Separator } from "@base-ui/react";
 import {
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import {
   createFileRoute,
   Outlet,
   redirect,
-  retainSearchParams,
+  useNavigate,
 } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import z from "zod";
 import { AppProvider } from "@/components/app-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -25,16 +27,13 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { $checkSessionCookieFn, getSessionQueryOptions } from "@/lib/fn/auth";
-import {
-  getActiveOrganizationQueryOptions,
-  setActiveOrganizationQueryOptions,
-} from "@/lib/fn/organization";
+import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { sessionCookieMiddleware } from "@/middleware/auth";
 import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
 
-const searchSchema = z.object({
-  agency: z.string().optional(),
-});
+// const searchSchema = z.object({
+//   agency: z.string().optional(),
+// });
 
 export const Route = createFileRoute("/app")({
   server: {
@@ -84,37 +83,22 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
-  // const { activeOrganization } = Route.useLoaderData();
+  const { activeOrganization } = Route.useLoaderData();
+
+  const navigate = useNavigate();
+
+  // const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+
+  if (activeOrganization) {
+    navigate({
+      to: "/app/agency/$id",
+      params: { id: activeOrganization.id },
+    });
+  }
 
   return (
-    <AppProvider initialOrg={undefined}>
-      <AppSidebar />
-      <SidebarInset>
-        {/* <div>Agency: {search?.agency}</div> */}
-        <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              className="mr-2 data-[orientation=vertical]:h-4"
-              orientation="vertical"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-        <Outlet />
-      </SidebarInset>
-    </AppProvider>
+    <>
+      <Outlet />
+    </>
   );
 }

@@ -24,7 +24,7 @@ export function OrganizationSwitcher({
   const { isMobile } = useSidebar();
 
   const matches = useRouterState({ select: (s) => s.matches });
-  const agencyRoutes = matches.find((m) => m.routeId === "/app/agency/$slug");
+  const agencyRoutes = matches.find((m) => m.routeId === "/app/agency/$id");
   const activeOrganization =
     agencyRoutes?.context.activeOrganization || initialOrganization;
 
@@ -74,9 +74,9 @@ export function OrganizationSwitcher({
               key={o.name}
               render={
                 <Link
-                  params={{ slug: o.slug }}
+                  params={{ id: o.id }}
                   preload={false}
-                  to="/app/agency/$slug"
+                  to="/app/agency/$id"
                 >
                   <Building2 className="size-3.5 shrink-0" />
                   {o.name}

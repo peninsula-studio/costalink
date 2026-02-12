@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 
-export const Route = createFileRoute("/app/agency/$slug/property/create")({
+export const Route = createFileRoute("/app/agency/$id/property/create")({
   loader: async ({ context }) => {
     const member = await context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
@@ -42,8 +42,8 @@ function RouteComponent() {
         nativeButton={false}
         render={
           <Link
-            params={{ slug: activeOrganization.slug }}
-            to="/app/agency/$slug/property"
+            params={{ id: activeOrganization.id }}
+            to="/app/agency/$id/property"
           >
             Property list
           </Link>

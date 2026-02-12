@@ -1,4 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -6,7 +13,10 @@ import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import {
+  getActiveOrganizationQueryOptions,
+  listOrganizationsQueryOptions,
+} from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
   loader: async ({ context }) => {
@@ -27,12 +37,25 @@ export const Route = createFileRoute("/app/")({
 });
 
 function AppIndexPage() {
-  const { session, organizations } = Route.useLoaderData();
+  const { organizations } = Route.useLoaderData();
+  const { user } = Route.useRouteContext();
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    getActiveOrganizationQueryOptions({ userId: user.id }),
+  );
+  const router = useRouter();
+
+  if (activeOrganization) {
+    router.buildAndCommitLocation({
+      to: "/app/agency/$id",
+      params: { id: activeOrganization.id },
+    });
+  }
 
   return (
     <main className="flex flex-col gap-y-6 p-6">
       <TypographyH2>Dashboard</TypographyH2>
-      {session?.user.role === "admin" && (
+      {user.role === "admin" && (
         <div>
           <Button nativeButton={false} render={<Link to="/app/admin"></Link>}>
             Admin panel
@@ -61,9 +84,9 @@ function AppIndexPage() {
             nativeButton={false}
             render={
               <Link
-                params={{ slug: o.slug }}
+                params={{ id: o.id }}
                 preload={false}
-                to="/app/agency/$slug"
+                to="/app/agency/$id"
               ></Link>
             }
           >

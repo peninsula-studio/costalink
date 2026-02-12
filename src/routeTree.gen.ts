@@ -19,13 +19,13 @@ import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAccountIndexRouteImport } from './routes/app/account/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AppAgencySlugRouteRouteImport } from './routes/app/agency/$slug/route'
-import { Route as AppAgencySlugIndexRouteImport } from './routes/app/agency/$slug/index'
+import { Route as AppAgencyIdRouteRouteImport } from './routes/app/agency/$id/route'
+import { Route as AppAgencyIdIndexRouteImport } from './routes/app/agency/$id/index'
 import { Route as AppAdminOrganizationIndexRouteImport } from './routes/app/admin/organization/index'
 import { Route as AppAdminOrganizationCreateRouteImport } from './routes/app/admin/organization/create'
 import { Route as AppAdminOrganizationIdRouteImport } from './routes/app/admin/organization/$id'
-import { Route as AppAgencySlugPropertyIndexRouteImport } from './routes/app/agency/$slug/property/index'
-import { Route as AppAgencySlugPropertyCreateRouteImport } from './routes/app/agency/$slug/property/create'
+import { Route as AppAgencyIdPropertyIndexRouteImport } from './routes/app/agency/$id/property/index'
+import { Route as AppAgencyIdPropertyCreateRouteImport } from './routes/app/agency/$id/property/create'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
@@ -76,15 +76,15 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppAgencySlugRouteRoute = AppAgencySlugRouteRouteImport.update({
-  id: '/agency/$slug',
-  path: '/agency/$slug',
+const AppAgencyIdRouteRoute = AppAgencyIdRouteRouteImport.update({
+  id: '/agency/$id',
+  path: '/agency/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppAgencySlugIndexRoute = AppAgencySlugIndexRouteImport.update({
+const AppAgencyIdIndexRoute = AppAgencyIdIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppAgencySlugRouteRoute,
+  getParentRoute: () => AppAgencyIdRouteRoute,
 } as any)
 const AppAdminOrganizationIndexRoute =
   AppAdminOrganizationIndexRouteImport.update({
@@ -103,17 +103,17 @@ const AppAdminOrganizationIdRoute = AppAdminOrganizationIdRouteImport.update({
   path: '/organization/$id',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
-const AppAgencySlugPropertyIndexRoute =
-  AppAgencySlugPropertyIndexRouteImport.update({
+const AppAgencyIdPropertyIndexRoute =
+  AppAgencyIdPropertyIndexRouteImport.update({
     id: '/property/',
     path: '/property/',
-    getParentRoute: () => AppAgencySlugRouteRoute,
+    getParentRoute: () => AppAgencyIdRouteRoute,
   } as any)
-const AppAgencySlugPropertyCreateRoute =
-  AppAgencySlugPropertyCreateRouteImport.update({
+const AppAgencyIdPropertyCreateRoute =
+  AppAgencyIdPropertyCreateRouteImport.update({
     id: '/property/create',
     path: '/property/create',
-    getParentRoute: () => AppAgencySlugRouteRoute,
+    getParentRoute: () => AppAgencyIdRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -123,16 +123,16 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/app/': typeof AppIndexRoute
-  '/app/agency/$slug': typeof AppAgencySlugRouteRouteWithChildren
+  '/app/agency/$id': typeof AppAgencyIdRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/account/': typeof AppAccountIndexRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/admin/organization/$id': typeof AppAdminOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
-  '/app/agency/$slug/': typeof AppAgencySlugIndexRoute
-  '/app/agency/$slug/property/create': typeof AppAgencySlugPropertyCreateRoute
-  '/app/agency/$slug/property/': typeof AppAgencySlugPropertyIndexRoute
+  '/app/agency/$id/': typeof AppAgencyIdIndexRoute
+  '/app/agency/$id/property/create': typeof AppAgencyIdPropertyCreateRoute
+  '/app/agency/$id/property/': typeof AppAgencyIdPropertyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -145,9 +145,9 @@ export interface FileRoutesByTo {
   '/app/admin/organization/$id': typeof AppAdminOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization': typeof AppAdminOrganizationIndexRoute
-  '/app/agency/$slug': typeof AppAgencySlugIndexRoute
-  '/app/agency/$slug/property/create': typeof AppAgencySlugPropertyCreateRoute
-  '/app/agency/$slug/property': typeof AppAgencySlugPropertyIndexRoute
+  '/app/agency/$id': typeof AppAgencyIdIndexRoute
+  '/app/agency/$id/property/create': typeof AppAgencyIdPropertyCreateRoute
+  '/app/agency/$id/property': typeof AppAgencyIdPropertyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -158,16 +158,16 @@ export interface FileRoutesById {
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/app/': typeof AppIndexRoute
-  '/app/agency/$slug': typeof AppAgencySlugRouteRouteWithChildren
+  '/app/agency/$id': typeof AppAgencyIdRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/account/': typeof AppAccountIndexRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/admin/organization/$id': typeof AppAdminOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/admin/organization/': typeof AppAdminOrganizationIndexRoute
-  '/app/agency/$slug/': typeof AppAgencySlugIndexRoute
-  '/app/agency/$slug/property/create': typeof AppAgencySlugPropertyCreateRoute
-  '/app/agency/$slug/property/': typeof AppAgencySlugPropertyIndexRoute
+  '/app/agency/$id/': typeof AppAgencyIdIndexRoute
+  '/app/agency/$id/property/create': typeof AppAgencyIdPropertyCreateRoute
+  '/app/agency/$id/property/': typeof AppAgencyIdPropertyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -178,16 +178,16 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/app/'
-    | '/app/agency/$slug'
+    | '/app/agency/$id'
     | '/api/auth/$'
     | '/app/account/'
     | '/app/admin/'
     | '/app/admin/organization/$id'
     | '/app/admin/organization/create'
     | '/app/admin/organization/'
-    | '/app/agency/$slug/'
-    | '/app/agency/$slug/property/create'
-    | '/app/agency/$slug/property/'
+    | '/app/agency/$id/'
+    | '/app/agency/$id/property/create'
+    | '/app/agency/$id/property/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -200,9 +200,9 @@ export interface FileRouteTypes {
     | '/app/admin/organization/$id'
     | '/app/admin/organization/create'
     | '/app/admin/organization'
-    | '/app/agency/$slug'
-    | '/app/agency/$slug/property/create'
-    | '/app/agency/$slug/property'
+    | '/app/agency/$id'
+    | '/app/agency/$id/property/create'
+    | '/app/agency/$id/property'
   id:
     | '__root__'
     | '/'
@@ -212,16 +212,16 @@ export interface FileRouteTypes {
     | '/_auth/sign-in'
     | '/_auth/sign-up'
     | '/app/'
-    | '/app/agency/$slug'
+    | '/app/agency/$id'
     | '/api/auth/$'
     | '/app/account/'
     | '/app/admin/'
     | '/app/admin/organization/$id'
     | '/app/admin/organization/create'
     | '/app/admin/organization/'
-    | '/app/agency/$slug/'
-    | '/app/agency/$slug/property/create'
-    | '/app/agency/$slug/property/'
+    | '/app/agency/$id/'
+    | '/app/agency/$id/property/create'
+    | '/app/agency/$id/property/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -303,19 +303,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/agency/$slug': {
-      id: '/app/agency/$slug'
-      path: '/agency/$slug'
-      fullPath: '/app/agency/$slug'
-      preLoaderRoute: typeof AppAgencySlugRouteRouteImport
+    '/app/agency/$id': {
+      id: '/app/agency/$id'
+      path: '/agency/$id'
+      fullPath: '/app/agency/$id'
+      preLoaderRoute: typeof AppAgencyIdRouteRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/agency/$slug/': {
-      id: '/app/agency/$slug/'
+    '/app/agency/$id/': {
+      id: '/app/agency/$id/'
       path: '/'
-      fullPath: '/app/agency/$slug/'
-      preLoaderRoute: typeof AppAgencySlugIndexRouteImport
-      parentRoute: typeof AppAgencySlugRouteRoute
+      fullPath: '/app/agency/$id/'
+      preLoaderRoute: typeof AppAgencyIdIndexRouteImport
+      parentRoute: typeof AppAgencyIdRouteRoute
     }
     '/app/admin/organization/': {
       id: '/app/admin/organization/'
@@ -338,19 +338,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminOrganizationIdRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
-    '/app/agency/$slug/property/': {
-      id: '/app/agency/$slug/property/'
+    '/app/agency/$id/property/': {
+      id: '/app/agency/$id/property/'
       path: '/property'
-      fullPath: '/app/agency/$slug/property/'
-      preLoaderRoute: typeof AppAgencySlugPropertyIndexRouteImport
-      parentRoute: typeof AppAgencySlugRouteRoute
+      fullPath: '/app/agency/$id/property/'
+      preLoaderRoute: typeof AppAgencyIdPropertyIndexRouteImport
+      parentRoute: typeof AppAgencyIdRouteRoute
     }
-    '/app/agency/$slug/property/create': {
-      id: '/app/agency/$slug/property/create'
+    '/app/agency/$id/property/create': {
+      id: '/app/agency/$id/property/create'
       path: '/property/create'
-      fullPath: '/app/agency/$slug/property/create'
-      preLoaderRoute: typeof AppAgencySlugPropertyCreateRouteImport
-      parentRoute: typeof AppAgencySlugRouteRoute
+      fullPath: '/app/agency/$id/property/create'
+      preLoaderRoute: typeof AppAgencyIdPropertyCreateRouteImport
+      parentRoute: typeof AppAgencyIdRouteRoute
     }
   }
 }
@@ -387,32 +387,32 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
   AppAdminRouteRouteChildren,
 )
 
-interface AppAgencySlugRouteRouteChildren {
-  AppAgencySlugIndexRoute: typeof AppAgencySlugIndexRoute
-  AppAgencySlugPropertyCreateRoute: typeof AppAgencySlugPropertyCreateRoute
-  AppAgencySlugPropertyIndexRoute: typeof AppAgencySlugPropertyIndexRoute
+interface AppAgencyIdRouteRouteChildren {
+  AppAgencyIdIndexRoute: typeof AppAgencyIdIndexRoute
+  AppAgencyIdPropertyCreateRoute: typeof AppAgencyIdPropertyCreateRoute
+  AppAgencyIdPropertyIndexRoute: typeof AppAgencyIdPropertyIndexRoute
 }
 
-const AppAgencySlugRouteRouteChildren: AppAgencySlugRouteRouteChildren = {
-  AppAgencySlugIndexRoute: AppAgencySlugIndexRoute,
-  AppAgencySlugPropertyCreateRoute: AppAgencySlugPropertyCreateRoute,
-  AppAgencySlugPropertyIndexRoute: AppAgencySlugPropertyIndexRoute,
+const AppAgencyIdRouteRouteChildren: AppAgencyIdRouteRouteChildren = {
+  AppAgencyIdIndexRoute: AppAgencyIdIndexRoute,
+  AppAgencyIdPropertyCreateRoute: AppAgencyIdPropertyCreateRoute,
+  AppAgencyIdPropertyIndexRoute: AppAgencyIdPropertyIndexRoute,
 }
 
-const AppAgencySlugRouteRouteWithChildren =
-  AppAgencySlugRouteRoute._addFileChildren(AppAgencySlugRouteRouteChildren)
+const AppAgencyIdRouteRouteWithChildren =
+  AppAgencyIdRouteRoute._addFileChildren(AppAgencyIdRouteRouteChildren)
 
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
-  AppAgencySlugRouteRoute: typeof AppAgencySlugRouteRouteWithChildren
+  AppAgencyIdRouteRoute: typeof AppAgencyIdRouteRouteWithChildren
   AppAccountIndexRoute: typeof AppAccountIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  AppAgencySlugRouteRoute: AppAgencySlugRouteRouteWithChildren,
+  AppAgencyIdRouteRoute: AppAgencyIdRouteRouteWithChildren,
   AppAccountIndexRoute: AppAccountIndexRoute,
 }
 

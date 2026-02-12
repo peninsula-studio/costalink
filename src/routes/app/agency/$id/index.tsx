@@ -25,18 +25,15 @@ import {
   TypographyLarge,
 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
-import { getActiveOrganizationQueryOptions, getFullOrganizationQueryOptions } from "@/lib/fn/organization";
+import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/agency/$slug/")({
+export const Route = createFileRoute("/app/agency/$id/")({
   loader: async ({ context, params }) => {
-    // const activeOrganization = await context.queryClient.ensureQueryData(
-    //   getFullOrganizationQueryOptions({ organizationSlug: params.slug }),
-    // );
     const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
-    if (!activeOrganization) throw redirect({ to: "/app" });
+    // if (!activeOrganization) throw redirect({ to: "/app" });
     context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
@@ -103,8 +100,8 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
               nativeButton={false}
               render={
                 <Link
-                  params={{ slug: activeOrganization.slug }}
-                  to="/app/agency/$slug/property/create"
+                  params={{ id: activeOrganization.id }}
+                  to="/app/agency/$id/property/create"
                 >
                   <PlusIcon /> Add Property
                 </Link>

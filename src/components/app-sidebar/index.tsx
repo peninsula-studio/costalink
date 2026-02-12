@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLoaderData, useRouteContext } from "@tanstack/react-router";
-import { type ComponentProps, Suspense } from "react";
+import type { ComponentProps } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,9 +8,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-  listOrganizationsQueryOptions,
-} from "@/lib/fn/organization";
+import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { OrganizationSwitcher } from "./organization-switcher";
