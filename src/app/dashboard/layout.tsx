@@ -1,24 +1,21 @@
-import { getCookieCache } from "better-auth/cookies";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { type ReactNode, Suspense } from "react";
+import type { ReactNode } from "react";
 import { AppProvider } from "@/components/app-provider";
-import { $getSession } from "@/lib/fn/auth";
+import { getSessionQueryOptions } from "@/lib/fn/query-options";
+import { getQueryClient } from "@/lib/get-query-client";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  // const session = await getCookieCache(await headers());
-  const session = await $getSession();
-  // const activeOrganization = await $getActiveOrganization();
+  const qc = getQueryClient();
+  const session = await qc.ensureQueryData({
+    ...getSessionQueryOptions(),
+    revalidateIfStale: true,
+  });
 
   if (!session) redirect("/sign-in");
-
-  // if (session.session.activeOrganizationId) {
-  //   redirect(`/dashboard/${session.session.activeOrganizationId}`);
-  // }
 
   return <AppProvider user={session.user}>{children}</AppProvider>;
 }

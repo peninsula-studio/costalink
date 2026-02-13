@@ -1,5 +1,4 @@
-import { headers } from "next/headers";
-import type { ComponentProps } from "react";
+import { type ComponentProps, Suspense } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -7,27 +6,26 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { auth } from "@/lib/auth";
-import { user } from "@/lib/db/schema";
 import { NavUser } from "./nav-user";
 import { OrganizationSwitcher } from "./organization-switcher";
 import { ProjectsMenu } from "./projects-group";
 
-export async function AppSidebar({
-  agencyId,
-  ...props
-}: { agencyId: string } & ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <OrganizationSwitcher />
+        <Suspense fallback={<div>Loading switcher...</div>}>
+          <OrganizationSwitcher />
+        </Suspense>
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain items={undefined} /> */}
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <Suspense fallback={<div>Loading NavUser...</div>}>
+          <NavUser />
+        </Suspense>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

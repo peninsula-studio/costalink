@@ -48,36 +48,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
 
   const { theme, setTheme } = useTheme();
 
-  // const { data: session } = useSuspenseQuery({
-  //   queryKey: userKeys.session(),
-  //   queryFn: async () => await authClient.getSession(),
-  // });
-
   const navigation = useRouter();
-
-  // const { mutate } = useMutation({
-  //   mutationKey: ["signOut"],
-  //   mutationFn: async () => await authClient.signOut(),
-  //   onError: (error) => {
-  //     console.error(`Sign-out error: ${error.message}`);
-  //     toast.error("Error", {
-  //       description: error.message || "Error while signing out",
-  //     });
-  //   },
-  //   onSuccess: async () => {
-  //     // await router.invalidate();
-  //     toast.info("Signed out successfully");
-  //     navigation.push("/sign-in");
-  //     // router.history.push("/sign-in");
-  //     return;
-  //   },
-  // });
-
-  // const { data: session } = authClient.useSession();
-  // const user = session?.user;
-
-  // if (!session) return null;
-  // const user = session.user;
 
   return (
     <SidebarMenu className={cn(className)}>

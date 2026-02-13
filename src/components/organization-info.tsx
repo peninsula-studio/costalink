@@ -3,18 +3,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HouseIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { TypographyH3 } from "@/components/ui/typography";
 import { getFullOrganizationQueryOptions } from "@/lib/fn/query-options";
 
-export default function AgencyPage({
-  params,
-}: {
-  params: Promise<{ agencyId: string }>;
-}) {
-  const { agencyId } = React.use(params);
-
+export function OrgInfo({ agencyId }: { agencyId: string }) {
   const { data: activeOrganization } = useSuspenseQuery(
     getFullOrganizationQueryOptions({ organizationId: agencyId }),
   );

@@ -1,7 +1,9 @@
 "use client";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useAppCtx } from "@/components/app-provider";
 import {
   DropdownMenu,
@@ -13,24 +15,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth/client";
+import { getFullOrganizationQueryOptions } from "@/lib/fn/query-options";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
-  const { user, activeOrganization } = useAppCtx();
+  const { user } = useAppCtx();
   const { data: organizations } = authClient.useListOrganizations();
-  // const { data: activeOrganization } = authClient.useActiveOrganization();
-  // const { data: session } = authClient.useSession();
-  // const user = session?.user;
-  // const { data: activeOrganization } = authClient.useActiveOrganization();
-  // const { data: activeOrganization } = useSuspenseQuery({
-  //   queryKey: organizationKeys.active({ userId: user.id }),
-  // });
+  const params = useParams();
 
-  // const matches = useRouterState({ select: (s) => s.matches });
-  // const agencyRoutes = matches.find((m) => m.routeId === "/app/agency/$slug");
-  // const activeOrganization =
-  //   agencyRoutes?.context.activeOrganization || initialOrganization;
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({
+      organizationId: params.agencyId as string,
+    }),
+  );
 
   return (
     <DropdownMenu>

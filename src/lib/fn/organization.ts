@@ -1,10 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import React from "react";
 import { auth } from "@/lib/auth";
 import type { ActiveOrganizationSelect } from "@/lib/fn/keys";
+import type { XOR } from "@/types/util";
 
 export async function $getListOrganizations() {
   try {
@@ -45,17 +46,26 @@ export async function $setActiveOrganization({
   }
 }
 
-export async function $getFullOrganization(props: {
-  organizationId?: string;
-  organizationSlug?: string;
-  membersLimit?: string | number;
-}) {
+export async function $getFullOrganization(
+  props: XOR<
+    {
+      organizationId: string;
+    },
+    { organizationSlug: string }
+  > & {
+    membersLimit?: string | number;
+  },
+) {
   try {
-    const organization = await auth.api.getFullOrganization({
+    const data = await auth.api.getFullOrganization({
       query: props,
       headers: await headers(),
     });
-    return organization;
+    if (data === null) {
+      throw Error(`Organization data can't be null!`);
+    } else {
+      return data;
+    }
   } catch (e) {
     console.error(`Error getting organization info: ${(e as Error).message}`);
     throw redirect("/dashboard");

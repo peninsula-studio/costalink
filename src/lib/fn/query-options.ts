@@ -8,6 +8,7 @@ import {
 } from "@/lib/fn/keys";
 import {
   $getActiveOrganization,
+  $getFullOrganization,
   $getListOrganizations,
   $setActiveOrganization,
 } from "@/lib/fn/organization";
@@ -42,18 +43,19 @@ export const getSessionQueryOptions = () =>
   });
 
 export const getFullOrganizationQueryOptions = (
-  props: Parameters<typeof organizationKeys.fullOrganization>[0],
+  props: Parameters<typeof $getFullOrganization>[0],
 ) =>
   queryOptions({
     queryKey: organizationKeys.fullOrganization(props),
-    queryFn: async () => {
-      try {
-        const { data } = await authClient.organization.getFullOrganization({
-          query: props,
-        });
-        return data;
-      } catch (e) {
-        throw e;
-      }
-    },
+    queryFn: () => $getFullOrganization(props),
+    // queryFn: async () => {
+    //   try {
+    //     const { data } = await authClient.organization.getFullOrganization({
+    //       query: props,
+    //     });
+    //     return data;
+    //   } catch (e) {
+    //     throw e;
+    //   }
+    // },
   });
