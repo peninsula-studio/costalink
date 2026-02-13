@@ -49,8 +49,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     advanced: {
-      //   // disableCSRFCheck: true,
-      //   // disableOriginCheck: true,
       disableCSRFCheck: env.NODE_ENV === "development",
       disableOriginCheck: env.NODE_ENV === "development",
     },
