@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@base-ui/react':
-        specifier: ^1.1.0
+        specifier: ^1.2.0
         version: 1.2.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@hookform/resolvers':
         specifier: ^5.2.2
@@ -30,7 +30,7 @@ importers:
         specifier: ^0.9.5
         version: 0.9.5(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(csstype@3.2.3)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.11)
       '@tanstack/react-query':
-        specifier: ^5.90.20
+        specifier: ^5.90.21
         version: 5.90.21(react@19.2.4)
       '@tanstack/react-query-devtools':
         specifier: ^5.91.3
@@ -72,11 +72,11 @@ importers:
         specifier: ^5.3.5
         version: 5.3.5
       lucide-react:
-        specifier: ^0.563.0
-        version: 0.563.0(react@19.2.4)
+        specifier: ^0.564.0
+        version: 0.564.0(react@19.2.4)
       nitro:
         specifier: npm:nitro-nightly@latest
-        version: nitro-nightly@3.0.1-20260212-144347-09d6aa6d(@azure/identity@4.13.0)(dotenv@17.2.4)(drizzle-orm@1.0.0-beta.9-e89174b(@neondatabase/serverless@1.0.2)(@types/mssql@9.1.9(@azure/core-client@1.10.1))(@types/pg@8.16.0)(mssql@11.0.1(@azure/core-client@1.10.1))(pg@8.18.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
+        version: nitro-nightly@3.0.1-20260212-144347-09d6aa6d(@azure/identity@4.13.0)(dotenv@17.3.1)(drizzle-orm@1.0.0-beta.9-e89174b(@neondatabase/serverless@1.0.2)(@types/mssql@9.1.9(@azure/core-client@1.10.1))(@types/pg@8.16.0)(mssql@11.0.1(@azure/core-client@1.10.1))(pg@8.18.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       pg:
         specifier: ^8.18.0
         version: 8.18.0
@@ -108,15 +108,15 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       vite-tsconfig-paths:
-        specifier: ^6.1.0
+        specifier: ^6.1.1
         version: 6.1.1(typescript@5.9.3)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       zod:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
       '@biomejs/biome':
-        specifier: 2.3.14
-        version: 2.3.14
+        specifier: 2.3.15
+        version: 2.3.15
       '@tanstack/devtools-vite':
         specifier: ^0.5.1
         version: 0.5.1(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
@@ -124,23 +124,23 @@ importers:
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/node':
-        specifier: ^25.2.2
+        specifier: ^25.2.3
         version: 25.2.3
       '@types/pg':
         specifier: ^8.16.0
         version: 8.16.0
       '@types/react':
-        specifier: ^19.2.13
+        specifier: ^19.2.14
         version: 19.2.14
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react':
-        specifier: ^5.1.3
+        specifier: ^5.1.4
         version: 5.1.4(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       dotenv:
-        specifier: ^17.2.4
-        version: 17.2.4
+        specifier: ^17.3.1
+        version: 17.3.1
       jsdom:
         specifier: ^28.0.0
         version: 28.0.0(@noble/hashes@2.0.1)
@@ -394,59 +394,59 @@ packages:
   '@better-fetch/fetch@1.1.21':
     resolution: {integrity: sha512-/ImESw0sskqlVR94jB+5+Pxjf+xBwDZF/N5+y2/q4EqD7IARUTSpPfIo8uf39SYpCxyOCtbyYpUrZ3F/k0zT4A==}
 
-  '@biomejs/biome@2.3.14':
-    resolution: {integrity: sha512-QMT6QviX0WqXJCaiqVMiBUCr5WRQ1iFSjvOLoTk6auKukJMvnMzWucXpwZB0e8F00/1/BsS9DzcKgWH+CLqVuA==}
+  '@biomejs/biome@2.3.15':
+    resolution: {integrity: sha512-u+jlPBAU2B45LDkjjNNYpc1PvqrM/co4loNommS9/sl9oSxsAQKsNZejYuUztvToB5oXi1tN/e62iNd6ESiY3g==}
     engines: {node: '>=14.21.3'}
     hasBin: true
 
-  '@biomejs/cli-darwin-arm64@2.3.14':
-    resolution: {integrity: sha512-UJGPpvWJMkLxSRtpCAKfKh41Q4JJXisvxZL8ChN1eNW3m/WlPFJ6EFDCE7YfUb4XS8ZFi3C1dFpxUJ0Ety5n+A==}
+  '@biomejs/cli-darwin-arm64@2.3.15':
+    resolution: {integrity: sha512-SDCdrJ4COim1r8SNHg19oqT50JfkI/xGZHSyC6mGzMfKrpNe/217Eq6y98XhNTc0vGWDjznSDNXdUc6Kg24jbw==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [darwin]
 
-  '@biomejs/cli-darwin-x64@2.3.14':
-    resolution: {integrity: sha512-PNkLNQG6RLo8lG7QoWe/hhnMxJIt1tEimoXpGQjwS/dkdNiKBLPv4RpeQl8o3s1OKI3ZOR5XPiYtmbGGHAOnLA==}
+  '@biomejs/cli-darwin-x64@2.3.15':
+    resolution: {integrity: sha512-RkyeSosBtn3C3Un8zQnl9upX0Qbq4E3QmBa0qjpOh1MebRbHhNlRC16jk8HdTe/9ym5zlfnpbb8cKXzW+vlTxw==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [darwin]
 
-  '@biomejs/cli-linux-arm64-musl@2.3.14':
-    resolution: {integrity: sha512-LInRbXhYujtL3sH2TMCH/UBwJZsoGwfQjBrMfl84CD4hL/41C/EU5mldqf1yoFpsI0iPWuU83U+nB2TUUypWeg==}
+  '@biomejs/cli-linux-arm64-musl@2.3.15':
+    resolution: {integrity: sha512-SSSIj2yMkFdSkXqASzIBdjySBXOe65RJlhKEDlri7MN19RC4cpez+C0kEwPrhXOTgJbwQR9QH1F4+VnHkC35pg==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@biomejs/cli-linux-arm64@2.3.14':
-    resolution: {integrity: sha512-KT67FKfzIw6DNnUNdYlBg+eU24Go3n75GWK6NwU4+yJmDYFe9i/MjiI+U/iEzKvo0g7G7MZqoyrhIYuND2w8QQ==}
+  '@biomejs/cli-linux-arm64@2.3.15':
+    resolution: {integrity: sha512-FN83KxrdVWANOn5tDmW6UBC0grojchbGmcEz6JkRs2YY6DY63sTZhwkQ56x6YtKhDVV1Unz7FJexy8o7KwuIhg==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@biomejs/cli-linux-x64-musl@2.3.14':
-    resolution: {integrity: sha512-KQU7EkbBBuHPW3/rAcoiVmhlPtDSGOGRPv9js7qJVpYTzjQmVR+C9Rfcz+ti8YCH+zT1J52tuBybtP4IodjxZQ==}
+  '@biomejs/cli-linux-x64-musl@2.3.15':
+    resolution: {integrity: sha512-dbjPzTh+ijmmNwojFYbQNMFp332019ZDioBYAMMJj5Ux9d8MkM+u+J68SBJGVwVeSHMYj+T9504CoxEzQxrdNw==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@biomejs/cli-linux-x64@2.3.14':
-    resolution: {integrity: sha512-ZsZzQsl9U+wxFrGGS4f6UxREUlgHwmEfu1IrXlgNFrNnd5Th6lIJr8KmSzu/+meSa9f4rzFrbEW9LBBA6ScoMA==}
+  '@biomejs/cli-linux-x64@2.3.15':
+    resolution: {integrity: sha512-T8n9p8aiIKOrAD7SwC7opiBM1LYGrE5G3OQRXWgbeo/merBk8m+uxJ1nOXMPzfYyFLfPlKF92QS06KN1UW+Zbg==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@biomejs/cli-win32-arm64@2.3.14':
-    resolution: {integrity: sha512-+IKYkj/pUBbnRf1G1+RlyA3LWiDgra1xpS7H2g4BuOzzRbRB+hmlw0yFsLprHhbbt7jUzbzAbAjK/Pn0FDnh1A==}
+  '@biomejs/cli-win32-arm64@2.3.15':
+    resolution: {integrity: sha512-puMuenu/2brQdgqtQ7geNwQlNVxiABKEZJhMRX6AGWcmrMO8EObMXniFQywy2b81qmC+q+SDvlOpspNwz0WiOA==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [win32]
 
-  '@biomejs/cli-win32-x64@2.3.14':
-    resolution: {integrity: sha512-oizCjdyQ3WJEswpb3Chdngeat56rIdSYK12JI3iI11Mt5T5EXcZ7WLuowzEaFPNJ3zmOQFliMN8QY1Pi+qsfdQ==}
+  '@biomejs/cli-win32-x64@2.3.15':
+    resolution: {integrity: sha512-kDZr/hgg+igo5Emi0LcjlgfkoGZtgIpJKhnvKTRmMBv6FF/3SDyEV4khBwqNebZIyMZTzvpca9sQNSXJ39pI2A==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
@@ -1915,8 +1915,8 @@ packages:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
     engines: {node: '>=12'}
 
-  dotenv@17.2.4:
-    resolution: {integrity: sha512-mudtfb4zRB4bVvdj0xRo+e6duH1csJRM8IukBqfTRvHotn9+LBXB8ynAidP9zHqoRC/fsllXgk4kCKlR21fIhw==}
+  dotenv@17.3.1:
+    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
     engines: {node: '>=12'}
 
   drizzle-kit@1.0.0-beta.9-e89174b:
@@ -2395,8 +2395,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.563.0:
-    resolution: {integrity: sha512-8dXPB2GI4dI8jV4MgUDGBeLdGk8ekfqVZ0BdLcrRzocGgG75ltNEmWS+gE7uokKF/0oSUuczNDT+g9hFJ23FkA==}
+  lucide-react@0.564.0:
+    resolution: {integrity: sha512-JJ8GVTQqFwuliifD48U6+h7DXEHdkhJ/E87kksGByII3qHxtPciVb8T8woQONHBQgHVOl7rSMrrip3SeVNy7Fg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -3492,39 +3492,39 @@ snapshots:
 
   '@better-fetch/fetch@1.1.21': {}
 
-  '@biomejs/biome@2.3.14':
+  '@biomejs/biome@2.3.15':
     optionalDependencies:
-      '@biomejs/cli-darwin-arm64': 2.3.14
-      '@biomejs/cli-darwin-x64': 2.3.14
-      '@biomejs/cli-linux-arm64': 2.3.14
-      '@biomejs/cli-linux-arm64-musl': 2.3.14
-      '@biomejs/cli-linux-x64': 2.3.14
-      '@biomejs/cli-linux-x64-musl': 2.3.14
-      '@biomejs/cli-win32-arm64': 2.3.14
-      '@biomejs/cli-win32-x64': 2.3.14
+      '@biomejs/cli-darwin-arm64': 2.3.15
+      '@biomejs/cli-darwin-x64': 2.3.15
+      '@biomejs/cli-linux-arm64': 2.3.15
+      '@biomejs/cli-linux-arm64-musl': 2.3.15
+      '@biomejs/cli-linux-x64': 2.3.15
+      '@biomejs/cli-linux-x64-musl': 2.3.15
+      '@biomejs/cli-win32-arm64': 2.3.15
+      '@biomejs/cli-win32-x64': 2.3.15
 
-  '@biomejs/cli-darwin-arm64@2.3.14':
+  '@biomejs/cli-darwin-arm64@2.3.15':
     optional: true
 
-  '@biomejs/cli-darwin-x64@2.3.14':
+  '@biomejs/cli-darwin-x64@2.3.15':
     optional: true
 
-  '@biomejs/cli-linux-arm64-musl@2.3.14':
+  '@biomejs/cli-linux-arm64-musl@2.3.15':
     optional: true
 
-  '@biomejs/cli-linux-arm64@2.3.14':
+  '@biomejs/cli-linux-arm64@2.3.15':
     optional: true
 
-  '@biomejs/cli-linux-x64-musl@2.3.14':
+  '@biomejs/cli-linux-x64-musl@2.3.15':
     optional: true
 
-  '@biomejs/cli-linux-x64@2.3.14':
+  '@biomejs/cli-linux-x64@2.3.15':
     optional: true
 
-  '@biomejs/cli-win32-arm64@2.3.14':
+  '@biomejs/cli-win32-arm64@2.3.15':
     optional: true
 
-  '@biomejs/cli-win32-x64@2.3.14':
+  '@biomejs/cli-win32-x64@2.3.15':
     optional: true
 
   '@clack/core@0.4.2':
@@ -4786,7 +4786,7 @@ snapshots:
 
   dotenv@16.6.1: {}
 
-  dotenv@17.2.4: {}
+  dotenv@17.3.1: {}
 
   drizzle-kit@1.0.0-beta.9-e89174b:
     dependencies:
@@ -5175,7 +5175,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.563.0(react@19.2.4):
+  lucide-react@0.564.0(react@19.2.4):
     dependencies:
       react: 19.2.4
 
@@ -5209,7 +5209,7 @@ snapshots:
 
   nf3@0.3.10: {}
 
-  nitro-nightly@3.0.1-20260212-144347-09d6aa6d(@azure/identity@4.13.0)(dotenv@17.2.4)(drizzle-orm@1.0.0-beta.9-e89174b(@neondatabase/serverless@1.0.2)(@types/mssql@9.1.9(@azure/core-client@1.10.1))(@types/pg@8.16.0)(mssql@11.0.1(@azure/core-client@1.10.1))(pg@8.18.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)):
+  nitro-nightly@3.0.1-20260212-144347-09d6aa6d(@azure/identity@4.13.0)(dotenv@17.3.1)(drizzle-orm@1.0.0-beta.9-e89174b(@neondatabase/serverless@1.0.2)(@types/mssql@9.1.9(@azure/core-client@1.10.1))(@types/pg@8.16.0)(mssql@11.0.1(@azure/core-client@1.10.1))(pg@8.18.0))(jiti@2.6.1)(lru-cache@11.2.6)(rollup@4.57.1)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.4(srvx@0.11.4)
@@ -5224,7 +5224,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       unstorage: 2.0.0-alpha.5(@azure/identity@4.13.0)(db0@0.3.4(drizzle-orm@1.0.0-beta.9-e89174b(@neondatabase/serverless@1.0.2)(@types/mssql@9.1.9(@azure/core-client@1.10.1))(@types/pg@8.16.0)(mssql@11.0.1(@azure/core-client@1.10.1))(pg@8.18.0)))(lru-cache@11.2.6)(ofetch@2.0.0-alpha.3)
     optionalDependencies:
-      dotenv: 17.2.4
+      dotenv: 17.3.1
       jiti: 2.6.1
       rollup: 4.57.1
       vite: 7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)

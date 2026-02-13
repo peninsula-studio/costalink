@@ -8,7 +8,7 @@ import {
   TypographyH3,
   TypographyH5,
 } from "@/components/ui/typography";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/admin/")({
   component: RouteComponent,
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/app/admin/")({
 
 function RouteComponent() {
   const { data: organizations } = useSuspenseQuery(
-    listOrganizationsQueryOptions(),
+    organizationListQueryOptions(),
   );
 
   return (

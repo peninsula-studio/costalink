@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { TypographyLarge } from "@/components/ui/typography";
 
-export const Route = createFileRoute("/app/agency/$id/property/")({
+export const Route = createFileRoute("/app/$agencyId/property/")({
   component: RouteComponent,
 });
 

@@ -28,20 +28,20 @@ import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/agency/$id/")({
-  loader: async ({ context, params }) => {
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    );
-    // if (!activeOrganization) throw redirect({ to: "/app" });
-    context.queryClient.ensureQueryData(
-      getActiveMemberQueryOptions({
-        userId: context.user.id,
-        organizationId: activeOrganization.id,
-      }),
-    );
-    return { activeOrganization };
-  },
+export const Route = createFileRoute("/app/$agencyId/")({
+  // loader: async ({ context, params }) => {
+  //   const activeOrganization = await context.queryClient.ensureQueryData(
+  //     getActiveOrganizationQueryOptions({ userId: context.user.id }),
+  //   );
+  //   // if (!activeOrganization) throw redirect({ to: "/app" });
+  //   context.queryClient.ensureQueryData(
+  //     getActiveMemberQueryOptions({
+  //       userId: context.user.id,
+  //       organizationId: activeOrganization.id,
+  //     }),
+  //   );
+  //   return { activeOrganization };
+  // },
   pendingComponent: () => (
     <div className="flex flex-col gap-y-6 p-6">
       <Skeleton className="h-12 w-md" />
@@ -55,10 +55,10 @@ export const Route = createFileRoute("/app/agency/$id/")({
 });
 
 function OrganizationPage() {
-  const { activeOrganization } = Route.useLoaderData();
+  const { activeOrganization } = Route.useRouteContext();
 
   return (
-    <>
+    <main className="flex flex-col gap-y-6 p-6">
       <TypographyH2>{activeOrganization.name}</TypographyH2>
       <TypographyLarge>{activeOrganization.id}</TypographyLarge>
 
@@ -70,12 +70,12 @@ function OrganizationPage() {
           <PropertySection organizationId={activeOrganization.id} />
         </Suspense>
       </section>
-    </>
+    </main>
   );
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
-  const { activeOrganization } = Route.useLoaderData();
+  const { activeOrganization } = Route.useRouteContext();
 
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
@@ -100,8 +100,8 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
               nativeButton={false}
               render={
                 <Link
-                  params={{ id: activeOrganization.id }}
-                  to="/app/agency/$id/property/create"
+                  params={{ agencyId: activeOrganization.id }}
+                  to="/app/$agencyId/property/create"
                 >
                   <PlusIcon /> Add Property
                 </Link>

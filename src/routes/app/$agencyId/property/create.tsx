@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 
-export const Route = createFileRoute("/app/agency/$id/property/create")({
+export const Route = createFileRoute("/app/$agencyId/property/create")({
   loader: async ({ context }) => {
     const member = await context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({

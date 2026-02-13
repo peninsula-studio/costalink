@@ -15,7 +15,7 @@ import { TypographyH2 } from "@/components/ui/typography";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import {
   getActiveOrganizationQueryOptions,
-  listOrganizationsQueryOptions,
+  organizationListQueryOptions,
 } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
@@ -24,8 +24,17 @@ export const Route = createFileRoute("/app/")({
       getSessionQueryOptions(),
     );
     const organizations = await context.queryClient.ensureQueryData(
-      listOrganizationsQueryOptions(),
+      organizationListQueryOptions(),
     );
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions({ userId: context.user.id }),
+    );
+    // if (activeOrganization) {
+    //   throw redirect({
+    //     to: "/app/$agencyId",
+    //     params: { agencyId: activeOrganization.id },
+    //   });
+    // }
     return { session, organizations };
   },
   pendingComponent: () => (
@@ -39,18 +48,6 @@ export const Route = createFileRoute("/app/")({
 function AppIndexPage() {
   const { organizations } = Route.useLoaderData();
   const { user } = Route.useRouteContext();
-
-  const { data: activeOrganization } = useSuspenseQuery(
-    getActiveOrganizationQueryOptions({ userId: user.id }),
-  );
-  const router = useRouter();
-
-  if (activeOrganization) {
-    router.buildAndCommitLocation({
-      to: "/app/agency/$id",
-      params: { id: activeOrganization.id },
-    });
-  }
 
   return (
     <main className="flex flex-col gap-y-6 p-6">
@@ -84,9 +81,9 @@ function AppIndexPage() {
             nativeButton={false}
             render={
               <Link
-                params={{ id: o.id }}
+                params={{ agencyId: o.id }}
                 preload={false}
-                to="/app/agency/$id"
+                to="/app/$agencyId"
               ></Link>
             }
           >

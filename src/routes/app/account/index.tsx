@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
-import { listOrganizationsQueryOptions } from "@/lib/fn/organization";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 import { setDefaultOrganizationFn } from "@/lib/fn/user";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/app/account/")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const organizations = await context.queryClient.ensureQueryData(
-      listOrganizationsQueryOptions(),
+      organizationListQueryOptions(),
     );
     return { organizations };
   },

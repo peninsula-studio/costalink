@@ -43,7 +43,7 @@ export const Route = createFileRoute("/app")({
   // search: {
   //   middlewares: [retainSearchParams(["agency"])],
   // },
-  beforeLoad: async ({ context, location, search }) => {
+  beforeLoad: async ({ context, location }) => {
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
@@ -56,12 +56,27 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions({ userId: session.user.id }),
+    );
+    if (location.pathname === "/app" && activeOrganization) {
+      throw redirect({
+        to: "/app/$agencyId",
+        params: { agencyId: activeOrganization.id },
+      });
+    }
     return { user: session.user };
   },
-  loader: async ({ context }) => {
+  loader: async ({ context, route }) => {
     const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
+    if (route.path === "/app" && activeOrganization) {
+      throw redirect({
+        to: "/app/$agencyId",
+        params: { agencyId: activeOrganization.id },
+      });
+    }
     return { activeOrganization };
   },
   pendingComponent: () => (
@@ -79,26 +94,26 @@ export const Route = createFileRoute("/app")({
       </SidebarInset>
     </>
   ),
-  component: AppLayout,
+  component: () => <Outlet />,
 });
 
-function AppLayout() {
-  const { activeOrganization } = Route.useLoaderData();
-
-  const navigate = useNavigate();
-
-  // const { data: session } = useSuspenseQuery(getSessionQueryOptions());
-
-  if (activeOrganization) {
-    navigate({
-      to: "/app/agency/$id",
-      params: { id: activeOrganization.id },
-    });
-  }
-
-  return (
-    <>
-      <Outlet />
-    </>
-  );
-}
+// function AppLayout() {
+//   const { activeOrganization } = Route.useLoaderData();
+//
+//   const navigate = useNavigate();
+//
+//   // const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+//
+//   if (activeOrganization) {
+//     navigate({
+//       to: "/app/$agencyId",
+//       params: { agencyId: activeOrganization.id },
+//     });
+//   }
+//
+//   return (
+//     <>
+//       <Outlet />
+//     </>
+//   );
+// }
