@@ -1,0 +1,98 @@
+"use client";
+
+import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
+import Link from "next/link";
+import { useAppCtx } from "@/components/app-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
+import { authClient } from "@/lib/auth/client";
+
+export function OrganizationSwitcher() {
+  const { isMobile } = useSidebar();
+
+  const { user, activeOrganization } = useAppCtx();
+  const { data: organizations } = authClient.useListOrganizations();
+  // const { data: activeOrganization } = authClient.useActiveOrganization();
+  // const { data: session } = authClient.useSession();
+  // const user = session?.user;
+  // const { data: activeOrganization } = authClient.useActiveOrganization();
+  // const { data: activeOrganization } = useSuspenseQuery({
+  //   queryKey: organizationKeys.active({ userId: user.id }),
+  // });
+
+  // const matches = useRouterState({ select: (s) => s.matches });
+  // const agencyRoutes = matches.find((m) => m.routeId === "/app/agency/$slug");
+  // const activeOrganization =
+  //   agencyRoutes?.context.activeOrganization || initialOrganization;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <SidebarMenuButton
+            className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
+            size="lg"
+          >
+            {
+              <>
+                <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
+                  <UserIcon className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">
+                    {activeOrganization?.name || user.name}
+                  </span>
+                </div>
+                <ChevronsUpDown className="ml-auto" />
+              </>
+            }
+          </SidebarMenuButton>
+        }
+      />
+      <DropdownMenuContent
+        align={isMobile ? "center" : "start"}
+        side={isMobile ? "bottom" : "left"}
+        sideOffset={4}
+      >
+        <DropdownMenuGroup className="space-y-1">
+          {organizations?.map((o, index) => (
+            <DropdownMenuItem
+              aria-selected={o.id === activeOrganization?.id}
+              className="gap-2 p-2"
+              key={o.name}
+              nativeButton={false}
+              render={
+                <Link
+                  className="w-full"
+                  href={`/dashboard/${o.id}`}
+                  // params={{ slug: o.slug }}
+                  // preload={false}
+                  // onMouseDown={async () => {
+                  //   // await $setActiveOrganization({ organizationSlug: o.slug })
+                  //   await authClient.organization
+                  //     .setActive({
+                  //       organizationSlug: o.slug,
+                  //     })
+                  //     .then(() => router.refresh());
+                  // }}
+                  type="button"
+                >
+                  <Building2 className="size-3.5 shrink-0" />
+                  {o.name}
+                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                </Link>
+              }
+            ></DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
