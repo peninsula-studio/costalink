@@ -8,8 +8,8 @@ import { type ActiveOrganizationSelect, organizationKeys } from "@/lib/fn/keys";
 import type { XOR } from "@/types/util";
 
 export async function $getListOrganizations(props: { headers: Headers }) {
-  "use cache";
-  cacheTag(...organizationKeys.list());
+  // "use cache";
+  // cacheTag(...organizationKeys.list());
   try {
     const organizationList = await auth.api.listOrganizations(props);
     return organizationList;
@@ -25,11 +25,12 @@ export async function $getListOrganizations(props: { headers: Headers }) {
 export async function $setActiveOrganization({
   organizationId,
   organizationSlug,
-}: ActiveOrganizationSelect) {
+  headers,
+}: ActiveOrganizationSelect & { headers: Headers }) {
   try {
     const data = await auth.api.setActiveOrganization({
       body: { organizationId, organizationSlug },
-      headers: await headers(),
+      headers: headers,
     });
     if (organizationId === null) {
       return null;
@@ -54,15 +55,14 @@ export async function $getFullOrganization(
     { organizationSlug: string }
   > & {
     membersLimit?: string | number;
-    headers: Headers;
   },
 ) {
-  "use cache";
-  cacheTag(...organizationKeys.fullOrganization(props));
+  // "use cache";
+  // cacheTag(...organizationKeys.fullOrganization(props));
   try {
     const data = await auth.api.getFullOrganization({
       query: props,
-      headers: props.headers,
+      headers: await headers(),
     });
     if (data === null) {
       throw Error(`Organization data can't be null!`);

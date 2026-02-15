@@ -9,10 +9,8 @@ import { userKeys } from "@/lib/fn/keys";
 export async function $getSession(props: {
   headers: Awaited<ReturnType<typeof headers>>;
 }) {
-  "use cache";
-  cacheTag(userKeys.session());
   try {
-    const session = await auth.api.getSession(props);
+    const session = await auth.api.getSession({ headers: await headers() });
     return session;
   } catch (error) {
     // Auth check failed (network error, etc.) - redirect to login

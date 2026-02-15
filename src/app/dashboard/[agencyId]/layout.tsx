@@ -1,5 +1,6 @@
 import { Separator } from "@base-ui/react";
-import { headers } from "next/headers";
+import { unstable_noStore } from "next/cache";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import type { ReactNode } from "react";
@@ -28,23 +29,24 @@ export default async function DashboardLayout({
   children: ReactNode;
   params: Promise<{ agencyId: string }>;
 }) {
-  await connection();
-
   const { agencyId } = await params;
   const reqHeaders = await headers();
 
   const session = await $getSession({ headers: reqHeaders });
 
-  $setActiveOrganization({ organizationId: agencyId });
-
   if (!session) redirect("/sign-in");
 
   const activeOrgPromise = $getFullOrganization({
     organizationId: agencyId,
-    headers: reqHeaders,
   });
 
   const orgListPromise = $getListOrganizations({ headers: reqHeaders });
+
+  unstable_noStore();
+  await $setActiveOrganization({
+    organizationId: agencyId,
+    headers: reqHeaders,
+  });
 
   return (
     <AppProvider

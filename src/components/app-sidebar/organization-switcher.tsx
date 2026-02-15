@@ -19,7 +19,7 @@ export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
   return (
-    <DropdownMenu>
+    <DropdownMenu >
       <DropdownMenuTrigger
         render={
           <SidebarMenuButton

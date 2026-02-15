@@ -1,5 +1,4 @@
 import { HouseIcon } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TypographyH3 } from "@/components/ui/typography";
@@ -12,11 +11,8 @@ export default async function AgencyPage({
 }) {
   const { agencyId } = await params;
 
-  const reqHeaders = await headers();
-
   const activeOrganization = await $getFullOrganization({
     organizationId: agencyId,
-    headers: reqHeaders,
   });
 
   return (

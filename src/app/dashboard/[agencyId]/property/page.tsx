@@ -12,11 +12,8 @@ export default async function PropertiesPage({
 }) {
   const { agencyId } = await params;
 
-  const reqHeaders = await headers();
-
   const fullOrganization = await $getFullOrganization({
     organizationId: agencyId,
-    headers: reqHeaders,
   });
 
   return (
