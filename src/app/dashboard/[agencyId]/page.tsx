@@ -1,32 +1,32 @@
-"use client";
-
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { HouseIcon } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { TypographyH3 } from "@/components/ui/typography";
-import { getFullOrganizationQueryOptions } from "@/lib/fn/query-options";
+import { $getFullOrganization } from "@/lib/fn/organization";
 
-export default function AgencyPage({
+export default async function AgencyPage({
   params,
 }: {
   params: Promise<{ agencyId: string }>;
 }) {
-  const { agencyId } = React.use(params);
+  const { agencyId } = await params;
 
-  const { data: activeOrganization } = useSuspenseQuery(
-    getFullOrganizationQueryOptions({ organizationId: agencyId }),
-  );
+  const reqHeaders = await headers();
+
+  const activeOrganization = await $getFullOrganization({
+    organizationId: agencyId,
+    headers: reqHeaders,
+  });
 
   return (
     <>
-      <TypographyH3>{activeOrganization?.name}</TypographyH3>
+      <TypographyH3>{activeOrganization.name}</TypographyH3>
       <Button
         className="w-fit"
         nativeButton={false}
         render={
-          <Link href={`/dashboard/${activeOrganization?.id}/property`}>
+          <Link href={`/dashboard/${activeOrganization.id}/property`}>
             <HouseIcon />
             Property
           </Link>

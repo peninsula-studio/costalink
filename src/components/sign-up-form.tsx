@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Link, useRouter } from "@tanstack/react-router";
-import { setPassword } from "better-auth/api";
 import { CheckCircle2, CheckIcon, Eye, EyeClosed, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,10 +25,9 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
-import { signUpFn } from "@/lib/fn/auth";
+import { authClient } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
-import type { FileRouteTypes } from "@/routeTree.gen";
 
 export function SignUpForm({
   onSuccess,
@@ -36,7 +35,7 @@ export function SignUpForm({
   ...props
 }: React.ComponentProps<typeof Card> & {
   onSuccess?: () => void;
-  callbackUrl?: FileRouteTypes["to"];
+  callbackUrl?: string;
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -91,9 +90,10 @@ export function SignUpForm({
   };
 
   const { mutate } = useMutation({
-    mutationFn: async (data: z.infer<typeof signUpFormSchema>) => {
+    mutationFn: async (props: z.infer<typeof signUpFormSchema>) => {
       clearErrors();
-      return await signUpFn({ data });
+      const { data } = await authClient.signUp.email(props);
+      return data;
     },
     onError: (e) => {
       setError("root", { message: "Error en la creación de sesión" });
@@ -101,8 +101,8 @@ export function SignUpForm({
       toast.error("Credenciales incorrectas");
     },
     onSuccess: (data) => {
-      toast.success(`Bienvenido ${data.user.name || ""}`);
-      router.navigate({ to: callbackUrl });
+      toast.success(`Bienvenido ${data?.user.name || ""}`);
+      router.push(`${callbackUrl}`);
     },
   });
 
@@ -268,7 +268,8 @@ export function SignUpForm({
                   {/*   Sign up with Google */}
                   {/* </Button> */}
                   <FieldDescription className="px-6 text-center">
-                    Already have an account? <Link to="/sign-in">Sign in</Link>
+                    Already have an account?{" "}
+                    <Link href="/sign-in">Sign in</Link>
                   </FieldDescription>
                 </Field>
               </FieldGroup>

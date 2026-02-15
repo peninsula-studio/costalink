@@ -1,4 +1,5 @@
-import { Link, useRouter } from "@tanstack/react-router";
+"use client"
+
 import {
   BookOpen,
   Bot,
@@ -9,6 +10,8 @@ import {
   SquareTerminal,
   UsersIcon,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ClassNameValue } from "tailwind-merge";
 import {
   Collapsible,
@@ -129,8 +132,7 @@ export const NavMain = ({
     }[];
   }[];
 }) => {
-  const router = useRouter();
-  const pathName = router.basepath;
+  const pathname = usePathname();
 
   return (
     <>
@@ -138,9 +140,9 @@ export const NavMain = ({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              isActive={pathName === "/app"}
+              isActive={pathname === "/dashboard"}
               render={
-                <Link preload={false} to={"/app"}>
+                <Link href="/dashboard">
                   <HomeIcon />
                   Dashboard
                 </Link>
@@ -180,7 +182,7 @@ export const NavMain = ({
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton
                             render={
-                              <Link to={subItem.url}>
+                              <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
                               </Link>
                             }

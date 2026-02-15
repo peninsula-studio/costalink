@@ -1,21 +1,18 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import type { ReactNode } from "react";
-import { AppProvider } from "@/components/app-provider";
-import { getSessionQueryOptions } from "@/lib/fn/query-options";
-import { getQueryClient } from "@/lib/get-query-client";
+import { $getSession } from "@/lib/fn/auth";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const qc = getQueryClient();
-  const session = await qc.ensureQueryData({
-    ...getSessionQueryOptions(),
-    revalidateIfStale: true,
-  });
+  const reqHeaders = await headers();
+  const session = await $getSession({ headers: reqHeaders });
 
   if (!session) redirect("/sign-in");
 
-  return <AppProvider user={session.user}>{children}</AppProvider>;
+  return children;
 }

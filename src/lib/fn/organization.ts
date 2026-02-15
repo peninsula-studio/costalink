@@ -1,17 +1,17 @@
 "use server";
 
+import { cacheTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import React from "react";
 import { auth } from "@/lib/auth";
-import type { ActiveOrganizationSelect } from "@/lib/fn/keys";
+import { type ActiveOrganizationSelect, organizationKeys } from "@/lib/fn/keys";
 import type { XOR } from "@/types/util";
 
-export async function $getListOrganizations() {
+export async function $getListOrganizations(props: { headers: Headers }) {
+  "use cache";
+  cacheTag(...organizationKeys.list());
   try {
-    const organizationList = await auth.api.listOrganizations({
-      headers: await headers(),
-    });
+    const organizationList = await auth.api.listOrganizations(props);
     return organizationList;
   } catch (error) {
     // Setting active Organization failed (network error, etc.) - redirect to dashboard
@@ -54,12 +54,15 @@ export async function $getFullOrganization(
     { organizationSlug: string }
   > & {
     membersLimit?: string | number;
+    headers: Headers;
   },
 ) {
+  "use cache";
+  cacheTag(...organizationKeys.fullOrganization(props));
   try {
     const data = await auth.api.getFullOrganization({
       query: props,
-      headers: await headers(),
+      headers: props.headers,
     });
     if (data === null) {
       throw Error(`Organization data can't be null!`);

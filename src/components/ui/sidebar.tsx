@@ -467,7 +467,7 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
 function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
-      className={cn("group/menu-item list-none relative", className)}
+      className={cn("group/menu-item relative list-none", className)}
       data-sidebar="menu-item"
       data-slot="sidebar-menu-item"
       {...props}

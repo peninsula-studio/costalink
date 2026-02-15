@@ -1,6 +1,5 @@
 "use server";
 
-import { queryOptions } from "@tanstack/react-query";
 import { db } from "@/lib/db";
 
 export const $getAgencyProperties = async ({
@@ -20,14 +19,3 @@ export const $getAgencyProperties = async ({
     throw new Error("Error getting organizations");
   }
 };
-
-// export const getPropertiesQueryOptions = ({
-//   organizationId,
-// }: {
-//   organizationId: string;
-// }) =>
-//   queryOptions({
-//     queryKey: ["property", "list", organizationId],
-//     queryFn: async () =>
-//       await getOrganizationPropertiesFn({ data: { organizationId } }),
-//   });

@@ -4,10 +4,12 @@ import React, { createContext, type ReactNode } from "react";
 import type { auth } from "@/lib/auth";
 
 export type ActiveOrganization = typeof auth.$Infer.ActiveOrganization;
+export type OrganizationList = (typeof auth.$Infer.Organization)[];
 export type User = typeof auth.$Infer.Session.user;
 
 type AppCtxProps = {
-  // activeOrganization: ActiveOrganization;
+  activeOrgPromise: Promise<ActiveOrganization | null>;
+  orgListPromise: Promise<OrganizationList>;
   // setActiveOrganization: Dispatch<SetStateAction<ActiveOrganization>>;
   user: User;
   // activeAgencyId: string;
@@ -17,12 +19,14 @@ type AppCtxProps = {
 const AppCtx = createContext({} as AppCtxProps);
 
 export function AppProvider({
-  // activeOrganization,
+  activeOrgPromise,
   user,
+  orgListPromise,
   // activeAgencyId,
   children,
 }: {
-  // activeOrganization: ActiveOrganization;
+  activeOrgPromise: Promise<ActiveOrganization | null>;
+  orgListPromise: Promise<OrganizationList>;
   user: User;
   // activeAgencyId: string;
   children: Readonly<ReactNode>;
@@ -31,7 +35,11 @@ export function AppProvider({
   //   useState<ActiveOrganization>(initialOrg);
   // const [user, setUser] = useState<User>(initialUser);
 
-  return <AppCtx value={{ user }}>{children}</AppCtx>;
+  return (
+    <AppCtx value={{ user, activeOrgPromise, orgListPromise }}>
+      {children}
+    </AppCtx>
+  );
 }
 
 export function useAppCtx() {

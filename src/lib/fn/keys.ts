@@ -12,31 +12,30 @@ export type ActiveOrganizationSelect = {
 };
 
 export const userKeys = {
-  all: () => ["user"] as const,
-  session: () => [...userKeys.all(), "session"] as const,
-  list: () => [...userKeys.all(), "list"] as const,
+  all: () => String(["user"]),
+  session: () => String([...userKeys.all(), "session"]),
+  list: () => String([...userKeys.all(), "list"]),
   // signUp: () => ["signUp"] as const,
 };
 
 export const organizationKeys = {
-  all: () => ["organization"] as const,
-  list: () => [...organizationKeys.all(), "list"] as const,
-  active: ({ userId }: UserId) =>
-    [...organizationKeys.all(), "active", userId] as const,
+  all: () => String(["organization"]),
+  list: () => String([...organizationKeys.all(), "list"]),
+  active: () => String([...organizationKeys.all(), "active"]),
   fullOrganization: (data: OrganizationSelect = {}) =>
-    [
+    String([
       ...organizationKeys.all(),
       "fullOrganization",
-      data.organizationId || data.organizationSlug,
-    ] as const,
+      String(data.organizationId || data.organizationSlug),
+    ]),
   setActive: (data: UserId) =>
     // setActive: (data: UserId & ActiveOrganizationSelect) =>
-    [
+    String([
       ...organizationKeys.all(),
       "setActive",
       data.userId,
       // data.organizationId || data.organizationSlug,
-    ] as const,
+    ]),
 };
 
 export const memberKeys = {

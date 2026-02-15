@@ -1,17 +1,18 @@
 "use server";
 
+import { cacheTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { userKeys } from "@/lib/fn/keys";
 
-// export async function $checkSessionCookie() {
-//   const sessionCookie = getSessionCookie(getRequest());
-//   return sessionCookie;
-// }
-
-export async function $getSession() {
+export async function $getSession(props: {
+  headers: Awaited<ReturnType<typeof headers>>;
+}) {
+  "use cache";
+  cacheTag(userKeys.session());
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await auth.api.getSession(props);
     return session;
   } catch (error) {
     // Auth check failed (network error, etc.) - redirect to login

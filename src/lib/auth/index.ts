@@ -8,6 +8,12 @@ import { getInitialOrganization } from "@/lib/db/get-initial-organization";
 import * as schema from "@/lib/db/schema";
 
 export const auth = betterAuth({
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 60 * 24 * 7, // Cache duration in seconds (7 days)
+    },
+  },
   database: drizzleAdapter(db, {
     schema: schema,
     provider: "pg", // or "pg" or "mysql"

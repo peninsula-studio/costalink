@@ -23,17 +23,14 @@ export default function DashboardLoading() {
     <>
       <Sidebar>
         <SidebarHeader>
-          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-10 w-full" />
         </SidebarHeader>
         <SidebarContent>
-          <SidebarGroup className="mt-6 gap-y-4">
+          <SidebarGroup className="mt-2 gap-y-4">
             <Skeleton className="mb-2 h-6 w-4/5" />
             <Skeleton className="h-4 w-2/5 rounded-sm" />
             <Skeleton className="h-4 w-2/3 rounded-sm" />
             <Skeleton className="h-4 w-3/5 rounded-sm" />
-
-            {/* <Skeleton className="h-4 w-2/3" /> */}
-            {/* <Skeleton className="h-4 w-2/3" /> */}
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>

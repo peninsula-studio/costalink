@@ -1,6 +1,6 @@
 import { SignInForm } from "@/components/sign-in-form";
 
-export default function SignInPage() {
+export default async function SignInPage() {
   return (
     <div className="flex min-h-[calc(100svh-var(--topnav-h))] w-full items-center justify-center p-4 md:py-8">
       <SignInForm

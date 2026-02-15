@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
-import "./src/env"
+import "./src/env";
 
 const nextConfig: NextConfig = {
-  // cacheComponents: true,
+  cacheComponents: true,
 };
 
 export default nextConfig;

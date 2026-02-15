@@ -1,8 +1,9 @@
 import { Separator } from "@base-ui/react";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
-import { type ReactNode, Suspense } from "react";
+import type { ReactNode } from "react";
+import { AppProvider } from "@/components/app-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -13,12 +14,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { $setActiveOrganization } from "@/lib/fn/organization";
+import { $getSession } from "@/lib/fn/auth";
 import {
-  getFullOrganizationQueryOptions,
-  getSessionQueryOptions,
-} from "@/lib/fn/query-options";
-import { getQueryClient } from "@/lib/get-query-client";
+  $getFullOrganization,
+  $getListOrganizations,
+  $setActiveOrganization,
+} from "@/lib/fn/organization";
 
 export default async function DashboardLayout({
   children,
@@ -27,23 +28,30 @@ export default async function DashboardLayout({
   children: ReactNode;
   params: Promise<{ agencyId: string }>;
 }) {
-  const { agencyId } = await params;
-
   await connection();
-  const qc = getQueryClient();
 
-  const session = await qc.ensureQueryData(getSessionQueryOptions());
+  const { agencyId } = await params;
+  const reqHeaders = await headers();
 
-  if (session?.session.activeOrganizationId !== agencyId) {
-    $setActiveOrganization({ organizationId: agencyId });
-  }
+  const session = await $getSession({ headers: reqHeaders });
 
-  void qc.prefetchQuery(
-    getFullOrganizationQueryOptions({ organizationId: agencyId }),
-  );
+  $setActiveOrganization({ organizationId: agencyId });
+
+  if (!session) redirect("/sign-in");
+
+  const activeOrgPromise = $getFullOrganization({
+    organizationId: agencyId,
+    headers: reqHeaders,
+  });
+
+  const orgListPromise = $getListOrganizations({ headers: reqHeaders });
 
   return (
-    <>
+    <AppProvider
+      activeOrgPromise={activeOrgPromise}
+      orgListPromise={orgListPromise}
+      user={session.user}
+    >
       <AppSidebar />
       <SidebarInset>
         <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -68,14 +76,8 @@ export default async function DashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <main className="flex flex-col gap-y-6 p-6">
-          <Suspense fallback={<div>Loading agency page stuff...</div>}>
-            <HydrationBoundary state={dehydrate(qc)}>
-              {children}
-            </HydrationBoundary>
-          </Suspense>
-        </main>
+        <main className="flex flex-col gap-y-6 p-6">{children}</main>
       </SidebarInset>
-    </>
+    </AppProvider>
   );
 }
