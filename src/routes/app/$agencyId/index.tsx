@@ -24,24 +24,10 @@ import {
   TypographyH3,
   TypographyLarge,
 } from "@/components/ui/typography";
-import { getActiveMemberQueryOptions } from "@/lib/fn/member";
-import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId/")({
-  // loader: async ({ context, params }) => {
-  //   const activeOrganization = await context.queryClient.ensureQueryData(
-  //     getActiveOrganizationQueryOptions({ userId: context.user.id }),
-  //   );
-  //   // if (!activeOrganization) throw redirect({ to: "/app" });
-  //   context.queryClient.ensureQueryData(
-  //     getActiveMemberQueryOptions({
-  //       userId: context.user.id,
-  //       organizationId: activeOrganization.id,
-  //     }),
-  //   );
-  //   return { activeOrganization };
-  // },
   pendingComponent: () => (
     <div className="flex flex-col gap-y-6 p-6">
       <Skeleton className="h-12 w-md" />
@@ -55,7 +41,14 @@ export const Route = createFileRoute("/app/$agencyId/")({
 });
 
 function OrganizationPage() {
-  const { activeOrganization } = Route.useRouteContext();
+  const { agencyId } = Route.useParams();
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: agencyId }),
+  );
+
+  if (!activeOrganization) {
+    throw redirect({ to: "/app" });
+  }
 
   return (
     <main className="flex flex-col gap-y-6 p-6">
@@ -75,11 +68,18 @@ function OrganizationPage() {
 }
 
 const PropertySection = ({ organizationId }: { organizationId: string }) => {
-  const { activeOrganization } = Route.useRouteContext();
+  const { agencyId } = Route.useParams();
 
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: agencyId }),
+  );
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
   );
+
+  if (!activeOrganization) {
+    return null;
+  }
 
   return (
     <div className="flex items-start gap-2 *:max-w-md *:border *:border-border">

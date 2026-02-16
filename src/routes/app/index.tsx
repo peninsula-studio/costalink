@@ -61,81 +61,51 @@ function AppIndexPage() {
   const { user } = Route.useRouteContext();
 
   return (
-    <>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              className="mr-2 data-[orientation=vertical]:h-4"
-              orientation="vertical"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-        <main className="flex flex-col gap-y-6 p-6">
-          <TypographyH2>Dashboard</TypographyH2>
-          {user.role === "admin" && (
-            <div>
-              <Button
-                nativeButton={false}
-                render={<Link to="/app/admin"></Link>}
-              >
-                Admin panel
-              </Button>
-            </div>
-          )}
-          <div className="flex gap-2">
-            <Button
-              onClick={() => toast.success("Success toast")}
-              variant="default"
-            >
-              Toast success
-            </Button>
-            <Button
-              onClick={() => toast.error("Error toast")}
-              variant="destructive"
-            >
-              Toast error
-            </Button>
-          </div>
-          <div className="flex flex-col gap-4 py-10">
-            {organizations?.map((o, i) => (
-              <Button
-                className="flex w-fit items-center"
-                key={o.name}
-                nativeButton={false}
-                render={
-                  <Link
-                    params={{ agencyId: o.id }}
-                    preload={false}
-                    to="/app/$agencyId"
-                  ></Link>
-                }
-              >
-                <Building2 className="stroke-white/80" />
-                {o.name}
-                <DropdownMenuShortcut className="text-white/70">
-                  ⌘{i + 1}
-                </DropdownMenuShortcut>
-              </Button>
-            ))}
-          </div>
-        </main>
-      </SidebarInset>
-    </>
+    <main className="flex flex-col gap-y-6 p-6">
+      <TypographyH2>Dashboard</TypographyH2>
+      {user.role === "admin" && (
+        <div>
+          <Button nativeButton={false} render={<Link to="/app/admin"></Link>}>
+            Admin panel
+          </Button>
+        </div>
+      )}
+      <div className="flex gap-2">
+        <Button
+          onClick={() => toast.success("Success toast")}
+          variant="default"
+        >
+          Toast success
+        </Button>
+        <Button
+          onClick={() => toast.error("Error toast")}
+          variant="destructive"
+        >
+          Toast error
+        </Button>
+      </div>
+      <div className="flex flex-col gap-4 py-10">
+        {organizations?.map((o, i) => (
+          <Button
+            className="flex w-fit items-center"
+            key={o.name}
+            nativeButton={false}
+            render={
+              <Link
+                params={{ agencyId: o.id }}
+                preload={false}
+                to="/app/$agencyId"
+              ></Link>
+            }
+          >
+            <Building2 className="stroke-white/80" />
+            {o.name}
+            <DropdownMenuShortcut className="text-white/70">
+              ⌘{i + 1}
+            </DropdownMenuShortcut>
+          </Button>
+        ))}
+      </div>
+    </main>
   );
 }

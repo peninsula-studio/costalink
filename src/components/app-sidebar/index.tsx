@@ -10,12 +10,15 @@ import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { OrganizationSwitcher } from "./organization-switcher";
 import { ProjectsMenu } from "./projects-group";
+import { Skeleton } from "../ui/skeleton";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <OrganizationSwitcher />
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <OrganizationSwitcher />
+        </Suspense>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={undefined} />

@@ -1,4 +1,3 @@
-import { Separator } from "@base-ui/react";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -18,48 +17,36 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   getActiveOrganizationQueryOptions,
+  getFullOrganizationQueryOptions,
   setActiveOrganizationQueryOptions,
 } from "@/lib/fn/organization";
+import { Separator } from "@/components/ui/separator";
+import { Suspense } from "react";
+import { AppProvider } from "@/components/app-provider";
 
 export const Route = createFileRoute("/app/$agencyId")({
   beforeLoad: async ({ context, params }) => {
-    let activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
+    context.queryClient.fetchQuery(
+      setActiveOrganizationQueryOptions({
+        userId: context.user.id,
+        organizationId: params.agencyId,
+      }),
     );
-    if (activeOrganization?.id !== params.agencyId) {
-      activeOrganization = await context.queryClient.fetchQuery(
-        setActiveOrganizationQueryOptions({
-          userId: context.user.id,
-          organizationId: params.agencyId,
-        }),
-      );
-      context.queryClient.resetQueries(
-        getActiveOrganizationQueryOptions({ userId: context.user.id }),
-      );
-    }
-    if (!activeOrganization) throw redirect({ to: "/app" });
-    return { activeOrganization };
+  },
+  loader: async ({ context, params }) => {
+    context.queryClient.ensureQueryData(
+      getFullOrganizationQueryOptions({ organizationId: params.agencyId }),
+    );
   },
   pendingComponent: () => (
     <>
-      <Sidebar>
-        <SidebarHeader>
-          <Skeleton className="h-12 w-full" />
-        </SidebarHeader>
-      </Sidebar>
-      <SidebarInset>
-        <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <Skeleton className="h-6 w-full" />
-        </header>
-        {/* <Outlet /> */}
-      </SidebarInset>
+      <div>Loading $agencyId/route...</div>
     </>
   ),
   component: OrganizationLayout,
 });
 
 function OrganizationLayout() {
-  // const { activeOrganization } = Route.useLoaderData();
   // const { setActiveOrganization } = useAppCtx();
   // useLayoutEffect(() => {
   //   setActiveOrganization(activeOrganization);

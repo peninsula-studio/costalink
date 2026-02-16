@@ -1,8 +1,12 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useRouteContext } from "@tanstack/react-router";
+import {
+  useIsFetching,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
 import React, { Suspense } from "react";
-import { useAppCtx } from "@/components/app-provider";
+import { ActiveOrganization, useAppCtx } from "@/components/app-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,11 +19,27 @@ import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   getActiveOrganizationQueryOptions,
+  getFullOrganizationQueryOptions,
   organizationListQueryOptions,
 } from "@/lib/fn/organization";
+import type { User } from "better-auth";
+import { organizationKeys } from "@/lib/fn/keys";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
+
+  const { user } = useRouteContext({ from: "/app" });
+  const { agencyId } = useParams({ from: "/app/$agencyId" });
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: agencyId }),
+  );
+  const { data: organizationList } = useSuspenseQuery(
+    organizationListQueryOptions(),
+  );
+  const isFetching = useIsFetching({
+    queryKey: organizationKeys.setActive({ userId: user.id }),
+  });
 
   return (
     <DropdownMenu>
@@ -29,8 +49,9 @@ export function OrganizationSwitcher() {
             className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
             size="lg"
           >
+            {isFetching}
             <Suspense fallback={<Skeleton className="h-10 w-full" />}>
-              <Trigger />
+              <Trigger activeOrganization={activeOrganization} user={user} />
             </Suspense>
           </SidebarMenuButton>
         }
@@ -49,7 +70,10 @@ export function OrganizationSwitcher() {
               </>
             }
           >
-            <GroupContent />
+            <GroupContent
+              activeOrganization={activeOrganization}
+              organizationList={organizationList}
+            />
           </Suspense>
         </DropdownMenuGroup>
       </DropdownMenuContent>
@@ -57,12 +81,13 @@ export function OrganizationSwitcher() {
   );
 }
 
-function Trigger() {
-  const { user } = useRouteContext({ from: "/app" });
-  const { data: activeOrganization } = useSuspenseQuery(
-    getActiveOrganizationQueryOptions({ userId: user.id }),
-  );
-
+function Trigger({
+  user,
+  activeOrganization,
+}: {
+  user: User;
+  activeOrganization: ActiveOrganization;
+}) {
   return (
     <>
       <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
@@ -82,16 +107,13 @@ function Trigger() {
   );
 }
 
-function GroupContent() {
-  const { user } = useRouteContext({ from: "/app" });
-
-  const { data: activeOrganization } = useSuspenseQuery(
-    getActiveOrganizationQueryOptions({ userId: user.id }),
-  );
-  const { data: organizationList } = useSuspenseQuery(
-    organizationListQueryOptions(),
-  );
-
+function GroupContent({
+  organizationList,
+  activeOrganization,
+}: {
+  organizationList: ActiveOrganization[];
+  activeOrganization: ActiveOrganization;
+}) {
   return (
     <>
       {organizationList?.map((o, index) => (
