@@ -1,3 +1,6 @@
+"use client";
+
+import { useParams } from "next/navigation";
 import { type ComponentProps, Suspense } from "react";
 import { NavMain } from "@/components/app-sidebar/nav-main";
 import {
@@ -11,14 +14,20 @@ import { NavUser } from "./nav-user";
 import { OrganizationSwitcher } from "./organization-switcher";
 import { ProjectsMenu } from "./projects-group";
 
-export async function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const params = useParams();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={undefined} />
+        {params.agencyId && (
+          <>
+            <NavMain items={undefined} />
+          </>
+        )}
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>

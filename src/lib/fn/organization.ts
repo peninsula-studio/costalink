@@ -1,4 +1,4 @@
-"use server";
+"server only";
 
 import { cacheTag } from "next/cache";
 import { headers } from "next/headers";
@@ -7,11 +7,13 @@ import { auth } from "@/lib/auth";
 import { type ActiveOrganizationSelect, organizationKeys } from "@/lib/fn/keys";
 import type { XOR } from "@/types/util";
 
-export async function $getListOrganizations(props: { headers: Headers }) {
+export async function $getListOrganizations() {
   // "use cache";
   // cacheTag(...organizationKeys.list());
   try {
-    const organizationList = await auth.api.listOrganizations(props);
+    const organizationList = await auth.api.listOrganizations({
+      headers: await headers(),
+    });
     return organizationList;
   } catch (error) {
     // Setting active Organization failed (network error, etc.) - redirect to dashboard
@@ -25,12 +27,11 @@ export async function $getListOrganizations(props: { headers: Headers }) {
 export async function $setActiveOrganization({
   organizationId,
   organizationSlug,
-  headers,
-}: ActiveOrganizationSelect & { headers: Headers }) {
+}: ActiveOrganizationSelect) {
   try {
     const data = await auth.api.setActiveOrganization({
       body: { organizationId, organizationSlug },
-      headers: headers,
+      headers: await headers(),
     });
     if (organizationId === null) {
       return null;

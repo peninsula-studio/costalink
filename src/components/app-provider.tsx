@@ -8,8 +8,8 @@ export type OrganizationList = (typeof auth.$Infer.Organization)[];
 export type User = typeof auth.$Infer.Session.user;
 
 type AppCtxProps = {
-  activeOrgPromise: Promise<ActiveOrganization | null>;
-  orgListPromise: Promise<OrganizationList>;
+  // activeOrgPromise: Promise<ActiveOrganization | null>;
+  organizationList: OrganizationList;
   // setActiveOrganization: Dispatch<SetStateAction<ActiveOrganization>>;
   user: User;
   // activeAgencyId: string;
@@ -19,14 +19,12 @@ type AppCtxProps = {
 const AppCtx = createContext({} as AppCtxProps);
 
 export function AppProvider({
-  activeOrgPromise,
   user,
-  orgListPromise,
-  // activeAgencyId,
+  organizationList,
   children,
 }: {
-  activeOrgPromise: Promise<ActiveOrganization | null>;
-  orgListPromise: Promise<OrganizationList>;
+  // activeOrgPromise: Promise<ActiveOrganization | null>;
+  organizationList: OrganizationList;
   user: User;
   // activeAgencyId: string;
   children: Readonly<ReactNode>;
@@ -35,11 +33,7 @@ export function AppProvider({
   //   useState<ActiveOrganization>(initialOrg);
   // const [user, setUser] = useState<User>(initialUser);
 
-  return (
-    <AppCtx value={{ user, activeOrgPromise, orgListPromise }}>
-      {children}
-    </AppCtx>
-  );
+  return <AppCtx value={{ user, organizationList }}>{children}</AppCtx>;
 }
 
 export function useAppCtx() {

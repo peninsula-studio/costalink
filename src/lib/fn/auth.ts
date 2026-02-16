@@ -3,12 +3,11 @@
 import { cacheTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import React from "react";
 import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
 
-export async function $getSession(props: {
-  headers: Awaited<ReturnType<typeof headers>>;
-}) {
+export const $getSession = React.cache(async () => {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     return session;
@@ -16,7 +15,7 @@ export async function $getSession(props: {
     // Auth check failed (network error, etc.) - redirect to login
     throw redirect("/sign-in");
   }
-}
+});
 
 // export const signUpFn = createServerFn()
 //   .inputValidator((data: z.infer<typeof signUpFormSchema>) => data)

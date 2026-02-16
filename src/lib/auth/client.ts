@@ -3,6 +3,7 @@ import {
   inferAdditionalFields,
   organizationClient,
 } from "better-auth/client/plugins";
+import { nextCookies } from "better-auth/next-js";
 import { createAuthClient } from "better-auth/react";
 import { env } from "@/env";
 import type { auth } from "@/lib/auth";
