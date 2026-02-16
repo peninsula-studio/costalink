@@ -16,7 +16,7 @@ export default async function AgencyPage({
   });
 
   return (
-    <>
+    <main className="flex flex-col gap-y-6 p-6">
       <TypographyH3>{activeOrganization.name}</TypographyH3>
       <Button
         className="w-fit"
@@ -28,6 +28,6 @@ export default async function AgencyPage({
           </Link>
         }
       ></Button>
-    </>
+    </main>
   );
 }

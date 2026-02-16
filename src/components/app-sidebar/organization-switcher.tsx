@@ -1,6 +1,13 @@
 "use client";
 
-import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
+import {
+  Building2,
+  ChevronsUpDown,
+  PlusIcon,
+  Settings,
+  UserIcon,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAppCtx } from "@/components/app-provider";
@@ -9,9 +16,11 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 
 export function OrganizationSwitcher() {
@@ -74,13 +83,34 @@ export function OrganizationSwitcher() {
                   // }}
                   type="button"
                 >
-                  <Building2 className="size-3.5 shrink-0" />
+                  <Building2 className="size-4 shrink-0" />
                   {o.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </Link>
               }
             ></DropdownMenuItem>
           ))}
+
+          <DropdownMenuSeparator />
+
+          {params.agencyId && (
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                render={
+                  <Link href={`/dashboard/${params.agencyId}/settings`}>
+                    <Settings className="size-4 shrink-0" /> Agency Settings
+                  </Link>
+                }
+              ></DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link href={`/dashboard/${params.agencyId}/settings`}>
+                    <UserPlus className="size-4 shrink-0" /> Invite Members
+                  </Link>
+                }
+              ></DropdownMenuItem>
+            </DropdownMenuGroup>
+          )}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

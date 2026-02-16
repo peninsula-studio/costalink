@@ -1,5 +1,4 @@
 import { HouseIcon } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TypographyLarge } from "@/components/ui/typography";
@@ -17,7 +16,7 @@ export default async function PropertiesPage({
   });
 
   return (
-    <>
+    <main className="flex flex-col gap-y-6 p-6">
       <TypographyLarge>Properites</TypographyLarge>
       <Button
         className="w-fit"
@@ -29,6 +28,6 @@ export default async function PropertiesPage({
           </Link>
         }
       ></Button>
-    </>
+    </main>
   );
 }
