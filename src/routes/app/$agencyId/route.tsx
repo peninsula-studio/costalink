@@ -13,27 +13,31 @@ import {
 
 export const Route = createFileRoute("/app/$agencyId")({
   beforeLoad: async ({ context, params }) => {
-    let activeOrganization = await context.queryClient.ensureQueryData(
+    const activeOrganization = await context.queryClient.ensureQueryData(
       getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
     if (activeOrganization?.id !== params.agencyId) {
-      activeOrganization = await context.queryClient.fetchQuery(
-        setActiveOrganizationQueryOptions({
-          userId: context.user.id,
-          organizationId: params.agencyId,
-        }),
-      );
-      context.queryClient.resetQueries(
-        getActiveOrganizationQueryOptions({ userId: context.user.id }),
-      );
+      context.queryClient
+        .fetchQuery(
+          setActiveOrganizationQueryOptions({
+            userId: context.user.id,
+            organizationId: params.agencyId,
+          }),
+        )
+        .then(() => {
+          context.queryClient.resetQueries(
+            getActiveOrganizationQueryOptions({ userId: context.user.id }),
+          );
+        });
     }
-    if (!activeOrganization) throw redirect({ to: "/app" });
-    return { activeOrganization };
+    // if (!activeOrganization) throw redirect({ to: "/app" });
+    // return { activeOrganization };
   },
   loader: async ({ context, params }) => {
-    context.queryClient.ensureQueryData(
+    const fullOrganization = await context.queryClient.ensureQueryData(
       getFullOrganizationQueryOptions({ organizationId: params.agencyId }),
     );
+    return { fullOrganization };
   },
   pendingComponent: () => (
     <>
@@ -44,13 +48,14 @@ export const Route = createFileRoute("/app/$agencyId")({
 });
 
 function OrganizationLayout() {
-  const { activeOrganization } = Route.useRouteContext();
+  // const { activeOrganization } = Route.useRouteContext();
+  const { fullOrganization } = Route.useLoaderData();
 
   const { setActiveOrganization } = useAppCtx();
 
   useLayoutEffect(() => {
-    setActiveOrganization(activeOrganization);
-  }, [activeOrganization]);
+    setActiveOrganization(fullOrganization);
+  }, [fullOrganization]);
 
   return <Outlet />;
 }

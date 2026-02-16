@@ -1,3 +1,5 @@
+import type { XOR } from "@/types/util";
+
 type UserId = { userId: string };
 
 export type OrganizationSelect = {
@@ -5,11 +7,14 @@ export type OrganizationSelect = {
   organizationId?: string;
 };
 
-export type ActiveOrganizationSelect = {
-  organizationSlug?: string;
-} & {
-  organizationId?: string | null;
-};
+export type ActiveOrganizationSelect = XOR<
+  {
+    organizationSlug: string;
+  },
+  {
+    organizationId: string | null;
+  }
+>;
 
 export const userKeys = {
   all: () => ["user"] as const,

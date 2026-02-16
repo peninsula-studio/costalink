@@ -53,23 +53,20 @@ export const Route = createFileRoute("/app")({
     //   ...getActiveOrganizationQueryOptions({ userId: session.user.id }),
     //   revalidateIfStale: true,
     // });
-    const initialOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: session.user.id }),
-    );
-    return { user: session.user, initialOrganization };
+    return { user: session.user };
   },
-  // loader: async ({ context, route }) => {
-  //   const activeOrganization = await context.queryClient.ensureQueryData(
-  //     getActiveOrganizationQueryOptions({ userId: context.user.id }),
-  //   );
-  //   if (route.path === "/app" && activeOrganization) {
-  //     throw redirect({
-  //       to: "/app/$agencyId",
-  //       params: { agencyId: activeOrganization.id },
-  //     });
-  //   }
-  //   return { activeOrganization };
-  // },
+  loader: async ({ context }) => {
+    const initialOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions({ userId: context.user.id }),
+    );
+    // if (route.path === "/app" && initialOrganization) {
+    //   throw redirect({
+    //     to: "/app/$agencyId",
+    //     params: { agencyId: initialOrganization.id },
+    //   });
+    // }
+    return { initialOrganization };
+  },
   pendingComponent: () => (
     <>
       <Sidebar>
@@ -88,7 +85,7 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
-  const { initialOrganization } = Route.useRouteContext();
+  const { initialOrganization } = Route.useLoaderData();
 
   return (
     <AppProvider initialOrg={initialOrganization}>
