@@ -1,8 +1,6 @@
 import { Separator } from "@base-ui/react";
-import { unstable_noStore } from "next/cache";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import type { ReactNode } from "react";
 import { AppProvider } from "@/components/app-provider";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -42,7 +40,6 @@ export default async function DashboardLayout({
 
   const orgListPromise = $getListOrganizations({ headers: reqHeaders });
 
-  unstable_noStore();
   await $setActiveOrganization({
     organizationId: agencyId,
     headers: reqHeaders,
