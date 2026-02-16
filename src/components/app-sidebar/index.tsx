@@ -6,6 +6,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { OrganizationSwitcher } from "./organization-switcher";
@@ -15,16 +16,16 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <OrganizationSwitcher />
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <OrganizationSwitcher />
+        </Suspense>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={undefined} />
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>
-        <Suspense fallback={<div>Loading NavUser...</div>}>
-          <NavUser />
-        </Suspense>
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

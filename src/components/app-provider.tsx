@@ -1,26 +1,34 @@
-import React, { createContext, type ReactNode } from "react";
+import React, {
+  createContext,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+  useState,
+} from "react";
 import type { auth } from "@/lib/auth";
 
+type ActiveOrganization = typeof auth.$Infer.ActiveOrganization | null;
 
 type AppCtxProps = {
-  activeOrgId: string;
+  activeOrganization: ActiveOrganization;
+  setActiveOrganization: Dispatch<SetStateAction<ActiveOrganization>>;
 };
 
 const AppCtx = createContext({} as AppCtxProps);
 
 export function AppProvider({
-  activeOrgId,
+  initialOrg,
   children,
 }: {
-  activeOrgId: string;
+  initialOrg: ActiveOrganization;
   children: Readonly<ReactNode>;
 }) {
-  // const [activeOrganization, setActiveOrganization] =
-  //   useState<ActiveOrganization>(initialOrg);
+  const [activeOrganization, setActiveOrganization] =
+    useState<ActiveOrganization>(initialOrg);
   // const [user, setUser] = useState<User>(initialUser);
 
   return (
-    <AppCtx value={{ activeOrgId }}>
+    <AppCtx value={{ activeOrganization, setActiveOrganization }}>
       {children}
     </AppCtx>
   );
