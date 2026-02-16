@@ -1,12 +1,8 @@
-import {
-  useIsFetching,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useIsFetching, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
+import type { User } from "better-auth";
 import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
 import React, { Suspense } from "react";
-import { ActiveOrganization, useAppCtx } from "@/components/app-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,13 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { auth } from "@/lib/auth";
+import { organizationKeys } from "@/lib/fn/keys";
 import {
-  getActiveOrganizationQueryOptions,
   getFullOrganizationQueryOptions,
   organizationListQueryOptions,
 } from "@/lib/fn/organization";
-import type { User } from "better-auth";
-import { organizationKeys } from "@/lib/fn/keys";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
@@ -31,15 +26,12 @@ export function OrganizationSwitcher() {
   const { user } = useRouteContext({ from: "/app" });
   const { agencyId } = useParams({ from: "/app/$agencyId" });
 
-  const { data: activeOrganization } = useSuspenseQuery(
+  const { data: activeOrganization } = useQuery(
     getFullOrganizationQueryOptions({ organizationId: agencyId }),
   );
-  const { data: organizationList } = useSuspenseQuery(
+  const { data: organizationList } = useQuery(
     organizationListQueryOptions(),
   );
-  const isFetching = useIsFetching({
-    queryKey: organizationKeys.setActive({ userId: user.id }),
-  });
 
   return (
     <DropdownMenu>
@@ -49,10 +41,7 @@ export function OrganizationSwitcher() {
             className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground **:data-[slot=skeleton]:bg-sidebar-accent"
             size="lg"
           >
-            {isFetching}
-            <Suspense fallback={<Skeleton className="h-10 w-full" />}>
-              <Trigger activeOrganization={activeOrganization} user={user} />
-            </Suspense>
+            <Trigger />
           </SidebarMenuButton>
         }
       ></DropdownMenuTrigger>
@@ -62,32 +51,20 @@ export function OrganizationSwitcher() {
         sideOffset={4}
       >
         <DropdownMenuGroup className="space-y-1">
-          <Suspense
-            fallback={
-              <>
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </>
-            }
-          >
-            <GroupContent
-              activeOrganization={activeOrganization}
-              organizationList={organizationList}
-            />
-          </Suspense>
+          <GroupContent />
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
-function Trigger({
-  user,
-  activeOrganization,
-}: {
-  user: User;
-  activeOrganization: ActiveOrganization;
-}) {
+function Trigger() {
+  const { agencyId } = useParams({ from: "/app/$agencyId" });
+  const { user } = useRouteContext({ from: "/app/$agencyId" });
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: agencyId }),
+  );
+
   return (
     <>
       <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
@@ -107,13 +84,17 @@ function Trigger({
   );
 }
 
-function GroupContent({
-  organizationList,
-  activeOrganization,
-}: {
-  organizationList: ActiveOrganization[];
-  activeOrganization: ActiveOrganization;
-}) {
+function GroupContent() {
+  const { user } = useRouteContext({ from: "/app" });
+  const { agencyId } = useParams({ from: "/app/$agencyId" });
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: agencyId }),
+  );
+  const { data: organizationList } = useSuspenseQuery(
+    organizationListQueryOptions(),
+  );
+
   return (
     <>
       {organizationList?.map((o, index) => (

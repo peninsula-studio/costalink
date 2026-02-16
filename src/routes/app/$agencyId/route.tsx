@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarHeader,
@@ -20,18 +21,22 @@ import {
   getFullOrganizationQueryOptions,
   setActiveOrganizationQueryOptions,
 } from "@/lib/fn/organization";
-import { Separator } from "@/components/ui/separator";
-import { Suspense } from "react";
-import { AppProvider } from "@/components/app-provider";
 
 export const Route = createFileRoute("/app/$agencyId")({
   beforeLoad: async ({ context, params }) => {
-    context.queryClient.fetchQuery(
-      setActiveOrganizationQueryOptions({
-        userId: context.user.id,
-        organizationId: params.agencyId,
-      }),
+    const activeOrganization = await context.queryClient.ensureQueryData(
+      getActiveOrganizationQueryOptions({ userId: context.user.id }),
     );
+    if (activeOrganization?.id !== params.agencyId) {
+      context.queryClient.fetchQuery(
+        setActiveOrganizationQueryOptions({
+          userId: context.user.id,
+          organizationId: params.agencyId,
+        }),
+      );
+    }
+    // if (!activeOrganization) throw redirect({ to: "/app" });
+    // return { activeOrganization };
   },
   loader: async ({ context, params }) => {
     context.queryClient.ensureQueryData(
@@ -40,7 +45,17 @@ export const Route = createFileRoute("/app/$agencyId")({
   },
   pendingComponent: () => (
     <>
-      <div>Loading $agencyId/route...</div>
+      <Sidebar>
+        <SidebarHeader>
+          <Skeleton className="h-12 w-full" />
+        </SidebarHeader>
+      </Sidebar>
+      <SidebarInset>
+        <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <Skeleton className="h-6 w-full" />
+        </header>
+        <div>/app/$agencyId ROUTE SUSPENSE</div>
+      </SidebarInset>
     </>
   ),
   component: OrganizationLayout,

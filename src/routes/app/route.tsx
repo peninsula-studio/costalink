@@ -1,21 +1,10 @@
+import { Separator } from "@base-ui/react";
 import {
   createFileRoute,
   Outlet,
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
-import { Separator } from "@base-ui/react";
-import {
-  Sidebar,
-  SidebarHeader,
-  SidebarTrigger,
-  SidebarInset,
-} from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { $checkSessionCookieFn, getSessionQueryOptions } from "@/lib/fn/auth";
-import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
-import { sessionCookieMiddleware } from "@/middleware/auth";
-import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -25,6 +14,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Sidebar,
+  SidebarHeader,
+  SidebarInset,
+} from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { $checkSessionCookieFn, getSessionQueryOptions } from "@/lib/fn/auth";
+import { getActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import { sessionCookieMiddleware } from "@/middleware/auth";
+import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
 
 export const Route = createFileRoute("/app")({
   server: {
