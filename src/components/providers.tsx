@@ -10,18 +10,16 @@ type Props = {
 
 export const Providers = ({ children }: Props) => {
   return (
-    <AppProvider initialOrg={undefined}>
-      <SidebarProvider>
-        <ReactQueryDevtools
-          buttonPosition="bottom-right"
-          initialIsOpen={false}
-          position="bottom"
-        />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Toaster closeButton={true} richColors visibleToasts={5} />
-          {children}
-        </ThemeProvider>
-      </SidebarProvider>
-    </AppProvider>
+    <SidebarProvider>
+      <ReactQueryDevtools
+        buttonPosition="bottom-right"
+        initialIsOpen={false}
+        position="bottom"
+      />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Toaster closeButton={true} richColors visibleToasts={5} />
+        {children}
+      </ThemeProvider>
+    </SidebarProvider>
   );
 };

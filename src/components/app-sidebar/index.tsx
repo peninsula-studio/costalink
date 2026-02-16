@@ -15,16 +15,16 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Suspense fallback={<div>Loading...</div>}>
-          <OrganizationSwitcher />
-        </Suspense>
+        <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={undefined} />
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <Suspense fallback={<div>Loading NavUser...</div>}>
+          <NavUser />
+        </Suspense>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
