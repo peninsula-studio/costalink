@@ -32,7 +32,7 @@ export const getSessionQueryOptions = () =>
     queryFn: getSessionFn,
   });
 
-export const signUpFn = createServerFn()
+export const $signUpFn = createServerFn()
   .inputValidator((data: z.infer<typeof signUpFormSchema>) => data)
   .handler(async ({ data }) => {
     const isValid = signUpFormSchema.safeParse(data);
@@ -53,7 +53,7 @@ export const signUpFn = createServerFn()
     }
   });
 
-export const signInFn = createServerFn()
+export const $signInFn = createServerFn()
   .inputValidator((data: z.infer<typeof signInFormSchema>) => data)
   .handler(async ({ data }) => {
     const isValid = signInFormSchema.safeParse(data);
@@ -74,7 +74,7 @@ export const signInFn = createServerFn()
     }
   });
 
-export const signOutFn = createServerFn().handler(async () => {
+export const $signOutFn = createServerFn().handler(async () => {
   try {
     const data = await auth.api.signOut({ headers: getRequestHeaders() });
     return data;

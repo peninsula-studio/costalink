@@ -25,7 +25,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
-import { signUpFn } from "@/lib/fn/auth";
+import { $signUpFn } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 import type { FileRouteTypes } from "@/routeTree.gen";
@@ -93,7 +93,7 @@ export function SignUpForm({
   const { mutate } = useMutation({
     mutationFn: async (data: z.infer<typeof signUpFormSchema>) => {
       clearErrors();
-      return await signUpFn({ data });
+      return await $signUpFn({ data });
     },
     onError: (e) => {
       setError("root", { message: "Error en la creación de sesión" });

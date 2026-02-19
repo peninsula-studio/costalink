@@ -25,13 +25,14 @@ export const userKeys = {
 
 export const organizationKeys = {
   all: () => ["organization"] as const,
-  list: () => [...organizationKeys.all(), "list"] as const,
+  list: ({ userId }: UserId) =>
+    [...organizationKeys.all(), "list", userId] as const,
   active: ({ userId }: UserId) =>
     [...organizationKeys.all(), "active", userId] as const,
   fullOrganization: (data: OrganizationSelect = {}) =>
     [
       ...organizationKeys.all(),
-      "fullOrganization",
+      "full",
       data.organizationId || data.organizationSlug,
     ] as const,
   setActive: (data: UserId) =>

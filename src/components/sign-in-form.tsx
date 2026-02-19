@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
-import { signInFn } from "@/lib/fn/auth";
+import { $signInFn } from "@/lib/fn/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
@@ -61,7 +61,7 @@ export function SignInForm({
   const { mutate } = useMutation({
     mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
       clearErrors();
-      return await signInFn({ data });
+      return await $signInFn({ data });
     },
     onError: (e) => {
       setError("root", { message: "Wrong credentials" });
