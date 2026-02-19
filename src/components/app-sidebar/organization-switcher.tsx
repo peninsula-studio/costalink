@@ -1,29 +1,42 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useRouteContext } from "@tanstack/react-router";
-import { Building2, ChevronsUpDown, UserIcon } from "lucide-react";
-import { useAppCtx } from "@/components/app-provider";
+import { Link, useParams, useRouteContext } from "@tanstack/react-router";
+import {
+  Building2,
+  ChevronsUpDown,
+  Settings,
+  UserIcon,
+  UserPlus,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
-import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
-  const { user } = useRouteContext({ from: "/app" });
-  const { activeOrganization } = useAppCtx();
+  const { user, organizationList } = useRouteContext({ from: "/app" });
+
+  const params = useParams({
+    from: "/app/$agencyId",
+    shouldThrow: false,
+  });
+
+  // const { data: organizationList } = useSuspenseQuery(
+  //   organizationListQueryOptions(),
+  // );
 
   // const { data: activeOrganization } = useSuspenseQuery(
-  //   getActiveOrganizationQueryOptions({ userId: user.id }),
+  //   getFullOrganizationQueryOptions({ organizationId: params?.agencyId }),
   // );
-  const { data: organizationList } = useSuspenseQuery(
-    organizationListQueryOptions(),
+
+  const activeOrganization = organizationList.find(
+    (o) => o.id === params?.agencyId,
   );
 
   return (
@@ -35,7 +48,7 @@ export function OrganizationSwitcher() {
             size="lg"
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
-              {activeOrganization ? (
+              {params?.agencyId && activeOrganization ? (
                 <Building2 className="size-4" />
               ) : (
                 <UserIcon className="size-4" />
@@ -43,7 +56,7 @@ export function OrganizationSwitcher() {
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
-                {activeOrganization?.name || user.name}
+                {(params?.agencyId && activeOrganization?.name) || user.name}
               </span>
             </div>
             <ChevronsUpDown className="ml-auto" />
@@ -86,6 +99,33 @@ export function OrganizationSwitcher() {
             ></DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        {params?.agencyId && (
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              render={
+                <Link
+                  to="/app/$agencyId"
+                  params={{ agencyId: params.agencyId }}
+                >
+                  <Settings className="size-4 shrink-0" /> Agency Settings
+                </Link>
+              }
+            ></DropdownMenuItem>
+            <DropdownMenuItem
+              render={
+                <Link
+                  to={`/app/$agencyId`}
+                  params={{ agencyId: params.agencyId }}
+                >
+                  <UserPlus className="size-4 shrink-0" /> Invite Members
+                </Link>
+              }
+            ></DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

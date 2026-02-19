@@ -1,7 +1,4 @@
-import {
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
@@ -38,12 +35,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOutFn } from "@/lib/fn/auth";
+import { $signOutFn } from "@/lib/fn/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 
 export function NavUser({ className }: { className?: ClassNameValue }) {
-  const { user } = useRouteContext({ from: "/app" })
+  const { user } = useRouteContext({ from: "/app" });
 
   const { isMobile } = useSidebar();
 
@@ -54,7 +51,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
 
   const { mutate } = useMutation({
     mutationKey: ["signOut"],
-    mutationFn: async () => await signOutFn(),
+    mutationFn: async () => await $signOutFn(),
     onError: (error) => {
       console.error(`Sign-out error: ${error.message}`);
       toast.error("Error", {
@@ -88,9 +85,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    {user.name}
-                  </span>
+                  <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
@@ -113,9 +108,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    {user.name}
-                  </span>
+                  <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </DropdownMenuLabel>
