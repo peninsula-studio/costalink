@@ -1,12 +1,5 @@
 import { Separator } from "@base-ui/react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  Outlet,
-  redirect,
-  useNavigate,
-} from "@tanstack/react-router";
-import { AppProvider } from "@/components/app-provider";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -18,16 +11,16 @@ import {
 } from "@/components/ui/breadcrumb";
 import {
   Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { $checkSessionCookieFn, getSessionQueryOptions } from "@/lib/fn/auth";
-import {
-  getActiveOrganizationQueryOptions,
-  organizationListQueryOptions,
-} from "@/lib/fn/organization";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 import { sessionCookieMiddleware } from "@/middleware/auth";
 import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
 
@@ -53,19 +46,11 @@ export const Route = createFileRoute("/app")({
     //   ...getActiveOrganizationQueryOptions({ userId: session.user.id }),
     //   revalidateIfStale: true,
     // });
-    return { user: session.user };
-  },
-  loader: async ({ context }) => {
-    const initialOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
+
+    const organizationList = await context.queryClient.ensureQueryData(
+      organizationListQueryOptions({ userId: session.user.id }),
     );
-    // if (route.path === "/app" && initialOrganization) {
-    //   throw redirect({
-    //     to: "/app/$agencyId",
-    //     params: { agencyId: initialOrganization.id },
-    //   });
-    // }
-    return { initialOrganization };
+    return { user: session.user, organizationList };
   },
   pendingComponent: () => (
     <>
@@ -73,8 +58,18 @@ export const Route = createFileRoute("/app")({
         <SidebarHeader>
           <Skeleton className="h-12 w-full" />
         </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup className="space-y-4">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-6 w-3/4" />
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <Skeleton className="h-12 w-full" />
+        </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="bg-red-400">
+      <SidebarInset>
         <header className="relative flex h-16 shrink-0 items-center gap-2 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <Skeleton className="h-6 w-full" />
         </header>
@@ -85,10 +80,8 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
-  const { initialOrganization } = Route.useLoaderData();
-
   return (
-    <AppProvider initialOrg={initialOrganization}>
+    <>
       <AppSidebar />
       <SidebarInset>
         <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -115,6 +108,6 @@ function AppLayout() {
         </header>
         <Outlet />
       </SidebarInset>
-    </AppProvider>
+    </>
   );
 }

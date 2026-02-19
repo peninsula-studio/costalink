@@ -9,44 +9,18 @@ import {
 } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
-import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import {
-  getActiveOrganizationQueryOptions,
-  organizationListQueryOptions,
-} from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
   loader: async ({ context }) => {
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
-    const organizations = await context.queryClient.ensureQueryData(
-      organizationListQueryOptions(),
-    );
-    const activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    );
-    // if (activeOrganization) {
-    //   throw redirect({
-    //     to: "/app/$agencyId",
-    //     params: { agencyId: activeOrganization.id },
-    //   });
-    // }
-    return { session, organizations };
+    return { session };
   },
   pendingComponent: () => (
     <div className="flex size-full min-h-lvh p-6">
@@ -57,7 +31,7 @@ export const Route = createFileRoute("/app/")({
 });
 
 function AppIndexPage() {
-  const { organizations } = Route.useLoaderData();
+  const { organizationList } = Route.useRouteContext();
   const { user } = Route.useRouteContext();
 
   return (
@@ -85,7 +59,7 @@ function AppIndexPage() {
         </Button>
       </div>
       <div className="flex flex-col gap-4 py-10">
-        {organizations?.map((o, i) => (
+        {organizationList?.map((o, i) => (
           <Button
             className="flex w-fit items-center"
             key={o.name}
