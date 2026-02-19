@@ -1,18 +1,18 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 
 export const Route = createFileRoute("/app/$agencyId/property/create")({
-  loader: async ({ context }) => {
-    const member = await context.queryClient.ensureQueryData(
+  loader: async ({ context, params }) => {
+    context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
-        organizationId: context.activeOrganization.id,
+        organizationId: params.agencyId,
       }),
     );
-    return { member };
   },
   pendingComponent: () => (
     <>
@@ -29,8 +29,13 @@ export const Route = createFileRoute("/app/$agencyId/property/create")({
 });
 
 function RouteComponent() {
-  const { activeOrganization } = Route.useRouteContext();
-  const { member } = Route.useLoaderData();
+  const { user, activeOrganization } = Route.useRouteContext();
+  const { data: member } = useSuspenseQuery(
+    getActiveMemberQueryOptions({
+      userId: user.id,
+      organizationId: activeOrganization.id,
+    }),
+  );
 
   return (
     <>
@@ -42,8 +47,8 @@ function RouteComponent() {
         nativeButton={false}
         render={
           <Link
-            params={{ id: activeOrganization.id }}
-            to="/app/agency/$id/property"
+            params={{ agencyId: activeOrganization.id }}
+            to="/app/$agencyId/property"
           >
             Property list
           </Link>

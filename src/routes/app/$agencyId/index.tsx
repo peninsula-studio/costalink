@@ -41,14 +41,11 @@ export const Route = createFileRoute("/app/$agencyId/")({
 });
 
 function OrganizationPage() {
-  const { agencyId } = Route.useParams();
-  const { data: activeOrganization } = useSuspenseQuery(
-    getFullOrganizationQueryOptions({ organizationId: agencyId }),
-  );
-
-  if (!activeOrganization) {
-    throw redirect({ to: "/app" });
-  }
+  // const { agencyId } = Route.useParams();
+  const { activeOrganization } = Route.useRouteContext();
+  // const { data: activeOrganization } = useSuspenseQuery(
+  //   getFullOrganizationQueryOptions({ organizationId: agencyId }),
+  // );
 
   return (
     <main className="flex flex-col gap-y-6 p-6">
