@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
   BookOpen,
   Bot,
@@ -10,6 +10,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import type { ClassNameValue } from "tailwind-merge";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -129,31 +130,29 @@ export const NavMain = ({
     }[];
   }[];
 }) => {
-  const router = useRouter();
-  const pathName = router.basepath;
+  const { pathname } = useLocation();
 
   return (
     <>
       <SidebarGroup>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              isActive={pathName === "/app"}
-              render={
-                <Link preload={false} to={"/app"}>
-                  <HomeIcon />
-                  Dashboard
-                </Link>
-              }
-            ></SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton>
-              <UsersIcon />
-              Bolsas
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            isActive={pathname === "/app"}
+            render={
+              <Link preload={false} to={"/app"}>
+                <HomeIcon />
+                Dashboard
+              </Link>
+            }
+          ></SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton>
+            <UsersIcon />
+            Bolsas
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarGroup>
       <SidebarGroup className={cn(className)}>
         <SidebarGroupLabel>Platform</SidebarGroupLabel>

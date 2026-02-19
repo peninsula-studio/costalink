@@ -24,6 +24,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
+        <NavMain items={undefined} />
         {params?.agencyId && <NavMain items={undefined} />}
         <ProjectsMenu />
       </SidebarContent>

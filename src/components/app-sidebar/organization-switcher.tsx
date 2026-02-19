@@ -100,31 +100,33 @@ export function OrganizationSwitcher() {
           ))}
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator />
-
         {params?.agencyId && (
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              render={
-                <Link
-                  to="/app/$agencyId"
-                  params={{ agencyId: params.agencyId }}
-                >
-                  <Settings className="size-4 shrink-0" /> Agency Settings
-                </Link>
-              }
-            ></DropdownMenuItem>
-            <DropdownMenuItem
-              render={
-                <Link
-                  to={`/app/$agencyId`}
-                  params={{ agencyId: params.agencyId }}
-                >
-                  <UserPlus className="size-4 shrink-0" /> Invite Members
-                </Link>
-              }
-            ></DropdownMenuItem>
-          </DropdownMenuGroup>
+          <>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                render={
+                  <Link
+                    to="/app/$agencyId"
+                    params={{ agencyId: params.agencyId }}
+                  >
+                    <Settings className="size-4 shrink-0" /> Agency Settings
+                  </Link>
+                }
+              ></DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link
+                    to={`/app/$agencyId`}
+                    params={{ agencyId: params.agencyId }}
+                  >
+                    <UserPlus className="size-4 shrink-0" /> Invite Members
+                  </Link>
+                }
+              ></DropdownMenuItem>
+            </DropdownMenuGroup>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
