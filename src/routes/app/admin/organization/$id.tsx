@@ -19,9 +19,7 @@ import {
 import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { listUsersQueryOptions } from "@/lib/fn/user";
 
-export const Route = createFileRoute(
-  "/app/admin/organization/$id",
-)({
+export const Route = createFileRoute("/app/admin/organization/$id")({
   component: RouteComponent,
 });
 
@@ -43,18 +41,18 @@ function RouteComponent() {
 }
 
 function OrgData() {
-  const { organizationId } = Route.useParams();
+  const { id } = Route.useParams();
   const { data: organization } = useSuspenseQuery(
-    getFullOrganizationQueryOptions({ organizationId }),
+    getFullOrganizationQueryOptions({ organizationId: id }),
   );
   return <div>Organization with ID: {organization?.id}</div>;
 }
 
 function UserList() {
-  const { organizationId } = Route.useParams();
+  const { id } = Route.useParams();
   const { data: users } = useSuspenseQuery(listUsersQueryOptions());
   const { data: members, refetch } = useSuspenseQuery(
-    listMembersQueryOptions({ organizationId }),
+    listMembersQueryOptions({ organizationId: id }),
   );
   return (
     <div className="flex flex-col gap-4">
@@ -73,7 +71,7 @@ function UserList() {
                   onClick={async () => {
                     const member = await addMemberFn({
                       data: {
-                        organizationId: organizationId,
+                        organizationId: id,
                         role: "member",
                         userId: user.id,
                       },
@@ -93,7 +91,7 @@ function UserList() {
                     const member = await removeMemberFn({
                       data: {
                         memberIdOrEmail: user.email,
-                        organizationId: organizationId,
+                        organizationId: id,
                       },
                     });
                     if (member) {

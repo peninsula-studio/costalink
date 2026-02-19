@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,6 @@ import {
   TypographyH3,
   TypographyH5,
 } from "@/components/ui/typography";
-import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/admin/")({
   component: RouteComponent,
@@ -20,9 +18,7 @@ export const Route = createFileRoute("/app/admin/")({
 });
 
 function RouteComponent() {
-  const { data: organizations } = useSuspenseQuery(
-    organizationListQueryOptions(),
-  );
+  const { organizationList } = Route.useRouteContext();
 
   return (
     <main className="flex flex-col gap-y-8 p-6">
@@ -33,6 +29,7 @@ function RouteComponent() {
             <Building2 className="aspect-square size-[0.8em]" /> Organizations
           </TypographyH3>
           <Button
+            nativeButton={false}
             className="w-fit"
             render={
               <Link to="/app/admin/organization/create">
@@ -42,7 +39,7 @@ function RouteComponent() {
           ></Button>
         </div>
         <div className="flex gap-4">
-          {organizations?.map((org) => (
+          {organizationList?.map((org) => (
             <Link
               key={org.id}
               params={{ id: org.id }}
