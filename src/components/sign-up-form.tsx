@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
-import { setPassword } from "better-auth/api";
 import { CheckCircle2, CheckIcon, Eye, EyeClosed, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

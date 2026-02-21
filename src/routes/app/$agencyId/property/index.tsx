@@ -17,8 +17,8 @@ function RouteComponent() {
         nativeButton={false}
         render={
           <Link
-            params={{ id: `${activeOrganization.id}` }}
-            to="/app/agency/$id/property/create"
+            params={{ agencyId: `${activeOrganization.id}` }}
+            to="/app/$agencyId/property/create"
           >
             Property list
           </Link>

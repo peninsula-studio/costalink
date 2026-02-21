@@ -130,9 +130,9 @@ const Theme = ({
   }, []);
 
   // Set theme state and save to local storage
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to set theme as a callback param
   const setTheme = React.useCallback(
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: This any is needed to access the value since we are reading from localStorage
     (value: any) => {
       const newTheme = typeof value === "function" ? value(theme) : value;
       setThemeState(newTheme);
@@ -141,16 +141,17 @@ const Theme = ({
       try {
         localStorage.setItem(storageKey, newTheme);
       } catch (e) {
+        throw e;
         // Unsupported
       }
     },
     [theme],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Don't need all dependencies
   const handleMediaQuery = React.useCallback(
-    (e: MediaQueryListEvent | MediaQueryList) => {
-      const resolved = getSystemTheme(e);
+    (_e: MediaQueryListEvent | MediaQueryList) => {
+      // const resolved = getSystemTheme(e);
 
       if (theme === "system" && enableSystem && !forcedTheme) {
         applyTheme("system");
@@ -171,7 +172,7 @@ const Theme = ({
   }, [handleMediaQuery]);
 
   // localStorage event handling, allow to sync theme changes between tabs
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Don't need all dependencies
   React.useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
       if (e.key !== storageKey) {
@@ -188,7 +189,7 @@ const Theme = ({
   }, [setTheme]);
 
   // Whenever theme or forcedTheme changes, apply it
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Don't need all dependencies
   React.useEffect(() => {
     applyTheme(forcedTheme ?? theme);
   }, [forcedTheme, theme]);
@@ -267,6 +268,7 @@ const getTheme = (key: string, fallback?: string) => {
   try {
     theme = localStorage.getItem(key) || undefined;
   } catch (e) {
+    throw e;
     // Unsupported
   }
   return theme || fallback;
@@ -304,7 +306,7 @@ const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent) => {
   next-themes can be found at https://github.com/pacocoursey/next-themes under the MIT license.
 */
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: reading from localStorage we need to use any
 export const script: (...args: any[]) => void = (
   attribute,
   storageKey,
@@ -354,7 +356,7 @@ export const script: (...args: any[]) => void = (
       const isSystem = enableSystem && themeName === "system";
       const theme = isSystem ? getSystemTheme() : themeName;
       updateDOM(theme);
-    } catch (e) {
+    } catch (_e) {
       //
     }
   }

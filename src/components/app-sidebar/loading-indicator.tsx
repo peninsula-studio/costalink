@@ -1,8 +1,8 @@
-import { useIsFetching } from "@tanstack/react-query";
+// import { useIsFetching } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 
 export function LoadingIndicator() {
-  const isFetching = useIsFetching();
+  // const isFetching = useIsFetching();
   return (
     <div
       className={cn(

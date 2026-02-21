@@ -10,7 +10,6 @@ import {
   UsersIcon,
 } from "lucide-react";
 import type { ClassNameValue } from "tailwind-merge";
-import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,

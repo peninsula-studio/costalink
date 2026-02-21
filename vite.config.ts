@@ -1,9 +1,10 @@
+import { fileURLToPath, URL } from "node:url";
+import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
-import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import postgresPlugin from "vite-plugin-db";
 import viteTsConfigPaths from "vite-tsconfig-paths";
@@ -15,6 +16,7 @@ const config = defineConfig({
     },
   },
   plugins: [
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
     devtools(),
     nitro(),
     postgresPlugin({

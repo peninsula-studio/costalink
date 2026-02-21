@@ -1,6 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { QueryBuilder } from "drizzle-orm/pg-core";
 import { db } from "@/lib/db";
 
 export const getOrganizationPropertiesFn = createServerFn()

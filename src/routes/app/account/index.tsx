@@ -2,30 +2,28 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
-import { organizationListQueryOptions } from "@/lib/fn/organization";
 import { setDefaultOrganizationFn } from "@/lib/fn/user";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/account/")({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    const organizations = await context.queryClient.ensureQueryData(
-      organizationListQueryOptions(),
-    );
-    return { organizations };
-  },
+  // loader: async ({ context }) => {
+  //   const organizations = await context.queryClient.ensureQueryData(
+  //     organizationListQueryOptions(),
+  //   );
+  //   return { organizations };
+  // },
 });
 
 function RouteComponent() {
   const router = useRouter();
-  const { organizations } = Route.useLoaderData();
-  const { user } = Route.useRouteContext();
+  const { user, organizationList } = Route.useRouteContext();
 
   return (
     <div className="flex flex-col gap-6">
       <TypographyH5>Default Organization</TypographyH5>
       <div className="flex flex-wrap gap-4">
-        {organizations.map((org) => (
+        {organizationList.map((org) => (
           <Card
             className={cn("max-w-md", {
               "ring-green-500": user.defaultOrganizationId === org.id,

@@ -1,24 +1,22 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
-import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/admin/organization/")({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    context.queryClient.ensureQueryData(organizationListQueryOptions());
-  },
+  // loader: async ({ context }) => {
+  //   context.queryClient.ensureQueryData(
+  //     organizationListQueryOptions({ userId: context.user.id }),
+  //   );
+  // },
 });
 
 function RouteComponent() {
-  const { data: organizations } = useSuspenseQuery(
-    organizationListQueryOptions(),
-  );
+  const { organizationList } = Route.useRouteContext();
 
   return (
     <div>
-      {organizations?.map((org) => (
+      {organizationList?.map((org) => (
         <Link
           key={org.id}
           params={{ id: org.id }}

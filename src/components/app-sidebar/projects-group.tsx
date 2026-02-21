@@ -1,5 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useRouteContext } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Folder,
   FolderIcon,
@@ -7,7 +6,6 @@ import {
   MoreHorizontal,
   Trash2,
 } from "lucide-react";
-import * as React from "react";
 import type { ClassNameValue } from "tailwind-merge";
 import {
   DropdownMenu,
@@ -23,7 +21,6 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";

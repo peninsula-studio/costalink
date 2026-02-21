@@ -1,8 +1,10 @@
+// biome-ignore-all lint: file not being used
+
 import { XMLParser } from "fast-xml-parser";
 import type {
   KyeroImage,
-  KyeroProperty,
   KyeroMultiLanguageString,
+  KyeroProperty,
 } from "@/lib/fn/kyero/types";
 
 // --- Extraction Function ---
@@ -64,7 +66,9 @@ export function extractKyeroProperties(xmlData: string): KyeroProperty[] {
     }
 
     // Helper to extract nested MultiLanguage objects (desc, features)
-    const extractMultiLang = (node: any): KyeroMultiLanguageString | undefined => {
+    const extractMultiLang = (
+      node: any,
+    ): KyeroMultiLanguageString | undefined => {
       if (!node) return undefined;
       // Filter out non-language keys if any artifact exists
       const result: KyeroMultiLanguageString = {};
