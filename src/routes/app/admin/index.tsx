@@ -29,8 +29,8 @@ function RouteComponent() {
             <Building2 className="aspect-square size-[0.8em]" /> Organizations
           </TypographyH3>
           <Button
-            nativeButton={false}
             className="w-fit"
+            nativeButton={false}
             render={
               <Link to="/app/admin/organization/create">
                 <PlusIcon /> Create
