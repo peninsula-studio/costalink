@@ -1,6 +1,7 @@
 import { Separator } from "@base-ui/react";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
+import { FlexContainer } from "@/components/container";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -106,7 +107,9 @@ function AppLayout() {
             </Breadcrumb>
           </div>
         </header>
-        <Outlet />
+        <main>
+          <Outlet />
+        </main>
       </SidebarInset>
     </>
   );

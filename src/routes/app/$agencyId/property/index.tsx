@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { FlexContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { TypographyLarge } from "@/components/ui/typography";
 
@@ -10,7 +11,7 @@ function RouteComponent() {
   const { activeOrganization } = Route.useRouteContext();
 
   return (
-    <>
+    <FlexContainer>
       <TypographyLarge>Hello "/app/agency/$id/property/"!</TypographyLarge>
       <Button
         className="w-fit"
@@ -24,6 +25,6 @@ function RouteComponent() {
           </Link>
         }
       ></Button>
-    </>
+    </FlexContainer>
   );
 }

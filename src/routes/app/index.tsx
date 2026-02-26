@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
+import { FlexContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,7 +28,7 @@ function AppIndexPage() {
   const { user } = Route.useRouteContext();
 
   return (
-    <main className="flex flex-col gap-y-6 p-6">
+    <FlexContainer>
       <TypographyH2>Dashboard</TypographyH2>
       {user.role === "admin" && (
         <div>
@@ -72,6 +73,6 @@ function AppIndexPage() {
           </Button>
         ))}
       </div>
-    </main>
+    </FlexContainer>
   );
 }

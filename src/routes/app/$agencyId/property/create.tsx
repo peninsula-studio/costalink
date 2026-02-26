@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { FlexContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/app/$agencyId/property/create")({
     );
   },
   pendingComponent: () => (
-    <>
+    <FlexContainer>
       <div>LOADING PROPERTIES...</div>
       <Skeleton className="h-12 w-sm" />
       <div className="flex w-full max-w-lg flex-col gap-y-2 bg-red-500 *:h-10">
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/app/$agencyId/property/create")({
         <Skeleton />
       </div>
       <Skeleton className="size-20" />
-    </>
+    </FlexContainer>
   ),
   component: RouteComponent,
 });
@@ -38,7 +39,7 @@ function RouteComponent() {
   );
 
   return (
-    <>
+    <FlexContainer>
       <TypographyH2>
         Role: <i>{member.role}</i>
       </TypographyH2>
@@ -54,6 +55,6 @@ function RouteComponent() {
           </Link>
         }
       ></Button>
-    </>
+    </FlexContainer>
   );
 }

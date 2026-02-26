@@ -8,6 +8,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { Suspense } from "react";
+import { FlexContainer } from "@/components/container";
 import { PropertyCard } from "@/components/property-card";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,9 +49,11 @@ function OrganizationPage() {
   // );
 
   return (
-    <main className="flex flex-col gap-y-6 p-6">
-      <TypographyH2>{activeOrganization.name}</TypographyH2>
-      <TypographyLarge>{activeOrganization.id}</TypographyLarge>
+    <FlexContainer>
+      <div className="flex flex-col gap-y-4">
+        <TypographyH2>{activeOrganization.name}</TypographyH2>
+        <TypographyLarge>{activeOrganization.id}</TypographyLarge>
+      </div>
 
       <section className="flex flex-col gap-y-6">
         <TypographyH3 className="inline-flex">
@@ -60,7 +63,7 @@ function OrganizationPage() {
           <PropertySection organizationId={activeOrganization.id} />
         </Suspense>
       </section>
-    </main>
+    </FlexContainer>
   );
 }
 
