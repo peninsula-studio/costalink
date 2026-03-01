@@ -1,14 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
-import { XCircle } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
 import { toast } from "sonner";
-import z from "zod";
+import type z from "zod";
 import { InputValidCheck } from "@/components/input-valid-check";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import {
   Field,
   FieldContent,
@@ -17,21 +22,24 @@ import {
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth/client";
+import { organizationKeys, propertyKeys } from "@/lib/fn/keys";
+import { kyeroPropertySchema } from "@/lib/fn/kyero/schemas";
 import {
-  organizationPlan,
-  organizationSlug,
-} from "@/lib/zod/schemas/organization";
+  $checkPropertyReference,
+  createPropertyMutationOptions,
+} from "@/lib/fn/property";
 
-export const createPropertyFormSchema = z.object({
-  name: z.string().min(4, { error: "Mínimo 4 caracteres" }),
-  slug: organizationSlug,
-  plan: organizationPlan,
-});
+// export const createPropertyFormSchema = z.object({
+//   name: z.string().min(4, { error: "Mínimo 4 caracteres" }),
+//   slug: organizationSlug,
+//   plan: organizationPlan,
+// });
+
+const createPropertyFormSchema = kyeroPropertySchema;
 
 export function CreatePropertyForm({
   onSuccess,
@@ -45,128 +53,133 @@ export function CreatePropertyForm({
 
   const { formState, handleSubmit, setValue, setError, clearErrors, register } =
     useForm({
-      defaultValues: { name: "", slug: "" },
+      defaultValues: { ref: "" },
       mode: "onSubmit",
       resolver: zodResolver(createPropertyFormSchema),
     });
 
   const isValidFn = React.cache(async (val: string) => {
-    const { data, error } = await authClient.organization.checkSlug({
-      slug: val,
+    const refExists = await $checkPropertyReference({
+      data: { reference: val },
     });
-    const result = error ? false : data.status;
-    return result;
+    return refExists;
   });
 
-  const submit = async ({
-    name,
-    slug,
-  }: z.infer<typeof createPropertyFormSchema>) => {
-    clearErrors();
-    const { data, error } = await authClient.organization.create({
-      name,
-      slug,
-    });
-    if (error) {
-      setError("root", { message: "Error al crear la organización" });
-      if (error.message === "Organization already exists") {
-        setError("slug", { message: "Este subdominio ya está siendo usado" });
-      }
-      console.error(`Error creating organization -> ${error.message}`);
-      toast.error("Error al crear la organización");
-    }
-    if (data) {
-      router.invalidate();
-      toast.success(`Organización creada`, {
-        description: `Organización "${data?.name}" con ruta "${data?.slug}" creada con éxito`,
-      });
-    }
-  };
+  const { mutateAsync, isPending, isSuccess } = useMutation({
+    ...createPropertyMutationOptions(),
+    onMutate: () => {
+      clearErrors();
+    },
+  });
 
   return (
     <Card {...props}>
-      <form
-        onSubmit={handleSubmit(async (data) => {
-          await submit(data);
-        })}
-      >
-        <CardContent className="pb-4">
-          <FieldSet>
-            <FieldLegend className="text-center">
-              Creación de Organización
-            </FieldLegend>
-            <FieldDescription className="text-center">
-              Creación de organización
-            </FieldDescription>
-            <FieldGroup>
-              <Field data-invalid={!!formState.errors.name}>
-                <FieldLabel htmlFor="name">Nombre</FieldLabel>
-                <FieldDescription>
-                  El nombre de la Organización
-                </FieldDescription>
-                <Input
-                  aria-invalid={!!formState.errors.name}
-                  autoComplete="organization"
-                  id="name"
-                  placeholder=""
-                  {...register("name", {
+      <CardHeader>Create a Property</CardHeader>
+      <CardContent>
+        <form
+          name="Property Creation Form"
+          onSubmit={handleSubmit(async (data) => {
+            await mutateAsync(data, {
+              onError: async (error) => {
+                setError("root", { message: error.message });
+                toast.error(error.message);
+              },
+              onSuccess: async (result, _data) => {
+                toast.success(
+                  `Property with ref: ${result.ref} created successfully`,
+                );
+              },
+            });
+          })}
+        >
+          <FieldGroup>
+            <Field data-invalid={false}>
+              <FieldLabel htmlFor="reference">Reference</FieldLabel>
+              <FieldContent>
+                <InputValidCheck
+                  aria-invalid={!!formState.errors.ref}
+                  autoComplete=""
+                  id="reference"
+                  placeholder="Reference"
+                  required
+                  validCheckFn={isValidFn}
+                  {...register("ref", {
                     required: true,
+                    onChange: (e) => {
+                      setValue(
+                        "ref",
+                        slugify(e.currentTarget.value, {
+                          trim: false,
+                          lower: true,
+                        }),
+                      );
+                    },
                   })}
                 />
-                <FieldError errors={[formState.errors.name]} />
-              </Field>
+              </FieldContent>
+            </Field>
 
-              <Field data-invalid={!!formState.errors.slug}>
-                <FieldContent>
-                  <FieldLabel htmlFor="name">Subdominio</FieldLabel>
-                  <FieldDescription>
-                    El subdominio a usar por la organización
-                  </FieldDescription>
-                  <InputValidCheck
-                    aria-invalid={!!formState.errors.slug}
-                    autoComplete=""
-                    id="slug"
-                    validCheckFn={isValidFn}
-                    placeholder=""
-                    {...register("slug", {
-                      required: true,
-                      onChange: (e) => {
-                        setValue(
-                          "slug",
-                          slugify(e.currentTarget.value, {
-                            trim: false,
-                            lower: true,
-                          }),
-                        );
-                      },
-                    })}
-                  />
-                  <FieldError errors={[formState.errors.slug]} />
-                </FieldContent>
-              </Field>
+            {/* <Field data-invalid={false}> */}
+            {/*   <FieldLabel htmlFor="date">Date</FieldLabel> */}
+            {/*   <Input */}
+            {/*     id="date" */}
+            {/*     name="date" */}
+            {/*     placeholder="YYYY-MM-DD" */}
+            {/*     required */}
+            {/*     type="date" */}
+            {/*   /> */}
+            {/* </Field> */}
 
-              {formState.errors.root && (
-                <FieldError className="flex items-center justify-center gap-2 rounded bg-destructive/10 py-2 text-center">
-                  <XCircle className="size-4" /> {formState.errors.root.message}
-                </FieldError>
-              )}
-            </FieldGroup>
-          </FieldSet>
-        </CardContent>
-        <CardFooter>
-          <FieldGroup>
+            <Field data-invalid={false}>
+              <FieldLabel htmlFor="price">Price</FieldLabel>
+              <Input
+                id="price"
+                name="price"
+                placeholder="Enter price"
+                required
+                type="number"
+              />
+            </Field>
+
+            <Field data-invalid={false}>
+              <FieldLabel htmlFor="type">Property Type</FieldLabel>
+              <Input
+                id="type"
+                name="type"
+                placeholder="Enter property type"
+                required
+                type="text"
+              />
+            </Field>
+
+            <Field data-invalid={false}>
+              <FieldLabel htmlFor="town">Town</FieldLabel>
+              <Input
+                id="town"
+                name="town"
+                placeholder="Enter town"
+                required
+                type="text"
+              />
+            </Field>
+
+            <Field data-invalid={false}>
+              <FieldLabel htmlFor="province">Province</FieldLabel>
+              <Input
+                id="province"
+                name="province"
+                placeholder="Enter province"
+                required
+                type="text"
+              />
+            </Field>
+
             <Field>
-              <Button disabled={formState.isSubmitting} type="submit">
-                {formState.isSubmitting && <Spinner />}
-                Crear
-              </Button>
-              {/* <FieldDescription className="px-6 pt-2 text-center"> */}
-              {/*   No tiene una cuenta? <Link href="/sign-up">Crear cuenta</Link> */}
-              {/* </FieldDescription> */}
+              <Button type="submit">Submit</Button>
             </Field>
           </FieldGroup>
-        </CardFooter>
-      </form>
+        </form>
+      </CardContent>
     </Card>
   );
 }

@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
@@ -72,6 +72,20 @@ export const $signInFn = createServerFn()
       console.error(`Error signing up: ${(e as Error).cause}`);
       throw e;
     }
+  });
+
+export const signInMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
+      return await $signInFn({ data });
+    },
+    onError: (e) => {
+      console.error(`Sign-in error -> "/sign-in": ${e.message}`);
+    },
+    onSuccess: async (_ret, _data, _, { client }) => {
+      await client.resetQueries({ queryKey: userKeys.session() });
+      return;
+    },
   });
 
 export const $signOutFn = createServerFn().handler(async () => {

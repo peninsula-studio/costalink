@@ -48,6 +48,23 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// function FieldGroup({
+//   className,
+//   ...props
+// }: React.ComponentProps<typeof FlexContainer>) {
+//   return (
+//     <FlexContainer
+//       className={cn(
+//         className,
+//         "group/field-group @container/field-group flex w-full flex-col data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
+//       )}
+//       data-slot="field-group"
+//       padding="none"
+//       {...props}
+//     />
+//   );
+// }
+
 const fieldVariants = cva(
   "group/field flex w-full gap-3 data-[invalid=true]:text-destructive",
   {

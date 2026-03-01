@@ -34,7 +34,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       toastOptions={{
         classNames: {
-          toast: "cn-toast",
+          toast: "cn-toast first-letter:uppercase",
         },
       }}
       {...props}

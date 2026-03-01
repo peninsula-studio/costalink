@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { i18nStringSchema } from "@/lib/i18n/schema";
 
 // --- Helper Schemas (Dependencies) ---
 
@@ -17,9 +18,6 @@ export const kyeroEnergyRatingSchema = z.object({
   emissions: z.string().optional(),
 });
 
-// Matches Record<string, string> for multi-language nodes (e.g. { en: "...", es: "..." })
-export const kyeroMultiLanguageStringSchema = z.record(z.string(), z.string());
-
 // --- Main KyeroProperty Schema ---
 
 export const kyeroPropertySchema = z.object({
@@ -33,16 +31,16 @@ export const kyeroPropertySchema = z.object({
   province: z.string(),
 
   // -- Optional / Conditional Fields --
-  currency: z.string().optional(), // Defaults to EUR in logic, but optional here
+  currency: z.string(), // Defaults to EUR in logic, but optional here
   price_freq: z.string().optional(),
   part_ownership: z.boolean().optional(),
   leasehold: z.boolean().optional(),
   new_build: z.boolean().optional(),
 
   location_detail: z.string().optional(),
-  beds: z.number().optional(),
-  baths: z.number().optional(),
-  pool: z.boolean().optional(),
+  beds: z.number(),
+  baths: z.number(),
+  pool: z.boolean(),
 
   surface_area: kyeroSurfaceAreaSchema.optional(),
   energy_rating: kyeroEnergyRatingSchema.optional(),
@@ -50,8 +48,8 @@ export const kyeroPropertySchema = z.object({
   url: z.url().optional(),
 
   // Description and Features
-  desc: kyeroMultiLanguageStringSchema.optional(),
-  features: kyeroMultiLanguageStringSchema.optional(),
+  desc: i18nStringSchema,
+  features: i18nStringSchema.optional(),
 
   images: z.array(kyeroImageSchema).optional(),
 

@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FlexContainer } from "@/components/container";
+import { CreatePropertyForm } from "@/components/create-property-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
@@ -55,6 +56,10 @@ function RouteComponent() {
           </Link>
         }
       ></Button>
+
+      <FlexContainer className="items-center" padding="none" spacing="sm">
+        <CreatePropertyForm className="w-full max-w-2xl" />
+      </FlexContainer>
     </FlexContainer>
   );
 }

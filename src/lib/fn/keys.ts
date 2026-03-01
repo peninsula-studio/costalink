@@ -35,14 +35,21 @@ export const organizationKeys = {
       "full",
       data.organizationId || data.organizationSlug,
     ] as const,
-  setActive: (data: UserId) =>
+  setActive: (data: UserId & ActiveOrganizationSelect) =>
     // setActive: (data: UserId & ActiveOrganizationSelect) =>
     [
       ...organizationKeys.all(),
       "setActive",
       data.userId,
-      // data.organizationId || data.organizationSlug,
+      data.organizationId || data.organizationSlug,
     ] as const,
+};
+
+export const propertyKeys = {
+  all: () => ["property"] as const,
+  list: ({ organizationId }: { organizationId: string }) =>
+    [...propertyKeys.all(), "list", organizationId] as const,
+  create: () => [...propertyKeys.all(), "create"] as const,
 };
 
 export const memberKeys = {

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -26,8 +26,7 @@ import {
 } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
-import { $signInFn } from "@/lib/fn/auth";
-import { userKeys } from "@/lib/fn/keys";
+import { signInMutationOptions } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
 
@@ -48,7 +47,6 @@ export function SignInForm({
   callbackUrl?: string;
 }) {
   const router = useRouter();
-  const qc = useQueryClient();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -58,22 +56,10 @@ export function SignInForm({
     resolver: zodResolver(signInFormSchema),
   });
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
+  const { mutate, isPending, isSuccess } = useMutation({
+    ...signInMutationOptions(),
+    onMutate: () => {
       clearErrors();
-      return await $signInFn({ data });
-    },
-    onError: (e) => {
-      setError("root", { message: "Wrong credentials" });
-      console.error(`Sign-in error -> "/sign-in": ${e.message}`);
-      toast.error("Credenciales incorrectas");
-    },
-    onSuccess: async (data) => {
-      await qc.resetQueries({ queryKey: userKeys.session() });
-      await router.invalidate();
-      toast.success(`Welcome ${data.user.name}`);
-      router.history.push(callbackUrl);
-      return;
     },
   });
 
@@ -90,7 +76,22 @@ export function SignInForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
             className="p-4 md:p-6"
-            onSubmit={handleSubmit((data) => mutate(data))}
+            onSubmit={handleSubmit((data) =>
+              mutate(data, {
+                onError: (e) => {
+                  const message =
+                    e.message.charAt(0).toUpperCase() + e.message.slice(1);
+                  setError("root", { message });
+                  toast.error(`${message}`);
+                },
+                onSuccess: async (data) => {
+                  await router.invalidate();
+                  toast.success(`Welcome ${data.user.name}`);
+                  router.history.push(callbackUrl);
+                  return;
+                },
+              }),
+            )}
           >
             <FieldSet>
               <FieldLegend className="text-center">
@@ -167,15 +168,17 @@ export function SignInForm({
                 <Field>
                   <Button
                     disabled={
-                      formState.isSubmitting || formState.isSubmitSuccessful
+                      formState.isSubmitting ||
+                      isPending ||
+                      (formState.isSubmitSuccessful && isSuccess)
                     }
                     type="submit"
                   >
-                    {formState.isSubmitting && <Spinner />}
-                    {formState.isSubmitSuccessful && <CheckIcon />}
-                    {formState.isSubmitting
+                    {(formState.isSubmitting || isPending) && <Spinner />}
+                    {formState.isSubmitSuccessful && isSuccess && <CheckIcon />}
+                    {formState.isSubmitting || isPending
                       ? "Iniciando sesión..."
-                      : formState.isSubmitSuccessful
+                      : formState.isSubmitSuccessful && isSuccess
                         ? "Sesión iniciada"
                         : "Iniciar sesión"}
                   </Button>

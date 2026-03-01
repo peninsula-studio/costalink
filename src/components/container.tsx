@@ -8,10 +8,17 @@ const containerVariants = cva("flex", {
       vertical: "flex-col",
       horizontal: "flex-row",
     },
+    padding: {
+      none: "p-0",
+      sm: "p-4",
+      md: "p-8",
+      lg: "p-12",
+    },
     spacing: {
-      sm: "gap-x-2 gap-y-4 p-4",
-      md: "gap-x-4 gap-y-8 p-8",
-      lg: "gap-x-8 gap-y-12 p-12",
+      none: "gap-x-0 gap-y-0",
+      sm: "gap-x-2 gap-y-4",
+      md: "gap-x-4 gap-y-8",
+      lg: "gap-x-8 gap-y-12",
     },
   },
 });
@@ -19,7 +26,7 @@ const containerVariants = cva("flex", {
 export function FlexContainer({
   className,
   direction = "vertical",
-  // padding = "md",
+  padding = "md",
   spacing = "md",
   render,
   ...props
@@ -28,7 +35,10 @@ export function FlexContainer({
     defaultTagName: "div",
     props: mergeProps<"div">(
       {
-        className: cn(containerVariants({ direction, spacing }), className),
+        className: cn(
+          containerVariants({ direction, spacing, padding }),
+          className,
+        ),
       },
       props,
     ),

@@ -9,12 +9,13 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { z } from "zod";
 import type {
-  KyeroEnergyRating,
-  KyeroImage,
-  KyeroMultiLanguageString,
-  KyeroSurfaceArea,
-} from "@/lib/fn/kyero/types";
+  kyeroEnergyRatingSchema,
+  kyeroImageSchema,
+  kyeroSurfaceAreaSchema,
+} from "@/lib/fn/kyero/schemas";
+import type { i18nStringSchema } from "../i18n/schema";
 
 export const USER_ROLE_ENUM = ["owner", "admin", "member"] as const;
 export const MEMBER_ROLE_ENUM = ["owner", "admin", "member"] as const;
@@ -36,7 +37,7 @@ export const property = pgTable(
   "property",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    reference: text("reference").unique(),
+    ref: text("ref").unique(),
     price: integer("price").notNull(),
     type: text("type").notNull(),
     town: text("town").notNull(),
@@ -46,24 +47,26 @@ export const property = pgTable(
       .references(() => organization.id, { onDelete: "cascade" }),
     // -- Optional / Conditional Fields --
     priceFreq: integer("price_freq"),
-    currency: text("currency"),
+    currency: text("currency").notNull().default("eur"),
     partOwnership: boolean("part_ownership").default(false),
     leasehold: boolean("leasehold").default(false),
     newBuild: boolean("new_build").default(false),
     locationDetail: text("location_detail"),
     beds: integer("beds").notNull(),
     baths: integer("baths").notNull(),
-    pool: boolean("pool").default(false),
+    pool: boolean("pool").notNull().default(false),
     // -- Nested Objects --
-    surfaceArea: jsonb("surface_area").$type<KyeroSurfaceArea>(),
-    energyRating: jsonb("energy_rating").$type<KyeroEnergyRating>(),
+    surfaceArea:
+      jsonb("surface_area").$type<z.infer<typeof kyeroSurfaceAreaSchema>>(),
+    energyRating:
+      jsonb("energy_rating").$type<z.infer<typeof kyeroEnergyRatingSchema>>(),
     url: text("url"),
     notes: text("notes"),
     // -- Description and Features (Multi-language) --
-    desc: jsonb("desc").$type<KyeroMultiLanguageString>(),
-    features: jsonb("features").$type<KyeroMultiLanguageString>(),
+    desc: jsonb("desc").$type<z.infer<typeof i18nStringSchema>>(),
+    features: jsonb("features").$type<z.infer<typeof i18nStringSchema>>(),
     // -- Arrays --
-    images: jsonb("images").$type<KyeroImage[]>(),
+    images: jsonb("images").$type<z.infer<typeof kyeroImageSchema>[]>(),
     // -- V3.5+ Additions --
     videoUrl: text("video_url"),
     virtualTourUrl: text("virtual_tour_url"),

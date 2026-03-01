@@ -25,6 +25,7 @@ import { Route as AppAdminOrganizationIndexRouteImport } from './routes/app/admi
 import { Route as AppAgencyIdPropertyIndexRouteImport } from './routes/app/$agencyId/property/index'
 import { Route as AppAdminOrganizationCreateRouteImport } from './routes/app/admin/organization/create'
 import { Route as AppAdminOrganizationIdRouteImport } from './routes/app/admin/organization/$id'
+import { Route as AppAgencyIdPropertyImportRouteImport } from './routes/app/$agencyId/property/import'
 import { Route as AppAgencyIdPropertyCreateRouteImport } from './routes/app/$agencyId/property/create'
 
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -109,6 +110,12 @@ const AppAdminOrganizationIdRoute = AppAdminOrganizationIdRouteImport.update({
   path: '/organization/$id',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
+const AppAgencyIdPropertyImportRoute =
+  AppAgencyIdPropertyImportRouteImport.update({
+    id: '/property/import',
+    path: '/property/import',
+    getParentRoute: () => AppAgencyIdRouteRoute,
+  } as any)
 const AppAgencyIdPropertyCreateRoute =
   AppAgencyIdPropertyCreateRouteImport.update({
     id: '/property/create',
@@ -129,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/app/account/': typeof AppAccountIndexRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/$agencyId/property/create': typeof AppAgencyIdPropertyCreateRoute
+  '/app/$agencyId/property/import': typeof AppAgencyIdPropertyImportRoute
   '/app/admin/organization/$id': typeof AppAdminOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/$agencyId/property/': typeof AppAgencyIdPropertyIndexRoute
@@ -144,6 +152,7 @@ export interface FileRoutesByTo {
   '/app/account': typeof AppAccountIndexRoute
   '/app/admin': typeof AppAdminIndexRoute
   '/app/$agencyId/property/create': typeof AppAgencyIdPropertyCreateRoute
+  '/app/$agencyId/property/import': typeof AppAgencyIdPropertyImportRoute
   '/app/admin/organization/$id': typeof AppAdminOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/$agencyId/property': typeof AppAgencyIdPropertyIndexRoute
@@ -164,6 +173,7 @@ export interface FileRoutesById {
   '/app/account/': typeof AppAccountIndexRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/$agencyId/property/create': typeof AppAgencyIdPropertyCreateRoute
+  '/app/$agencyId/property/import': typeof AppAgencyIdPropertyImportRoute
   '/app/admin/organization/$id': typeof AppAdminOrganizationIdRoute
   '/app/admin/organization/create': typeof AppAdminOrganizationCreateRoute
   '/app/$agencyId/property/': typeof AppAgencyIdPropertyIndexRoute
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/app/account/'
     | '/app/admin/'
     | '/app/$agencyId/property/create'
+    | '/app/$agencyId/property/import'
     | '/app/admin/organization/$id'
     | '/app/admin/organization/create'
     | '/app/$agencyId/property/'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/app/account'
     | '/app/admin'
     | '/app/$agencyId/property/create'
+    | '/app/$agencyId/property/import'
     | '/app/admin/organization/$id'
     | '/app/admin/organization/create'
     | '/app/$agencyId/property'
@@ -218,6 +230,7 @@ export interface FileRouteTypes {
     | '/app/account/'
     | '/app/admin/'
     | '/app/$agencyId/property/create'
+    | '/app/$agencyId/property/import'
     | '/app/admin/organization/$id'
     | '/app/admin/organization/create'
     | '/app/$agencyId/property/'
@@ -345,6 +358,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminOrganizationIdRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
+    '/app/$agencyId/property/import': {
+      id: '/app/$agencyId/property/import'
+      path: '/property/import'
+      fullPath: '/app/$agencyId/property/import'
+      preLoaderRoute: typeof AppAgencyIdPropertyImportRouteImport
+      parentRoute: typeof AppAgencyIdRouteRoute
+    }
     '/app/$agencyId/property/create': {
       id: '/app/$agencyId/property/create'
       path: '/property/create'
@@ -372,12 +392,14 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 interface AppAgencyIdRouteRouteChildren {
   AppAgencyIdIndexRoute: typeof AppAgencyIdIndexRoute
   AppAgencyIdPropertyCreateRoute: typeof AppAgencyIdPropertyCreateRoute
+  AppAgencyIdPropertyImportRoute: typeof AppAgencyIdPropertyImportRoute
   AppAgencyIdPropertyIndexRoute: typeof AppAgencyIdPropertyIndexRoute
 }
 
 const AppAgencyIdRouteRouteChildren: AppAgencyIdRouteRouteChildren = {
   AppAgencyIdIndexRoute: AppAgencyIdIndexRoute,
   AppAgencyIdPropertyCreateRoute: AppAgencyIdPropertyCreateRoute,
+  AppAgencyIdPropertyImportRoute: AppAgencyIdPropertyImportRoute,
   AppAgencyIdPropertyIndexRoute: AppAgencyIdPropertyIndexRoute,
 }
 

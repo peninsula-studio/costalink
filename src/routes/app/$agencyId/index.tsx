@@ -107,9 +107,18 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
                 </Link>
               }
             ></Button>
-            <Button variant="outline">
-              <ImportIcon /> Import Properties
-            </Button>
+            <Button
+              nativeButton={false}
+              render={
+                <Link
+                  params={{ agencyId }}
+                  to={"/app/$agencyId/property/import"}
+                >
+                  <ImportIcon /> Import Properties
+                </Link>
+              }
+              variant="outline"
+            ></Button>
           </EmptyContent>
           <Button
             className="text-muted-foreground"

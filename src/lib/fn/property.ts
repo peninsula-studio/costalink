@@ -1,6 +1,11 @@
-import { queryOptions } from "@tanstack/react-query";
+import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import type { z } from "zod";
 import { db } from "@/lib/db";
+import { property } from "../db/schema";
+import { propertyKeys } from "./keys";
+import type { kyeroPropertySchema } from "./kyero/schemas";
+import { getActiveOrganizationFn } from "./organization";
 
 export const getOrganizationPropertiesFn = createServerFn()
   .inputValidator((data: { organizationId: string }) => data)
@@ -30,4 +35,63 @@ export const getPropertiesQueryOptions = ({
     queryKey: ["property", "list", organizationId],
     queryFn: async () =>
       await getOrganizationPropertiesFn({ data: { organizationId } }),
+  });
+
+export const $checkPropertyReference = createServerFn()
+  .inputValidator((data: { reference: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      const property = await db.query.property.findFirst({
+        where: { reference: { eq: data.reference } },
+      });
+      return !property;
+    } catch (error) {
+      console.error(
+        `Error getting list of organizations: ${(error as Error).message}`,
+      );
+      throw new Error("Error getting organizations");
+    }
+  });
+
+export const $createPropertyFn = createServerFn({ method: "POST" })
+  .inputValidator((data: z.infer<typeof kyeroPropertySchema>) => data)
+  .handler(async ({ data }) => {
+    const orgId = await getActiveOrganizationFn();
+    if (!orgId) throw new Error("There is no valid active Organization");
+
+    try {
+      const result = await db
+        .insert(property)
+        .values({
+          beds: data.beds,
+          baths: data.baths,
+          ref: data.reference,
+          price: data.price,
+          organizationId: orgId.id,
+          province: data.province,
+          town: data.town,
+          type: data.type,
+        })
+        .returning();
+      return result[0];
+    } catch (error) {
+      console.error(
+        `Error getting list of organizations: ${(error as Error).message}`,
+      );
+      throw new Error("Error getting organizations");
+    }
+  });
+
+export const createPropertyMutationOptions = () =>
+  mutationOptions({
+    mutationKey: propertyKeys.create(),
+    mutationFn: async (data: z.infer<typeof kyeroPropertySchema>) =>
+      await $createPropertyFn({ data }),
+    onSuccess: async (result, data, _, { client }) => {
+      console.info(`✅ Property with reference ${data.reference} created.`);
+      await client.resetQueries({
+        queryKey: propertyKeys.list({ organizationId: result.organizationId }),
+      });
+      return;
+    },
   });

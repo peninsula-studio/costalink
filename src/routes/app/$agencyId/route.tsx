@@ -1,26 +1,16 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getActiveOrganizationQueryOptions,
-  setActiveOrganizationQueryOptions,
-} from "@/lib/fn/organization";
+import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/$agencyId")({
   beforeLoad: async ({ context, params }) => {
-    let activeOrganization = await context.queryClient.ensureQueryData(
-      getActiveOrganizationQueryOptions({ userId: context.user.id }),
-    );
-    if (activeOrganization?.id !== params.agencyId) {
-      activeOrganization = await context.queryClient.fetchQuery(
-        setActiveOrganizationQueryOptions({
-          userId: context.user.id,
-          organizationId: params.agencyId,
-        }),
-      );
-      context.queryClient.resetQueries(
-        getActiveOrganizationQueryOptions({ userId: context.user.id }),
-      );
-    }
+    const activeOrganization = await context.queryClient.ensureQueryData({
+      ...setActiveOrganizationQueryOptions({
+        userId: context.user.id,
+        organizationId: params.agencyId,
+      }),
+      revalidateIfStale: true,
+    });
     if (!activeOrganization) throw redirect({ to: "/app" });
     return { activeOrganization };
   },
