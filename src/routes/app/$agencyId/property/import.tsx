@@ -135,18 +135,22 @@ function Results({ url }: { url: string }) {
   const { data } = useSuspenseQuery({
     queryKey: ["kyeroXML", url],
     queryFn: async () => {
-      await new Promise((res) => setTimeout(res, 1000));
-      const rawXmlData = await fetch(url, {
-        mode: "cors",
-        // referrer: "https://www.medvillaspanje.com/",
-        // headers: {
-        //   "Access-Control-Allow-Origin": "*",
-        //   "Content-Type": "application/json",
-        // },
-      });
-      const blob = await rawXmlData.blob();
-      const extracted = extractKyeroProperties(await blob.text());
-      return extracted;
+      try {
+        const rawXmlData = await fetch(url, {
+          mode: "cors",
+          // referrer: "https://www.medvillaspanje.com/",
+          // headers: {
+          //   "Access-Control-Allow-Origin": "*",
+          //   "Content-Type": "application/json",
+          // },
+        });
+        const blob = await rawXmlData.blob();
+        const extracted = extractKyeroProperties(await blob.text());
+        return extracted;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Error fetching the Kyero XML");
+      }
     },
     refetchOnWindowFocus: false,
   });
