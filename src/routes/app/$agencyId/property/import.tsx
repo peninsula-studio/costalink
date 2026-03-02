@@ -1,17 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useIsFetching,
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useIsFetching, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { FileXCorner, HouseIcon, ImportIcon } from "lucide-react";
 import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FlexContainer } from "@/components/container";
-import { CreatePropertyForm } from "@/components/create-property-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -42,7 +36,7 @@ function RouteComponent() {
     url: z.string(),
   });
 
-  const { formState, register, watch, handleSubmit } = useForm({
+  const { formState, register, watch, reset, handleSubmit } = useForm({
     defaultValues: {
       // biome-error: THIS IS TESTING
       // ERROR: Don't build with this value
@@ -86,7 +80,11 @@ function RouteComponent() {
                 id="kyero-feed-url"
                 placeholder="https://www.website.com/feed/kyero-v3.xml"
                 type="url"
-                {...register("url")}
+                {...register("url", {
+                  onChange: () => {
+                    reset();
+                  },
+                })}
               />
             </FieldContent>
           </Field>
