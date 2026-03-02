@@ -38,11 +38,11 @@ export const getPropertiesQueryOptions = ({
   });
 
 export const $checkPropertyReference = createServerFn()
-  .inputValidator((data: { reference: string }) => data)
+  .inputValidator((data: { ref: string }) => data)
   .handler(async ({ data }) => {
     try {
       const property = await db.query.property.findFirst({
-        where: { reference: { eq: data.reference } },
+        where: { ref: { eq: data.ref } },
       });
       return !property;
     } catch (error) {
@@ -65,7 +65,7 @@ export const $createPropertyFn = createServerFn({ method: "POST" })
         .values({
           beds: data.beds,
           baths: data.baths,
-          ref: data.reference,
+          ref: data.ref,
           price: data.price,
           organizationId: orgId.id,
           province: data.province,
@@ -88,7 +88,7 @@ export const createPropertyMutationOptions = () =>
     mutationFn: async (data: z.infer<typeof kyeroPropertySchema>) =>
       await $createPropertyFn({ data }),
     onSuccess: async (result, data, _, { client }) => {
-      console.info(`✅ Property with reference ${data.reference} created.`);
+      console.info(`✅ Property with reference ${data.ref} created.`);
       await client.resetQueries({
         queryKey: propertyKeys.list({ organizationId: result.organizationId }),
       });

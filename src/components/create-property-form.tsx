@@ -1,32 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
 import { toast } from "sonner";
-import type z from "zod";
 import { InputValidCheck } from "@/components/input-valid-check";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Field,
   FieldContent,
-  FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { authClient } from "@/lib/auth/client";
-import { organizationKeys, propertyKeys } from "@/lib/fn/keys";
 import { kyeroPropertySchema } from "@/lib/fn/kyero/schemas";
 import {
   $checkPropertyReference,
@@ -49,8 +36,6 @@ export function CreatePropertyForm({
   onSuccess?: () => void;
   callbackURL?: string;
 }) {
-  const router = useRouter();
-
   const { formState, handleSubmit, setValue, setError, clearErrors, register } =
     useForm({
       defaultValues: { ref: "" },
@@ -60,12 +45,12 @@ export function CreatePropertyForm({
 
   const isValidFn = React.cache(async (val: string) => {
     const refExists = await $checkPropertyReference({
-      data: { reference: val },
+      data: { ref: val },
     });
     return refExists;
   });
 
-  const { mutateAsync, isPending, isSuccess } = useMutation({
+  const { mutateAsync } = useMutation({
     ...createPropertyMutationOptions(),
     onMutate: () => {
       clearErrors();
