@@ -28,6 +28,7 @@ export const Route = createFileRoute("/app")({
   server: {
     middleware: [sessionCookieMiddleware],
   },
+  ssr: "data-only",
   beforeLoad: async ({ context, location }) => {
     const session = await context.queryClient.ensureQueryData({
       ...getSessionQueryOptions(),

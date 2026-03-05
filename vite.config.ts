@@ -6,7 +6,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
-import postgresPlugin from "vite-plugin-db";
+import { postgres } from "vite-plugin-db";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
 const config = defineConfig({
@@ -19,7 +19,7 @@ const config = defineConfig({
     // cloudflare({ viteEnvironment: { name: "ssr" } }),
     devtools(),
     nitro(),
-    postgresPlugin({
+    postgres({
       // seed: {
       //   type: "sql-script",
       //   path: "db/init.sql",

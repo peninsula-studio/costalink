@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, organization } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { env } from "@/env";
+import { serverEnv } from "@/env.server";
 import { db } from "@/lib/db";
 import { getInitialOrganization } from "@/lib/db/get-initial-organization";
 import * as schema from "@/lib/db/schema";
@@ -51,8 +51,8 @@ export const auth = betterAuth({
     advanced: {
       //   // disableCSRFCheck: true,
       //   // disableOriginCheck: true,
-      disableCSRFCheck: env.NODE_ENV === "development",
-      disableOriginCheck: env.NODE_ENV === "development",
+      disableCSRFCheck: serverEnv.NODE_ENV === "development",
+      disableOriginCheck: serverEnv.NODE_ENV === "development",
     },
   },
   plugins: [

@@ -33,7 +33,5 @@ export const Route = createFileRoute("/app/$agencyId")({
 });
 
 function OrganizationLayout() {
-  // const { activeOrganization } = Route.useRouteContext();
-
   return <Outlet />;
 }

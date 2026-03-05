@@ -4,12 +4,12 @@ import {
   organizationClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { env } from "@/env";
+import { clientEnv } from "@/env";
 import type { auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
   /** The base URL of the server (optional if you're using the same domain) */
-  baseURL: `${env.VITE_ROOT_DOMAIN}`,
+  baseURL: `${clientEnv.VITE_ROOT_DOMAIN}`,
   plugins: [
     inferAdditionalFields<typeof auth>(),
     adminClient(),

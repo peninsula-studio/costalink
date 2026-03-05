@@ -26,7 +26,9 @@ export const getListOrganizationsFn = createServerFn().handler(async () => {
   }
 });
 
-export const organizationListQueryOptions = (props:Parameters<typeof organizationKeys.list>[0] ) =>
+export const organizationListQueryOptions = (
+  props: Parameters<typeof organizationKeys.list>[0],
+) =>
   queryOptions({
     queryKey: organizationKeys.list(props),
     queryFn: () => getListOrganizationsFn(),
