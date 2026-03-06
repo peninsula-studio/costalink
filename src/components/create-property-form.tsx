@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { kyeroPropertySchema } from "@/lib/fn/kyero/schemas";
 import {
-  $checkPropertyReference,
+  checkPropertyReferenceFn,
   createPropertyMutationOptions,
 } from "@/lib/fn/property";
 
@@ -44,7 +44,7 @@ export function CreatePropertyForm({
     });
 
   const isValidFn = React.cache(async (val: string) => {
-    const refExists = await $checkPropertyReference({
+    const refExists = await checkPropertyReferenceFn({
       data: { ref: val },
     });
     return refExists;
