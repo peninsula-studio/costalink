@@ -26,6 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH2, TypographyLarge } from "@/components/ui/typography";
 import { extractKyeroProperties } from "@/lib/fn/kyero/extract-kyero-property";
+import { extractPropertiesFromKyeroXMLFn } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId/property/import")({
   component: RouteComponent,
@@ -134,24 +135,8 @@ function RouteComponent() {
 function Results({ url }: { url: string }) {
   const { data } = useSuspenseQuery({
     queryKey: ["kyeroXML", url],
-    queryFn: async () => {
-      try {
-        const rawXmlData = await fetch(url, {
-          mode: "cors",
-          // referrer: "https://www.medvillaspanje.com/",
-          // headers: {
-          //   "Access-Control-Allow-Origin": "*",
-          //   "Content-Type": "application/json",
-          // },
-        });
-        const blob = await rawXmlData.blob();
-        const extracted = extractKyeroProperties(await blob.text());
-        return extracted;
-      } catch (error) {
-        console.error(error);
-        throw new Error("Error fetching the Kyero XML");
-      }
-    },
+    queryFn: async () =>
+      await extractPropertiesFromKyeroXMLFn({ data: { url } }),
     refetchOnWindowFocus: false,
   });
 

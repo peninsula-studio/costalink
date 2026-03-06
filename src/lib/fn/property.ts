@@ -2,8 +2,10 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { z } from "zod";
 import { db } from "@/lib/db";
+import { adminMiddleware, authMiddleware } from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
+import { extractKyeroProperties } from "./kyero/extract-kyero-property";
 import type { kyeroPropertySchema } from "./kyero/schemas";
 import { getActiveOrganizationFn } from "./organization";
 
@@ -37,7 +39,7 @@ export const getPropertiesQueryOptions = ({
       await getOrganizationPropertiesFn({ data: { organizationId } }),
   });
 
-export const $checkPropertyReference = createServerFn()
+export const checkPropertyReferenceFn = createServerFn()
   .inputValidator((data: { ref: string }) => data)
   .handler(async ({ data }) => {
     try {
@@ -53,7 +55,7 @@ export const $checkPropertyReference = createServerFn()
     }
   });
 
-export const $createPropertyFn = createServerFn({ method: "POST" })
+export const createPropertyFn = createServerFn({ method: "POST" })
   .inputValidator((data: z.infer<typeof kyeroPropertySchema>) => data)
   .handler(async ({ data }) => {
     const orgId = await getActiveOrganizationFn();
@@ -86,7 +88,7 @@ export const createPropertyMutationOptions = () =>
   mutationOptions({
     mutationKey: propertyKeys.create(),
     mutationFn: async (data: z.infer<typeof kyeroPropertySchema>) =>
-      await $createPropertyFn({ data }),
+      await createPropertyFn({ data }),
     onSuccess: async (result, data, _, { client }) => {
       console.info(`✅ Property with reference ${data.ref} created.`);
       await client.resetQueries({
@@ -94,4 +96,22 @@ export const createPropertyMutationOptions = () =>
       });
       return;
     },
+  });
+
+export const extractPropertiesFromKyeroXMLFn = createServerFn()
+  .inputValidator((data: { url: string }) => data)
+  .middleware([authMiddleware, adminMiddleware])
+  .handler(async ({ data: { url } }) => {
+    const orgId = await getActiveOrganizationFn();
+    if (!orgId) throw new Error("There is no valid active Organization");
+
+    try {
+      const rawXmlData = await fetch(url);
+      const blob = await rawXmlData.blob();
+      const extracted = extractKyeroProperties(await blob.text());
+      return extracted;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching the Kyero XML");
+    }
   });
