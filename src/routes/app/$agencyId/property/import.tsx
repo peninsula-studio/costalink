@@ -25,7 +25,6 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH2, TypographyLarge } from "@/components/ui/typography";
-import { extractKyeroProperties } from "@/lib/fn/kyero/extract-kyero-property";
 import { extractPropertiesFromKyeroXMLFn } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId/property/import")({
