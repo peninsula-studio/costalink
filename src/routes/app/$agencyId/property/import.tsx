@@ -54,17 +54,6 @@ function RouteComponent() {
     });
   });
 
-  // const { data, mutate, isPending } = useMutation({
-  //   mutationKey: ["getKyeroXML", watch("url")],
-  //   mutationFn: async (data: z.infer<typeof importKyeroXMLSchema>) => {
-  //     await new Promise((res) => setTimeout(res, 1000));
-  //     const rawXmlData = await fetch(data.url);
-  //     const blob = await rawXmlData.blob();
-  //     const extracted = extractKyeroProperties(await blob.text());
-  //     return extracted;
-  //   },
-  // });
-
   const isFetching = useIsFetching({
     fetchStatus: "fetching",
     queryKey: ["kyeroXML"],

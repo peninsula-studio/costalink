@@ -80,7 +80,15 @@ function SidebarProvider({
       }
 
       // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      // document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      Promise.all([
+        cookieStore.set({ name: SIDEBAR_COOKIE_NAME, value: `${openState}` }),
+        cookieStore.set({ name: "path", value: `/` }),
+        cookieStore.set({
+          name: "max-age",
+          value: `${SIDEBAR_COOKIE_MAX_AGE}`,
+        }),
+      ]);
     },
     [setOpenProp, open],
   );
