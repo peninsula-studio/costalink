@@ -153,22 +153,11 @@ function RouteComponent() {
         </Card>
       </div>
 
-      {property.desc && (
-        <Card className="mt-6">
-          <CardContent className="p-6">
-            <h3 className="mb-4 font-semibold text-xl">Description</h3>
-            <TypographyP className="whitespace-pre-wrap">
-              {Object.values(property.desc).join("\n")}
-            </TypographyP>
-          </CardContent>
-        </Card>
-      )}
-
       {property.images && property.images.length > 0 && (
         <Card className="mt-6">
           <CardContent className="p-6">
             <h3 className="mb-4 font-semibold text-xl">Images</h3>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               {property.images.map((img) => (
                 <div
                   className="aspect-video overflow-hidden rounded-lg bg-gray-100"
@@ -182,6 +171,17 @@ function RouteComponent() {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {property.desc && (
+        <Card>
+          <CardContent className="p-6">
+            <h3 className="mb-4 font-semibold text-xl">Description</h3>
+            <TypographyP className="whitespace-pre-wrap">
+              {Object.values(property.desc).join("\n")}
+            </TypographyP>
           </CardContent>
         </Card>
       )}
