@@ -1,5 +1,6 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
 import type { z } from "zod";
 import { db } from "@/lib/db";
 import { adminMiddleware, authMiddleware } from "@/middleware/auth";
@@ -11,6 +12,7 @@ import { getActiveOrganizationFn } from "./organization";
 
 export const getOrganizationPropertiesFn = createServerFn()
   .inputValidator((data: { organizationId: string }) => data)
+  .middleware([authMiddleware])
   // .inputValidator(
   //   (data: Parameters<typeof db.query.property.findMany>["0"]) => data,
   // )
@@ -182,4 +184,89 @@ export const extractPropertiesFromKyeroXMLFn = createServerFn()
       console.error(error);
       throw new Error("Error fetching the Kyero XML");
     }
+  });
+
+export const updatePropertyFn = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: Partial<z.infer<typeof kyeroPropertySchema>> & { id: string }) =>
+      data,
+  )
+  .handler(async ({ data }) => {
+    try {
+      const { id, ...updateData } = data;
+
+      const result = await db
+        .update(property)
+        .set({
+          ...updateData,
+          updatedAt: new Date(),
+        })
+        .where(eq(property.id, id))
+        .returning();
+
+      return result[0];
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error(`❌ Error updating property: ${(e as Error).message}`);
+      }
+      throw e;
+    }
+  });
+
+export const deletePropertyFn = createServerFn({ method: "POST" })
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      await db.delete(property).where(eq(property.id, data.id));
+      return { success: true };
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error(`❌ Error deleting property: ${(e as Error).message}`);
+      }
+      throw e;
+    }
+  });
+
+export const getPropertyFn = createServerFn({ method: "GET" })
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      const result = await db.query.property.findFirst({
+        where: { id: { eq: data.id } },
+      });
+      return result;
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error(`❌ Error getting property: ${(e as Error).message}`);
+      }
+      throw e;
+    }
+  });
+
+export const getPropertyQueryOptions = ({ id }: { id: string }) =>
+  queryOptions({
+    queryKey: ["property", "detail", id],
+    queryFn: async () => await getPropertyFn({ data: { id } }),
+  });
+
+export const updatePropertyMutationOptions = () =>
+  mutationOptions({
+    mutationKey: ["property", "update"],
+    mutationFn: async (
+      data: Partial<z.infer<typeof kyeroPropertySchema>> & { id: string },
+    ) => await updatePropertyFn({ data }),
+    onSuccess: async () => {
+      console.info(`✅ Property updated successfully.`);
+    },
+  });
+
+export const deletePropertyMutationOptions = () =>
+  mutationOptions({
+    mutationKey: ["property", "delete"],
+    mutationFn: async (data: { id: string }) =>
+      await deletePropertyFn({ data }),
+    onSuccess: async (_result, data, _context, { client }) => {
+      console.info(`✅ Property with ID ${data.id} deleted.`);
+      await client.resetQueries({ queryKey: ["property", "list"] });
+    },
   });

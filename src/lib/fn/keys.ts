@@ -50,6 +50,9 @@ export const propertyKeys = {
   list: ({ organizationId }: { organizationId: string }) =>
     [...propertyKeys.all(), "list", organizationId] as const,
   create: () => [...propertyKeys.all(), "create"] as const,
+  detail: (id: string) => [...propertyKeys.all(), "detail", id] as const,
+  update: () => [...propertyKeys.all(), "update"] as const,
+  delete: () => [...propertyKeys.all(), "delete"] as const,
 };
 
 export const memberKeys = {
