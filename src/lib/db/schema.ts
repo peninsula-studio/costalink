@@ -19,6 +19,13 @@ import type { i18nStringSchema } from "../i18n/schema";
 
 export const USER_ROLE_ENUM = ["owner", "admin", "member"] as const;
 export const MEMBER_ROLE_ENUM = ["owner", "admin", "member"] as const;
+export const PROPERTY_STATUS_ENUM = [
+  "active",
+  "inactive",
+  "pending",
+  "sold",
+  "rented",
+] as const;
 
 export const estadoPlaza = pgEnum("estado_plaza", [
   "vacante",
@@ -32,6 +39,10 @@ export const memberRoleEnum = pgEnum("memberRole", [
   "member",
 ]);
 export const planEnum = pgEnum("plan", ["free", "pro", "enterprise"]);
+export const propertyStatusEnum = pgEnum(
+  "propertyStatus",
+  PROPERTY_STATUS_ENUM,
+);
 
 export const property = pgTable(
   "property",
@@ -78,6 +89,8 @@ export const property = pgTable(
     // -- V3.9+ Additions --
     contactNumber: text("contact_number"),
     whatsappNumber: text("whatsapp_number"),
+    // -- Property status --
+    status: propertyStatusEnum("status").default("active").notNull(),
     // -- Standard fields for created and updated timestamps
     createdAt: timestamp("created_at", { withTimezone: true })
       .$defaultFn(() => new Date())
@@ -87,7 +100,10 @@ export const property = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("property_organizationId_idx").on(table.organizationId)],
+  (table) => [
+    index("property_organizationId_idx").on(table.organizationId),
+    index("property_status_idx").on(table.status),
+  ],
 );
 
 // *****************************************************************
