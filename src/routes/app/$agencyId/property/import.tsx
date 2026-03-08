@@ -163,7 +163,7 @@ function Results({ url }: { url: string }) {
       </Button>
       <FlexContainer className="flex-row flex-wrap" padding="none">
         {data.map((property) => (
-          <Card className="w-full min-w-sm max-w-lg" key={property.id}>
+          <Card className="w-full min-w-sm max-w-lg" key={property.ref}>
             <CardHeader>
               <TypographyLarge className="inline-flex">
                 <HouseIcon /> {property.ref}
