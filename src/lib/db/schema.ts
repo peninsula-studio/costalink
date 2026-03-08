@@ -46,7 +46,7 @@ export const property = pgTable(
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
     // -- Optional / Conditional Fields --
-    priceFreq: integer("price_freq"),
+    priceFreq: text("price_freq").notNull().default("sale"),
     currency: text("currency").notNull().default("eur"),
     partOwnership: boolean("part_ownership").default(false),
     leasehold: boolean("leasehold").default(false),

@@ -62,25 +62,45 @@ export const createPropertyFn = createServerFn({ method: "POST" })
     if (!orgId) throw new Error("There is no valid active Organization");
 
     try {
-      const result = await db
-        .insert(property)
-        .values({
-          beds: data.beds,
-          baths: data.baths,
-          ref: data.ref,
-          price: data.price,
-          organizationId: orgId.id,
-          province: data.province,
-          town: data.town,
-          type: data.type,
-        })
-        .returning();
+      const dbData: typeof property.$inferInsert = {
+        organizationId: orgId.id,
+        beds: data.beds,
+        baths: data.baths,
+        ref: data.ref,
+        price: data.price,
+        desc: data.desc,
+        images: data.images,
+        features: data.features,
+        province: data.province,
+        town: data.town,
+        type: data.type,
+        priceFreq: data.price_freq,
+        currency: data.currency.toLowerCase(),
+        partOwnership: data.part_ownership,
+        leasehold: data.leasehold,
+        newBuild: data.new_build,
+        locationDetail: data.location_detail,
+        pool: data.pool,
+        surfaceArea: data.surface_area,
+        energyRating: data.energy_rating,
+        url: data.url,
+        notes: data.notes,
+        videoUrl: data.video_url,
+        virtualTourUrl: data.virtual_tour_url,
+        catastral: data.catastral,
+        email: data.email,
+        prime: data.prime,
+        contactNumber: data.contact_number,
+        whatsappNumber: data.whatsapp_number,
+      };
+
+      const result = await db.insert(property).values([dbData]).returning();
       return result[0];
-    } catch (error) {
-      console.error(
-        `Error getting list of organizations: ${(error as Error).message}`,
-      );
-      throw new Error("Error getting organizations");
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error(`❌ Error creating property: ${(e as Error).message}`);
+      }
+      throw e;
     }
   });
 
@@ -96,6 +116,54 @@ export const createPropertyMutationOptions = () =>
       });
       return;
     },
+  });
+
+export const extractAndSavePropertiesFromKyeroXMLFn = createServerFn()
+  .inputValidator((data: { url: string }) => data)
+  .middleware([authMiddleware, adminMiddleware])
+  .handler(async ({ data: { url } }) => {
+    const orgId = await getActiveOrganizationFn();
+    if (!orgId) throw new Error("There is no valid active Organization");
+
+    try {
+      const rawXmlData = await fetch(url);
+      const blob = await rawXmlData.blob();
+      const extracted = extractKyeroProperties(await blob.text());
+
+      // Create all properties in the database
+      const results = [];
+      for (const property of extracted) {
+        try {
+          // // Transform property data to match database schema
+          // const dbPropertyData = {
+          //   ...property,
+          //   priceFreq: property.price_freq,
+          //   partOwnership: property.part_ownership,
+          //   leasehold: property.leasehold,
+          //   newBuild: property.new_build,
+          //   locationDetail: property.location_detail,
+          //   surfaceArea: property.surface_area,
+          //   energyRating: property.energy_rating,
+          //   videoUrl: property.video_url,
+          //   virtualTourUrl: property.virtual_tour_url,
+          //   contactNumber: property.contact_number,
+          //   whatsappNumber: property.whatsapp_number,
+          // };
+
+          // const result = await createPropertyFn({ data: dbPropertyData });
+          const result = await createPropertyFn({ data: property });
+          results.push(result);
+        } catch (error) {
+          console.error(`Error creating property ${property.ref}:`, error);
+          // Continue with other properties instead of failing completely
+        }
+      }
+
+      return results;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error fetching the Kyero XML");
+    }
   });
 
 export const extractPropertiesFromKyeroXMLFn = createServerFn()

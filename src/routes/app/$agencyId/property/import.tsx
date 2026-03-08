@@ -1,5 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIsFetching, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useIsFetching,
+  useMutation,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { CheckIcon, FileXCorner, HouseIcon, ImportIcon } from "lucide-react";
 import { Suspense } from "react";
@@ -25,7 +29,10 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH2, TypographyLarge } from "@/components/ui/typography";
-import { extractPropertiesFromKyeroXMLFn } from "@/lib/fn/property";
+import {
+  createPropertyMutationOptions,
+  extractPropertiesFromKyeroXMLFn,
+} from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId/property/import")({
   component: RouteComponent,
@@ -40,7 +47,8 @@ function RouteComponent() {
     defaultValues: {
       // biome-error: THIS IS TESTING
       // ERROR: Don't build with this value
-      url: "https://feeds.kyero.com/assets/kyero_v3_test_feed.xml",
+      // url: "https://feeds.kyero.com/assets/kyero_v3_test_feed.xml",
+      url: "https://www.vandamestates.com/kyero/direct",
     },
     mode: "onSubmit",
     resolver: zodResolver(importKyeroXMLSchema),
@@ -128,33 +136,60 @@ function Results({ url }: { url: string }) {
     refetchOnWindowFocus: false,
   });
 
+  const { mutateAsync, isPending, isError } = useMutation(
+    createPropertyMutationOptions(),
+  );
+
   return data ? (
-    <FlexContainer className="flex-row flex-wrap" padding="none">
-      {data.map((property) => (
-        <Card className="w-full min-w-sm max-w-lg" key={property.id}>
-          <CardHeader>
-            <TypographyLarge className="inline-flex">
-              <HouseIcon /> {property.ref}
-            </TypographyLarge>
-          </CardHeader>
-          <CardContent>
-            <TypographyLarge>
-              {Number(property.price).toLocaleString()}&nbsp;{property.currency}
-            </TypographyLarge>
-            <div className="grid grid-cols-3 gap-4">
-              {property.images?.slice(0, 6).map((img) => (
-                <img
-                  alt={`Element ${img.id}`}
-                  className="aspect-square w-full min-w-28 max-w-64"
-                  key={img.id}
-                  src={img.url}
-                />
-              ))}
-            </div>
-            <span>{property.province}</span>
-          </CardContent>
-        </Card>
-      ))}
+    <FlexContainer padding="none">
+      <Button
+        className="w-fit"
+        disabled={isPending}
+        onClick={async () => {
+          await Promise.all(data.map((p) => mutateAsync(p)));
+        }}
+        type="submit"
+        variant={isError ? "destructive" : "default"}
+      >
+        {isPending ? (
+          <>
+            <Spinner /> Importing
+          </>
+        ) : isError ? (
+          <>Error importing</>
+        ) : (
+          <>Import {data.length} properties</>
+        )}
+      </Button>
+      <FlexContainer className="flex-row flex-wrap" padding="none">
+        {data.map((property) => (
+          <Card className="w-full min-w-sm max-w-lg" key={property.id}>
+            <CardHeader>
+              <TypographyLarge className="inline-flex">
+                <HouseIcon /> {property.ref}
+              </TypographyLarge>
+            </CardHeader>
+            <CardContent>
+              <TypographyLarge>
+                {Number(property.price).toLocaleString()}&nbsp;
+                {property.currency}
+              </TypographyLarge>
+              <pre>{JSON.stringify(property, null, 2)}</pre>
+              {/* <div className="grid grid-cols-3 gap-4"> */}
+              {/*   {property.images?.slice(0, 6).map((img) => ( */}
+              {/*     <img */}
+              {/*       alt={`Element ${img.id}`} */}
+              {/*       className="aspect-square w-full min-w-28 max-w-64" */}
+              {/*       key={img.id} */}
+              {/*       src={img.url} */}
+              {/*     /> */}
+              {/*   ))} */}
+              {/* </div> */}
+              <span>{property.province}</span>
+            </CardContent>
+          </Card>
+        ))}
+      </FlexContainer>
     </FlexContainer>
   ) : (
     <Empty className="mx-auto w-fit">

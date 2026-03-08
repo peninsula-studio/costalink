@@ -4,7 +4,7 @@ import { i18nStringSchema } from "@/lib/i18n/schema";
 // --- Helper Schemas (Dependencies) ---
 
 export const kyeroImageSchema = z.object({
-  id: z.union([z.number(), z.string()]).optional(),
+  id: z.string(),
   url: z.url(), // Enforces valid URL format
 });
 
@@ -22,7 +22,7 @@ export const kyeroEnergyRatingSchema = z.object({
 
 export const kyeroPropertySchema = z.object({
   // -- Mandatory Fields --
-  id: z.string(),
+  // id: z.string(),
   date: z.string(), // You could refine this with .regex() if you want to strictly validate "YYYY-MM-DD HH:MM:SS"
   ref: z.string(),
   price: z.number(),
@@ -30,9 +30,11 @@ export const kyeroPropertySchema = z.object({
   town: z.string(),
   province: z.string(),
 
+  organization_id: z.string(),
+
   // -- Optional / Conditional Fields --
-  currency: z.string(), // Defaults to EUR in logic, but optional here
-  price_freq: z.string().optional(),
+  currency: z.string().default("eur"), // Defaults to EUR in logic, but optional here
+  price_freq: z.string().default("sale"),
   part_ownership: z.boolean().optional(),
   leasehold: z.boolean().optional(),
   new_build: z.boolean().optional(),
@@ -51,7 +53,7 @@ export const kyeroPropertySchema = z.object({
   desc: i18nStringSchema,
   features: i18nStringSchema.optional(),
 
-  images: z.array(kyeroImageSchema).optional(),
+  images: z.array(kyeroImageSchema),
 
   notes: z.string().optional(),
 
