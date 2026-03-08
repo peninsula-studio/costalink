@@ -10,13 +10,21 @@ import {
   StopCircleIcon,
   Trash2Icon,
 } from "lucide-react";
-import { Suspense } from "react";
+import { type ComponentProps, Suspense } from "react";
 import { z } from "zod";
 import { FlexContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -37,8 +45,8 @@ import { cn } from "@/lib/utils";
 const routeParamSchema = z.object({
   search: z.string().optional(),
   type: z.string().optional(),
-  status: z.enum(PROPERTY_STATUS_ENUM).optional(),
-  // status: property.$inferSelect.status,
+  // status: z.enum(PROPERTY_STATUS_ENUM).optional(),
+  status: z.string().optional(),
   sortBy: z
     .enum(["price", "createdAt", "ref", "status", "province", "town"])
     .optional(),
@@ -88,24 +96,31 @@ function RouteComponent() {
   };
 
   const handleStatusFilter = (statusValue: string) => {
-    const newStatus = status === statusValue ? undefined : statusValue;
+    const newStatus =
+      status === statusValue ? undefined : statusValue || undefined;
     navigate({
       to: ".",
       search: {
         search,
         type,
-        status: newStatus as
-          | "active"
-          | "pending"
-          | "sold"
-          | "rented"
-          | undefined,
+        status: newStatus,
         sortBy,
         sortOrder,
         page,
       },
     });
   };
+
+  const allTypes: ComponentProps<typeof Select>["items"] = [
+    { label: "Select type", value: "" },
+    { label: "Detached", value: "detached" },
+    { label: "Townhouse", value: "townhouse" },
+  ];
+
+  const allStatus: ComponentProps<typeof Select>["items"] = [
+    { label: "Select status", value: "" },
+    ...PROPERTY_STATUS_ENUM.map((s) => ({ label: s, value: s })),
+  ];
 
   return (
     <FlexContainer className="space-y-6">
@@ -123,41 +138,67 @@ function RouteComponent() {
       </FlexContainer>
 
       <FlexContainer padding="none" spacing="sm">
-        <FlexContainer className="*:max-w-xl md:flex-row" padding="none">
-          <div className="flex-1">
-            <Label className="mb-1 block font-medium text-sm leading-none">
-              Search
-            </Label>
-            <Input
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search by ref, town, province..."
-              value={search || ""}
-            />
-          </div>
+        <FlexContainer className="*:flex-1 md:flex-row" padding="none">
+          <Field>
+            <FieldContent>
+              <FieldLabel>Search</FieldLabel>
+              <Input
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Search by ref, town, province..."
+                value={search || ""}
+              />
+            </FieldContent>
+          </Field>
 
-          <div>
-            <Label className="mb-1 block font-medium text-sm leading-none">
-              Type
-            </Label>
-            <Input
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-0 file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              onChange={(e) => handleTypeFilter(e.target.value)}
-              placeholder="Type"
-              value={type || ""}
-            />
-          </div>
+          <Field className="max-w-2xs">
+            <FieldContent className="w-full">
+              <FieldLabel>Type</FieldLabel>
+              <Select
+                defaultValue=""
+                items={allTypes}
+                onValueChange={(value) => handleTypeFilter(value || "")}
+                value={type || ""}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {allTypes.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FieldContent>
+          </Field>
 
-          <div>
-            <Label className="mb-1 block font-medium text-sm leading-none">
-              Status
-            </Label>
-            <Input
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-0 file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              onChange={(e) => handleStatusFilter(e.target.value)}
-              placeholder="Status"
-              value={status || ""}
-            />
-          </div>
+          <Field>
+            <FieldContent>
+              <FieldLabel>Status</FieldLabel>
+              <Select
+                defaultValue={""}
+                items={allStatus}
+                onValueChange={(value) => handleStatusFilter(value || "")}
+                value={status || ""}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {allStatus.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FieldContent>
+          </Field>
         </FlexContainer>
 
         <Suspense fallback={<Skeleton className="h-20 w-full" />}>
