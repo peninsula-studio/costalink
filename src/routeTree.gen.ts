@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,6 +29,11 @@ import { Route as AppAdminOrganizationIdRouteImport } from './routes/app/admin/o
 import { Route as AppAgencyIdPropertyImportRouteImport } from './routes/app/$agencyId/property/import'
 import { Route as AppAgencyIdPropertyCreateRouteImport } from './routes/app/$agencyId/property/create'
 
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
   path: '/app',
@@ -126,6 +132,7 @@ const AppAgencyIdPropertyCreateRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
+  '/llms.txt': typeof LlmsDottxtRoute
   '/app/$agencyId': typeof AppAgencyIdRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/sign-in': typeof AuthSignInRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/app': typeof AppIndexRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
   '/app': typeof AppRouteRouteWithChildren
+  '/llms.txt': typeof LlmsDottxtRoute
   '/app/$agencyId': typeof AppAgencyIdRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/_auth/sign-in': typeof AuthSignInRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/llms.txt'
     | '/app/$agencyId'
     | '/app/admin'
     | '/sign-in'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/llms.txt'
     | '/sign-in'
     | '/sign-up'
     | '/app'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/app'
+    | '/llms.txt'
     | '/app/$agencyId'
     | '/app/admin'
     | '/_auth/sign-in'
@@ -241,11 +253,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -446,6 +466,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AppRouteRoute: AppRouteRouteWithChildren,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
