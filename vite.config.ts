@@ -6,7 +6,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
-import { postgres } from "vite-plugin-db";
+import { postgres } from "vite-plugin-neon-new";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
 const config = defineConfig({

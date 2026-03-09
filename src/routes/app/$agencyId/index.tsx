@@ -19,16 +19,24 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Item, ItemHeader, ItemMedia } from "@/components/ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH3,
+  TypographyH4,
   TypographyLarge,
 } from "@/components/ui/typography";
-import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId/")({
+  loader: async ({ context }) => {
+    context.queryClient.ensureQueryData(
+      getPropertiesQueryOptions({
+        organizationId: context.activeOrganization.id,
+      }),
+    );
+  },
   pendingComponent: () => (
     <div className="flex flex-col gap-y-6 p-6">
       <Skeleton className="h-12 w-md" />
@@ -55,34 +63,33 @@ function OrganizationPage() {
         <TypographyLarge>{activeOrganization.id}</TypographyLarge>
       </div>
 
-      <section className="flex flex-col gap-y-6">
-        <TypographyH3 className="inline-flex">
-          <HouseIcon className="inline-flex" /> Properties
-        </TypographyH3>
+      <Item className="flex flex-col gap-y-6">
+        <TypographyH4 className="self-start">
+          <ItemHeader>
+            <ItemMedia variant="icon">
+              <HouseIcon />
+            </ItemMedia>
+            Properties
+          </ItemHeader>
+        </TypographyH4>
         <Suspense fallback={<div>Loading...</div>}>
-          <PropertySection organizationId={activeOrganization.id} />
+          <PropertyGrid organizationId={activeOrganization.id} />
         </Suspense>
-      </section>
+      </Item>
     </FlexContainer>
   );
 }
 
-const PropertySection = ({ organizationId }: { organizationId: string }) => {
+const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
   const { agencyId } = Route.useParams();
+  const { activeOrganization } = Route.useRouteContext();
 
-  const { data: activeOrganization } = useSuspenseQuery(
-    getFullOrganizationQueryOptions({ organizationId: agencyId }),
-  );
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
   );
 
-  if (!activeOrganization) {
-    return null;
-  }
-
   return (
-    <div className="flex items-start gap-2 *:max-w-md *:border *:border-border">
+    <Item>
       {properties.length < 1 ? (
         <Empty>
           <EmptyHeader>
@@ -135,13 +142,22 @@ const PropertySection = ({ organizationId }: { organizationId: string }) => {
       ) : (
         <>
           {properties.map((property) => (
-            <PropertyCard key={property.id} />
+            <Link
+              key={property.id}
+              params={{
+                agencyId: property.organizationId,
+                propertyId: property.id,
+              }}
+              to="/app/$agencyId/property/$propertyId"
+            >
+              <PropertyCard data={property} />
+            </Link>
           ))}
           <Button>
             <PlusIcon /> Add Property
           </Button>
         </>
       )}
-    </div>
+    </Item>
   );
 };

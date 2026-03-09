@@ -89,7 +89,7 @@ function AppLayout() {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
-              className="mr-2 data-[orientation=vertical]:h-4"
+              className="mr-2 data-vertical:h-4"
               orientation="vertical"
             />
             <Breadcrumb>
