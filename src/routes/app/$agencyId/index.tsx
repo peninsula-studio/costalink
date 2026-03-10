@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ArrowUpRightIcon,
   FolderCode,
   HouseIcon,
+  HousePlusIcon,
   ImportIcon,
   PlusIcon,
 } from "lucide-react";
@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import { FlexContainer } from "@/components/container";
 import { PropertyCard } from "@/components/property-card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Empty,
   EmptyContent,
@@ -19,11 +20,12 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Item, ItemHeader, ItemMedia } from "@/components/ui/item";
+import { Item, ItemContent, ItemHeader, ItemMedia } from "@/components/ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH4,
+  TypographyH5,
   TypographyLarge,
 } from "@/components/ui/typography";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
@@ -57,52 +59,74 @@ function OrganizationPage() {
 
   return (
     <FlexContainer>
-      <div className="flex flex-col gap-y-4">
-        <TypographyH2>{activeOrganization.name}</TypographyH2>
-        <TypographyLarge>{activeOrganization.id}</TypographyLarge>
-      </div>
+      <Item className="p-0">
+        <ItemHeader className="justify-start">
+          <ItemMedia variant="image">
+            <img
+              alt="placeholder logo"
+              className="size-12 object-cover"
+              src="/placeholder.svg"
+            />
+          </ItemMedia>
+          <TypographyH2>{activeOrganization.name}</TypographyH2>
+        </ItemHeader>
+        <ItemContent>
+          <TypographyLarge>{activeOrganization.id}</TypographyLarge>
+        </ItemContent>
+      </Item>
 
-      <Item className="flex flex-col gap-y-6">
-        <TypographyH4 className="self-start">
-          <ItemHeader>
-            <ItemMedia variant="icon">
-              <HouseIcon />
-            </ItemMedia>
-            Properties
-          </ItemHeader>
-        </TypographyH4>
+      <FlexContainer
+        className="flex-wrap"
+        direction="horizontal"
+        padding="none"
+        spacing="sm"
+      >
+        <Item className="p-0">
+          <ItemMedia variant="icon">
+            <HouseIcon className="size-[1em] text-2xl" />
+          </ItemMedia>
+          <ItemContent>
+            <TypographyH4>Properties</TypographyH4>
+          </ItemContent>
+        </Item>
+
         <Suspense fallback={<div>Loading...</div>}>
           <PropertyGrid organizationId={activeOrganization.id} />
         </Suspense>
-      </Item>
+      </FlexContainer>
     </FlexContainer>
   );
 }
 
 const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
-  const { agencyId } = Route.useParams();
   const { activeOrganization } = Route.useRouteContext();
-
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
   );
 
   return (
-    <Item>
+    <>
       {properties.length < 1 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FolderCode />
-            </EmptyMedia>
-            <EmptyTitle>No Properties Yet</EmptyTitle>
-            <EmptyDescription>
-              You haven&apos;t created any properties yet. Get started by
-              creating your first property.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent className="flex-row justify-center gap-2">
+        <Card className="group relative w-full min-w-xs max-w-82 pt-0 transition-shadow hover:shadow-3xl">
+          <CardContent>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FolderCode />
+                </EmptyMedia>
+                <EmptyTitle className="text-lg">No Properties Yet</EmptyTitle>
+              </EmptyHeader>
+              <EmptyContent>
+                <EmptyDescription>
+                  You haven&apos;t created any properties yet. Get started by
+                  creating your first property.
+                </EmptyDescription>
+              </EmptyContent>
+            </Empty>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-2">
             <Button
+              className="w-full"
               nativeButton={false}
               render={
                 <Link
@@ -114,10 +138,11 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               }
             ></Button>
             <Button
+              className="w-full"
               nativeButton={false}
               render={
                 <Link
-                  params={{ agencyId }}
+                  params={{ agencyId: activeOrganization.id }}
                   to={"/app/$agencyId/property/import"}
                 >
                   <ImportIcon /> Import Properties
@@ -125,19 +150,8 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               }
               variant="outline"
             ></Button>
-          </EmptyContent>
-          <Button
-            className="text-muted-foreground"
-            nativeButton={false}
-            render={
-              <Link to="/app/admin">
-                Learn More <ArrowUpRightIcon />
-              </Link>
-            }
-            size="sm"
-            variant="link"
-          />
-        </Empty>
+          </CardFooter>
+        </Card>
       ) : (
         <>
           {properties.map((property) => (
@@ -152,11 +166,57 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               <PropertyCard data={property} />
             </Link>
           ))}
-          <Button>
-            <PlusIcon /> Add Property
-          </Button>
+
+          <Card className="group relative w-full min-w-xs max-w-82 pt-0 transition-shadow hover:shadow-3xl">
+            <CardContent>
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <HousePlusIcon />
+                  </EmptyMedia>
+                  <EmptyTitle className="text-lg">
+                    Add more properties
+                  </EmptyTitle>
+                </EmptyHeader>
+                <EmptyContent>
+                  <EmptyDescription>
+                    You can add up to <b>{100 - properties.length}</b> more
+                    properties to your portfolio to collaborate with other
+                    agents.
+                  </EmptyDescription>
+                </EmptyContent>
+              </Empty>
+            </CardContent>
+            <CardFooter className="flex flex-col gap-2">
+              <Button
+                className="w-full"
+                nativeButton={false}
+                render={
+                  <Link
+                    params={{ agencyId: activeOrganization.id }}
+                    to="/app/$agencyId/property/create"
+                  >
+                    <PlusIcon /> Add Property
+                  </Link>
+                }
+              ></Button>
+              <Button
+                className="w-full"
+                nativeButton={false}
+                render={
+                  <Link
+                    params={{ agencyId: activeOrganization.id }}
+                    to={"/app/$agencyId/property/import"}
+                  >
+                    <ImportIcon /> Import Properties
+                  </Link>
+                }
+                variant="outline"
+              ></Button>
+            </CardFooter>
+          </Card>
         </>
       )}
-    </Item>
+    </>
   );
 };

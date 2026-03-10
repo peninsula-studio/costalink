@@ -43,10 +43,6 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
-    // context.queryClient.ensureQueryData({
-    //   ...getActiveOrganizationQueryOptions({ userId: session.user.id }),
-    //   revalidateIfStale: true,
-    // });
     return { user: session.user };
   },
   loader: async ({ context }) => {

@@ -46,6 +46,7 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
         return null;
       } else {
         if (data === null) throw new Error("Data should not be null");
+        data.logo = data.logo || null;
         return data;
       }
     } catch (error) {

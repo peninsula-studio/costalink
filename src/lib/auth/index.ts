@@ -59,6 +59,18 @@ export const auth = betterAuth({
     tanstackStartCookies(),
     admin(),
     organization({
+      schema: {
+        organization: {
+          additionalFields: {
+            plan: {
+              type: [...schema.ORGANIZATION_PLAN_ENUM],
+              required: true,
+              defaultValue: "free",
+              input: false, // don't allow user to set role
+            },
+          },
+        },
+      },
       // ac: createAccessControl(defaultStatements),
       // roles: defaultRoles,
       allowUserToCreateOrganization: async (user) => {

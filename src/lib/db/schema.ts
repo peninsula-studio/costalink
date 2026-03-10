@@ -17,8 +17,8 @@ import type {
 } from "@/lib/fn/kyero/schemas";
 import type { i18nStringSchema } from "../i18n/schema";
 
-export const USER_ROLE_ENUM = ["owner", "admin", "member"] as const;
-export const MEMBER_ROLE_ENUM = ["owner", "admin", "member"] as const;
+export const USER_ROLE_ENUM = ["user", "admin"] as const;
+export const MEMBER_ROLE_ENUM = ["owner", "editor", "member"] as const;
 export const PROPERTY_STATUS_ENUM = [
   "active",
   "inactive",
@@ -26,19 +26,11 @@ export const PROPERTY_STATUS_ENUM = [
   "sold",
   "rented",
 ] as const;
+export const ORGANIZATION_PLAN_ENUM = ["free", "pro", "enterprise"] as const;
 
-export const estadoPlaza = pgEnum("estado_plaza", [
-  "vacante",
-  "ocupada",
-  "financiando_programa",
-]);
-export const userRoleEnum = pgEnum("userRole", ["user", "admin"]);
-export const memberRoleEnum = pgEnum("memberRole", [
-  "owner",
-  "admin",
-  "member",
-]);
-export const planEnum = pgEnum("plan", ["free", "pro", "enterprise"]);
+export const userRoleEnum = pgEnum("userRole", USER_ROLE_ENUM);
+export const memberRoleEnum = pgEnum("memberRole", MEMBER_ROLE_ENUM);
+export const planEnum = pgEnum("plan", ORGANIZATION_PLAN_ENUM);
 export const propertyStatusEnum = pgEnum(
   "propertyStatus",
   PROPERTY_STATUS_ENUM,

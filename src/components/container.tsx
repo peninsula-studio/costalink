@@ -15,10 +15,14 @@ const containerVariants = cva("flex", {
       lg: "p-12",
     },
     spacing: {
-      none: "gap-x-0 gap-y-0",
-      sm: "gap-x-2 gap-y-4",
-      md: "gap-x-4 gap-y-8",
-      lg: "gap-x-8 gap-y-12",
+      // none: "gap-x-0 gap-y-0",
+      none: "gap-0",
+      // sm: "gap-x-2 gap-y-4",
+      sm: "gap-4",
+      // md: "gap-x-4 gap-y-8",
+      md: "gap-8",
+      // lg: "gap-x-8 gap-y-12",
+      lg: "gap-12",
     },
   },
 });
