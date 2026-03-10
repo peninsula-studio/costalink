@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import {
   Building2,
@@ -16,24 +17,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
 
-  const { user, organizationList } = useRouteContext({ from: "/app" });
+  const { user } = useRouteContext({ from: "/app" });
 
   const params = useParams({
     from: "/app/$agencyId",
     shouldThrow: false,
   });
 
-  // const { data: organizationList } = useSuspenseQuery(
-  //   organizationListQueryOptions(),
-  // );
-
-  // const { data: activeOrganization } = useSuspenseQuery(
-  //   getFullOrganizationQueryOptions({ organizationId: params?.agencyId }),
-  // );
+  const { data: organizationList } = useSuspenseQuery(
+    organizationListQueryOptions({ userId: user.id }),
+  );
 
   const activeOrganization = organizationList.find(
     (o) => o.id === params?.agencyId,
@@ -78,9 +76,9 @@ export function OrganizationSwitcher() {
               render={
                 <Link
                   className="w-full"
-                  to={"/app/$agencyId"}
                   params={{ agencyId: o.id }}
                   preload={false}
+                  to={"/app/$agencyId"}
                   // onMouseDown={async () => {
                   //   // await $setActiveOrganization({ organizationSlug: o.slug })
                   //   await authClient.organization
@@ -108,8 +106,8 @@ export function OrganizationSwitcher() {
               <DropdownMenuItem
                 render={
                   <Link
-                    to="/app/$agencyId"
                     params={{ agencyId: params.agencyId }}
+                    to="/app/$agencyId"
                   >
                     <Settings className="size-4 shrink-0" /> Agency Settings
                   </Link>
@@ -118,8 +116,8 @@ export function OrganizationSwitcher() {
               <DropdownMenuItem
                 render={
                   <Link
-                    to={`/app/$agencyId`}
                     params={{ agencyId: params.agencyId }}
+                    to={`/app/$agencyId`}
                   >
                     <UserPlus className="size-4 shrink-0" /> Invite Members
                   </Link>

@@ -1,5 +1,5 @@
 import { useParams } from "@tanstack/react-router";
-import type { ComponentProps } from "react";
+import { type ComponentProps, Suspense } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,7 +21,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <OrganizationSwitcher />
+        <Suspense>
+          <OrganizationSwitcher />
+        </Suspense>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={undefined} />

@@ -7,13 +7,17 @@ import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
   loader: async ({ context }) => {
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
-    return { session };
+    const organizationList = await context.queryClient.ensureQueryData(
+      organizationListQueryOptions({ userId: context.user.id }),
+    );
+    return { session, organizationList };
   },
   pendingComponent: () => (
     <div className="flex size-full min-h-lvh p-6">
@@ -24,8 +28,8 @@ export const Route = createFileRoute("/app/")({
 });
 
 function AppIndexPage() {
-  const { organizationList } = Route.useRouteContext();
   const { user } = Route.useRouteContext();
+  const { organizationList } = Route.useLoaderData();
 
   return (
     <FlexContainer>

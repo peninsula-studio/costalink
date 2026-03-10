@@ -47,11 +47,12 @@ export const Route = createFileRoute("/app")({
     //   ...getActiveOrganizationQueryOptions({ userId: session.user.id }),
     //   revalidateIfStale: true,
     // });
-
-    const organizationList = await context.queryClient.ensureQueryData(
-      organizationListQueryOptions({ userId: session.user.id }),
+    return { user: session.user };
+  },
+  loader: async ({ context }) => {
+    context.queryClient.ensureQueryData(
+      organizationListQueryOptions({ userId: context.user.id }),
     );
-    return { user: session.user, organizationList };
   },
   pendingComponent: () => (
     <>

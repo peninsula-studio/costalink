@@ -23,7 +23,6 @@ import { Item, ItemHeader, ItemMedia } from "@/components/ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
-  TypographyH3,
   TypographyH4,
   TypographyLarge,
 } from "@/components/ui/typography";
