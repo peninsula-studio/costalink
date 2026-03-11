@@ -1,12 +1,18 @@
 import { Separator } from "@base-ui/react";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+  useRouterState,
+} from "@tanstack/react-router";
+import React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
@@ -29,11 +35,10 @@ export const Route = createFileRoute("/app")({
     middleware: [sessionCookieMiddleware],
   },
   ssr: "data-only",
-  beforeLoad: async ({ context, location }) => {
-    const session = await context.queryClient.ensureQueryData({
-      ...getSessionQueryOptions(),
-      revalidateIfStale: true,
-    });
+  beforeLoad: async ({ context, routeId }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
     // const sessionCookie = await $checkSessionCookieFn();
     if (!session) {
       throw redirect({
@@ -43,7 +48,11 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
-    return { user: session.user };
+    console.log(session.session.activeOrganizationId);
+    return {
+      user: session.user,
+      breadcrumbs: [{ label: "Dashboard", href: routeId }],
+    };
   },
   loader: async ({ context }) => {
     context.queryClient.ensureQueryData(
@@ -78,11 +87,27 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
+  const matches = useRouterState({ select: (s) => s.matches });
+
+  // const breadcrumbs = matches
+  //   .filter((match) => match.context.breadcrumb)
+  //   // .filter((match) => !match.routeId.endsWith("/"))
+  //   .map(({ pathname, context }) => {
+  //     return {
+  //       label: context.breadcrumb,
+  //       href: pathname,
+  //     };
+  //   });
+
+  const breadcrumbs = matches
+    .filter((match) => match.context.breadcrumbs)
+    .at(-1)?.context.breadcrumbs;
+
   return (
     <>
       <AppSidebar />
       <SidebarInset>
-        <header className="relative flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -91,15 +116,25 @@ function AppLayout() {
             />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+                {breadcrumbs?.map(({ label, href }, i) => (
+                  <React.Fragment key={label}>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink
+                        render={<Link to={href}>{label}</Link>}
+                      ></BreadcrumbLink>
+                    </BreadcrumbItem>
+                    {i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                  </React.Fragment>
+                ))}
+                {/* <BreadcrumbItem className="hidden md:block"> */}
+                {/*   <BreadcrumbLink href="#"> */}
+                {/*     Building Your Application */}
+                {/*   </BreadcrumbLink> */}
+                {/* </BreadcrumbItem> */}
+                {/* <BreadcrumbSeparator className="hidden md:block" /> */}
+                {/* <BreadcrumbItem> */}
+                {/*   <BreadcrumbPage>Data Fetching</BreadcrumbPage> */}
+                {/* </BreadcrumbItem> */}
               </BreadcrumbList>
             </Breadcrumb>
           </div>

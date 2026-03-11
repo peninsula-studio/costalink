@@ -7,6 +7,7 @@ import { routeTree } from "./routeTree.gen";
 
 export interface MyRouterContext {
   queryClient: QueryClient;
+  breadcrumbs?: { label: string; href: string }[];
 }
 
 export const getRouter = () => {

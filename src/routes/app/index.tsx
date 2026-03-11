@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { FlexContainer } from "@/components/container";
@@ -10,6 +10,26 @@ import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/")({
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+    // const sessionCookie = await checkSessionCookieFn();
+    if (session?.session.activeOrganizationId) {
+      console.log(session.session.activeOrganizationId);
+      throw redirect({
+        to: "/app/$agencyId",
+        params: { agencyId: session.session.activeOrganizationId },
+      });
+    }
+    if (context.user.defaultOrganizationId) {
+      throw redirect({
+        to: "/app/$agencyId",
+        params: { agencyId: context.user.defaultOrganizationId },
+      });
+    }
+    return { breadcrumb: undefined };
+  },
   loader: async ({ context }) => {
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),

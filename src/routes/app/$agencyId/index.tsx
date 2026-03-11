@@ -25,19 +25,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH4,
-  TypographyH5,
   TypographyLarge,
 } from "@/components/ui/typography";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId/")({
-  loader: async ({ context }) => {
-    context.queryClient.ensureQueryData(
-      getPropertiesQueryOptions({
-        organizationId: context.activeOrganization.id,
-      }),
-    );
-  },
   pendingComponent: () => (
     <div className="flex flex-col gap-y-6 p-6">
       <Skeleton className="h-12 w-md" />
@@ -51,11 +43,7 @@ export const Route = createFileRoute("/app/$agencyId/")({
 });
 
 function OrganizationPage() {
-  // const { agencyId } = Route.useParams();
   const { activeOrganization } = Route.useRouteContext();
-  // const { data: activeOrganization } = useSuspenseQuery(
-  //   getFullOrganizationQueryOptions({ organizationId: agencyId }),
-  // );
 
   return (
     <FlexContainer>
@@ -65,7 +53,7 @@ function OrganizationPage() {
             <img
               alt="placeholder logo"
               className="size-12 object-cover"
-              src="/placeholder.svg"
+              src="/placeholder-mesh-gradient.svg"
             />
           </ItemMedia>
           <TypographyH2>{activeOrganization.name}</TypographyH2>
@@ -99,7 +87,7 @@ function OrganizationPage() {
 }
 
 const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
-  const { activeOrganization } = Route.useRouteContext();
+  const params = Route.useParams();
   const { data: properties } = useSuspenseQuery(
     getPropertiesQueryOptions({ organizationId }),
   );
@@ -129,10 +117,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               className="w-full"
               nativeButton={false}
               render={
-                <Link
-                  params={{ agencyId: activeOrganization.id }}
-                  to="/app/$agencyId/property/create"
-                >
+                <Link params={params} to="/app/$agencyId/property/create">
                   <PlusIcon /> Add Property
                 </Link>
               }
@@ -141,10 +126,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               className="w-full"
               nativeButton={false}
               render={
-                <Link
-                  params={{ agencyId: activeOrganization.id }}
-                  to={"/app/$agencyId/property/import"}
-                >
+                <Link params={params} to={"/app/$agencyId/property/import"}>
                   <ImportIcon /> Import Properties
                 </Link>
               }
@@ -192,10 +174,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                 className="w-full"
                 nativeButton={false}
                 render={
-                  <Link
-                    params={{ agencyId: activeOrganization.id }}
-                    to="/app/$agencyId/property/create"
-                  >
+                  <Link params={params} to="/app/$agencyId/property/create">
                     <PlusIcon /> Add Property
                   </Link>
                 }
@@ -204,10 +183,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                 className="w-full"
                 nativeButton={false}
                 render={
-                  <Link
-                    params={{ agencyId: activeOrganization.id }}
-                    to={"/app/$agencyId/property/import"}
-                  >
+                  <Link params={params} to={"/app/$agencyId/property/import"}>
                     <ImportIcon /> Import Properties
                   </Link>
                 }

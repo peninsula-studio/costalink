@@ -1,9 +1,11 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
+import { userKeys } from "@/lib/fn/keys";
 import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$agencyId")({
-  beforeLoad: async ({ context, params }) => {
+  beforeLoad: async ({ context, params, routeId }) => {
     const activeOrganization = await context.queryClient.ensureQueryData({
       ...setActiveOrganizationQueryOptions({
         userId: context.user.id,
@@ -11,15 +13,28 @@ export const Route = createFileRoute("/app/$agencyId")({
       }),
       revalidateIfStale: true,
     });
+
     if (!activeOrganization) throw redirect({ to: "/app" });
-    return { activeOrganization };
+
+    if (context.session?.session.activeOrganizationId !== params.agencyId) {
+      context.queryClient.resetQueries({ queryKey: userKeys.session() });
+    }
+
+    return {
+      activeOrganization,
+      breadcrumbs: [
+        // ...context.breadcrumbs,
+        { label: activeOrganization.name, href: routeId },
+      ],
+    };
   },
-  // loader: async ({ context, params }) => {
-  //   const fullOrganization = await context.queryClient.ensureQueryData(
-  //     getFullOrganizationQueryOptions({ organizationId: params.agencyId }),
-  //   );
-  //   return { fullOrganization };
-  // },
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(
+      getPropertiesQueryOptions({
+        organizationId: context.activeOrganization.id,
+      }),
+    );
+  },
   pendingComponent: () => (
     <div className="flex flex-col gap-y-6 p-6">
       <Skeleton className="h-12 w-md" />

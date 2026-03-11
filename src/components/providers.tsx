@@ -1,4 +1,5 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,6 +16,7 @@ export const Providers = ({ children }: Props) => {
         initialIsOpen={false}
         position="bottom"
       />
+      <TanStackRouterDevtools />
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Toaster closeButton={true} richColors visibleToasts={5} />
         {children}
