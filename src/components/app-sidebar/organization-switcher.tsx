@@ -25,7 +25,7 @@ export function OrganizationSwitcher() {
   const { user } = useRouteContext({ from: "/app" });
 
   const params = useParams({
-    from: "/app/$agencyId",
+    from: "/app/$organizationId",
     shouldThrow: false,
   });
 
@@ -34,7 +34,7 @@ export function OrganizationSwitcher() {
   );
 
   const activeOrganization = organizationList.find(
-    (o) => o.id === params?.agencyId,
+    (o) => o.id === params?.organizationId,
   );
 
   return (
@@ -46,7 +46,7 @@ export function OrganizationSwitcher() {
             size="lg"
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
-              {params?.agencyId && activeOrganization ? (
+              {params?.organizationId && activeOrganization ? (
                 <Building2 className="size-4" />
               ) : (
                 <UserIcon className="size-4" />
@@ -54,7 +54,7 @@ export function OrganizationSwitcher() {
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
-                {(params?.agencyId && activeOrganization?.name) || user.name}
+                {(params?.organizationId && activeOrganization?.name) || user.name}
               </span>
             </div>
             <ChevronsUpDown className="ml-auto" />
@@ -76,9 +76,9 @@ export function OrganizationSwitcher() {
               render={
                 <Link
                   className="w-full"
-                  params={{ agencyId: o.id }}
+                  params={{ organizationId: o.id }}
                   preload={false}
-                  to={"/app/$agencyId"}
+                  to={"/app/$organizationId"}
                   // onMouseDown={async () => {
                   //   // await $setActiveOrganization({ organizationSlug: o.slug })
                   //   await authClient.organization
@@ -98,7 +98,7 @@ export function OrganizationSwitcher() {
           ))}
         </DropdownMenuGroup>
 
-        {params?.agencyId && (
+        {params?.organizationId && (
           <>
             <DropdownMenuSeparator />
 
@@ -106,8 +106,8 @@ export function OrganizationSwitcher() {
               <DropdownMenuItem
                 render={
                   <Link
-                    params={{ agencyId: params.agencyId }}
-                    to="/app/$agencyId"
+                    params={{ organizationId: params.organizationId }}
+                    to="/app/$organizationId"
                   >
                     <Settings className="size-4 shrink-0" /> Agency Settings
                   </Link>
@@ -116,8 +116,8 @@ export function OrganizationSwitcher() {
               <DropdownMenuItem
                 render={
                   <Link
-                    params={{ agencyId: params.agencyId }}
-                    to={`/app/$agencyId`}
+                    params={{ organizationId: params.organizationId }}
+                    to={`/app/$organizationId`}
                   >
                     <UserPlus className="size-4 shrink-0" /> Invite Members
                   </Link>

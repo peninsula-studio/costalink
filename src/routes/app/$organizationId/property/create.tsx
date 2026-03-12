@@ -7,12 +7,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 
-export const Route = createFileRoute("/app/$agencyId/property/create")({
+export const Route = createFileRoute("/app/$organizationId/property/create")({
   loader: async ({ context, params }) => {
     context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
         userId: context.user.id,
-        organizationId: params.agencyId,
+        organizationId: params.organizationId,
       }),
     );
   },
@@ -49,8 +49,8 @@ function RouteComponent() {
         nativeButton={false}
         render={
           <Link
-            params={{ agencyId: activeOrganization.id }}
-            to="/app/$agencyId/property"
+            params={{ organizationId: activeOrganization.id }}
+            to="/app/$organizationId/property"
           >
             Property list
           </Link>

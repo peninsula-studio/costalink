@@ -18,14 +18,14 @@ export const Route = createFileRoute("/app/")({
     if (session?.session.activeOrganizationId) {
       console.log(session.session.activeOrganizationId);
       throw redirect({
-        to: "/app/$agencyId",
-        params: { agencyId: session.session.activeOrganizationId },
+        to: "/app/$organizationId",
+        params: { organizationId: session.session.activeOrganizationId },
       });
     }
     if (context.user.defaultOrganizationId) {
       throw redirect({
-        to: "/app/$agencyId",
-        params: { agencyId: context.user.defaultOrganizationId },
+        to: "/app/$organizationId",
+        params: { organizationId: context.user.defaultOrganizationId },
       });
     }
     return { breadcrumb: undefined };
@@ -83,9 +83,9 @@ function AppIndexPage() {
             nativeButton={false}
             render={
               <Link
-                params={{ agencyId: o.id }}
+                params={{ organizationId: o.id }}
                 preload={false}
-                to="/app/$agencyId"
+                to="/app/$organizationId"
               ></Link>
             }
           >

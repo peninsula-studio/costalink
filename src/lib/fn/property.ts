@@ -1,9 +1,14 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
+import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import type { z } from "zod";
 import { db } from "@/lib/db";
-import { adminMiddleware, authMiddleware } from "@/middleware/auth";
+import {
+  adminRequiredMiddleware,
+  authMiddleware,
+  hasActiveOrganizationMiddleware,
+} from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
@@ -122,7 +127,7 @@ export const createPropertyMutationOptions = () =>
 
 export const extractAndSavePropertiesFromKyeroXMLFn = createServerFn()
   .inputValidator((data: { url: string }) => data)
-  .middleware([authMiddleware, adminMiddleware])
+  .middleware([authMiddleware, adminRequiredMiddleware])
   .handler(async ({ data: { url } }) => {
     const orgId = await getActiveOrganizationFn();
     if (!orgId) throw new Error("There is no valid active Organization");
@@ -170,7 +175,7 @@ export const extractAndSavePropertiesFromKyeroXMLFn = createServerFn()
 
 export const extractPropertiesFromKyeroXMLFn = createServerFn()
   .inputValidator((data: { url: string }) => data)
-  .middleware([authMiddleware, adminMiddleware])
+  .middleware([authMiddleware, adminRequiredMiddleware])
   .handler(async ({ data: { url } }) => {
     const orgId = await getActiveOrganizationFn();
     if (!orgId) throw new Error("There is no valid active Organization");
@@ -229,11 +234,17 @@ export const deletePropertyFn = createServerFn({ method: "POST" })
 
 export const getPropertyFn = createServerFn({ method: "GET" })
   .inputValidator((data: { id: string }) => data)
-  .handler(async ({ data }) => {
+  .middleware([authMiddleware, hasActiveOrganizationMiddleware])
+  .handler(async ({ context, data }) => {
     try {
       const result = await db.query.property.findFirst({
         where: { id: { eq: data.id } },
       });
+      if (!result)
+        throw redirect({
+          to: "/app/$organizationId/property",
+          params: { organizationId: context.session.session.activeOrganizationId },
+        });
       return result;
     } catch (e) {
       if (e instanceof Error) {

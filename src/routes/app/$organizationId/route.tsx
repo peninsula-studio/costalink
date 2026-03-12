@@ -4,19 +4,19 @@ import { userKeys } from "@/lib/fn/keys";
 import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/$agencyId")({
+export const Route = createFileRoute("/app/$organizationId")({
   beforeLoad: async ({ context, params, routeId }) => {
     const activeOrganization = await context.queryClient.ensureQueryData({
       ...setActiveOrganizationQueryOptions({
         userId: context.user.id,
-        organizationId: params.agencyId,
+        organizationId: params.organizationId,
       }),
       revalidateIfStale: true,
     });
 
     if (!activeOrganization) throw redirect({ to: "/app" });
 
-    if (context.session?.session.activeOrganizationId !== params.agencyId) {
+    if (context.session?.session.activeOrganizationId !== params.organizationId) {
       context.queryClient.resetQueries({ queryKey: userKeys.session() });
     }
 

@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/typography";
 import { getPropertiesQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/$agencyId/")({
+export const Route = createFileRoute("/app/$organizationId/")({
   pendingComponent: () => (
     <div className="flex flex-col gap-y-6 p-6">
       <Skeleton className="h-12 w-md" />
@@ -117,7 +117,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               className="w-full"
               nativeButton={false}
               render={
-                <Link params={params} to="/app/$agencyId/property/create">
+                <Link params={params} to="/app/$organizationId/property/create">
                   <PlusIcon /> Add Property
                 </Link>
               }
@@ -126,7 +126,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               className="w-full"
               nativeButton={false}
               render={
-                <Link params={params} to={"/app/$agencyId/property/import"}>
+                <Link params={params} to={"/app/$organizationId/property/import"}>
                   <ImportIcon /> Import Properties
                 </Link>
               }
@@ -140,10 +140,10 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
             <Link
               key={property.id}
               params={{
-                agencyId: property.organizationId,
+                organizationId: property.organizationId,
                 propertyId: property.id,
               }}
-              to="/app/$agencyId/property/$propertyId"
+              to="/app/$organizationId/property/$propertyId"
             >
               <PropertyCard data={property} />
             </Link>
@@ -174,7 +174,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                 className="w-full"
                 nativeButton={false}
                 render={
-                  <Link params={params} to="/app/$agencyId/property/create">
+                  <Link params={params} to="/app/$organizationId/property/create">
                     <PlusIcon /> Add Property
                   </Link>
                 }
@@ -183,7 +183,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                 className="w-full"
                 nativeButton={false}
                 render={
-                  <Link params={params} to={"/app/$agencyId/property/import"}>
+                  <Link params={params} to={"/app/$organizationId/property/import"}>
                     <ImportIcon /> Import Properties
                   </Link>
                 }

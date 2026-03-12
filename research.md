@@ -150,7 +150,7 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
 
 ### Import UI
 
-**File:** `/src/routes/app/$agencyId/property/import.tsx`
+**File:** `/src/routes/app/$organizationId/property/import.tsx`
 - Form to input Kyero XML feed URL
 - Preview extracted properties before import
 - Bulk import functionality
@@ -162,11 +162,11 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
 - Dashboard entry point with auth protection
 - Sidebar layout with navigation
 
-**File:** `/src/routes/app/$agencyId/property/index.tsx`
+**File:** `/src/routes/app/$organizationId/property/index.tsx`
 - Placeholder route for property list
 - Currently just shows "Property list" button
 
-**File:** `/src/routes/app/$agencyId/property/create.tsx`
+**File:** `/src/routes/app/$organizationId/property/create.tsx`
 - Manual property creation form
 
 ---
@@ -229,7 +229,7 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
 **Priority:** High - Core functionality agents need daily
 
 **Tasks:**
-1. **Property List View** (`/app/$agencyId/property/list.tsx`)
+1. **Property List View** (`/app/$organizationId/property/list.tsx`)
    - Table/Grid view of all properties
    - Search by: ref, town, province, price range, beds, baths
    - Filter by: type (sale/rent), status (active/pending/sold)
@@ -237,13 +237,13 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
    - Pagination (50 items per page)
    - Bulk actions checkbox
 
-2. **Property Edit View** (`/app/$agencyId/property/$propertyId/edit.tsx`)
+2. **Property Edit View** (`/app/$organizationId/property/$propertyId/edit.tsx`)
    - Pre-filled form with current data
    - Image gallery with add/remove
    - Multi-language editors for desc/features
    - Save with validation
 
-3. **Property Detail View** (`/app/$agencyId/property/$propertyId/index.tsx`)
+3. **Property Detail View** (`/app/$organizationId/property/$propertyId/index.tsx`)
    - Full property information display
    - Image carousel
    - Edit/Delete buttons
@@ -260,9 +260,9 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
    - Restore functionality for soft deletes
 
 **Files to Create/Modify:**
-- `/src/routes/app/$agencyId/property/list.tsx` (NEW)
-- `/src/routes/app/$agencyId/property/$propertyId/index.tsx` (NEW)
-- `/src/routes/app/$agencyId/property/$propertyId/edit.tsx` (NEW)
+- `/src/routes/app/$organizationId/property/list.tsx` (NEW)
+- `/src/routes/app/$organizationId/property/$propertyId/index.tsx` (NEW)
+- `/src/routes/app/$organizationId/property/$propertyId/edit.tsx` (NEW)
 - `/src/lib/db/schema.ts` (ADD status field)
 - `/src/lib/fn/property.ts` (ADD update/delete functions)
 
@@ -298,8 +298,8 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
 **Files to Create/Modify:**
 - `/src/lib/db/schema.ts` (ADD quota fields to organization)
 - `/src/lib/fn/property.ts` (ADD quota checking)
-- `/src/routes/app/$agencyId/settings.tsx` (NEW - plan management)
-- `/src/routes/app/$agencyId/billing.tsx` (NEW - upgrade UI)
+- `/src/routes/app/$organizationId/settings.tsx` (NEW - plan management)
+- `/src/routes/app/$organizationId/billing.tsx` (NEW - upgrade UI)
 
 ### Phase 3: Public Property Sharing
 
@@ -331,7 +331,7 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
 **Files to Create/Modify:**
 - `/src/lib/db/schema.ts` (ADD publicId to property, ADD lead table)
 - `/src/routes/p/$publicId.tsx` (NEW - public view)
-- `/src/routes/app/$agencyId/leads.tsx` (NEW - lead dashboard)
+- `/src/routes/app/$organizationId/leads.tsx` (NEW - lead dashboard)
 - `/src/lib/fn/property.ts` (ADD public ID generation)
 - `/src/lib/fn/lead.ts` (NEW - lead CRUD)
 
@@ -364,9 +364,9 @@ export const i18nStringSchema = z.record(localeSchema, z.string());
    - Network directory
 
 **Files to Create/Modify:**
-- `/src/routes/app/$agencyId/analytics.tsx` (NEW)
-- `/src/routes/app/$agencyId/import/csv.tsx` (NEW)
-- `/src/routes/app/$agencyId/compliance.tsx` (NEW)
+- `/src/routes/app/$organizationId/analytics.tsx` (NEW)
+- `/src/routes/app/$organizationId/import/csv.tsx` (NEW)
+- `/src/routes/app/$organizationId/compliance.tsx` (NEW)
 - `/src/lib/db/schema.ts` (ADD analytics tables)
 
 ---
@@ -447,12 +447,12 @@ export const importHistory = pgTable("import_history", {
 **Completed:**
 - ✅ Analyzed existing codebase structure
 - ✅ Added `status` field to property schema (active, pending, sold, rented)
-- ✅ Created property list view (`/src/routes/app/$agencyId/property/index.tsx`)
+- ✅ Created property list view (`/src/routes/app/$organizationId/property/index.tsx`)
   - Search by ref, town, province
   - Filter by type and status
   - Sort by price, date, ref
   - Pagination (20 items per page)
-- ✅ Created property detail view (`/src/routes/app/$agencyId/property/$propertyId.tsx`)
+- ✅ Created property detail view (`/src/routes/app/$organizationId/property/$propertyId.tsx`)
   - Full property information display
   - Contact info and features
   - Image gallery

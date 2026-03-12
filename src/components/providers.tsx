@@ -16,7 +16,7 @@ export const Providers = ({ children }: Props) => {
         initialIsOpen={false}
         position="bottom"
       />
-      <TanStackRouterDevtools />
+      <TanStackRouterDevtools position="bottom-right" />
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Toaster closeButton={true} richColors visibleToasts={5} />
         {children}

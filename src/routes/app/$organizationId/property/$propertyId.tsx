@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { FlexContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,12 +6,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH1, TypographyP } from "@/components/ui/typography";
 import { getPropertyQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/$agencyId/property/$propertyId")({
+export const Route = createFileRoute("/app/$organizationId/property/$propertyId")({
   beforeLoad: async ({ context, params, routeId }) => {
     const property = await context.queryClient.ensureQueryData(
       getPropertyQueryOptions({ id: params.propertyId }),
     );
-    if (!property) throw redirect({ to: "/app/$agencyId/property", params });
     return {
       property,
       breadcrumbs: [

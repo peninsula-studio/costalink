@@ -54,7 +54,7 @@ const routeParamSchema = z.object({
   page: z.number().optional(),
 });
 
-export const Route = createFileRoute("/app/$agencyId/property/")({
+export const Route = createFileRoute("/app/$organizationId/property/")({
   validateSearch: routeParamSchema,
   component: RouteComponent,
 });
@@ -62,7 +62,7 @@ export const Route = createFileRoute("/app/$agencyId/property/")({
 const ITEMS_PER_PAGE = 20;
 
 function RouteComponent() {
-  const { agencyId } = Route.useParams();
+  const { organizationId } = Route.useParams();
   const { search, type, status, sortBy, sortOrder, page } = Route.useSearch();
   const navigate = useNavigate();
 
@@ -130,7 +130,7 @@ function RouteComponent() {
           className="w-fit"
           nativeButton={false}
           render={
-            <Link params={{ agencyId }} to="/app/$agencyId/property/create">
+            <Link params={{ organizationId }} to="/app/$organizationId/property/create">
               <HousePlusIcon /> Add Property
             </Link>
           }
@@ -210,13 +210,13 @@ function RouteComponent() {
 }
 
 function ResultTable() {
-  const { agencyId } = Route.useParams();
+  const { organizationId } = Route.useParams();
   const { search, type, status, sortBy, sortOrder, page } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const { data: organizationProperties } = useSuspenseQuery(
     getPropertiesQueryOptions({
-      organizationId: agencyId,
+      organizationId: organizationId,
     }),
   );
 
@@ -423,8 +423,8 @@ function ResultTable() {
                   // nativeButton={false}
                   render={
                     <Link
-                      params={{ agencyId, propertyId: property.id }}
-                      to={"/app/$agencyId/property/$propertyId"}
+                      params={{ organizationId, propertyId: property.id }}
+                      to={"/app/$organizationId/property/$propertyId"}
                     >
                       <EyeIcon data-icon="inline-start" /> View
                     </Link>

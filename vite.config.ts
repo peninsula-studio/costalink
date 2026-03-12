@@ -7,13 +7,13 @@ import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import { postgres } from "vite-plugin-neon-new";
-import viteTsConfigPaths from "vite-tsconfig-paths";
 
 const config = defineConfig({
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
+    // alias: {
+    //   "@": fileURLToPath(new URL("./src", import.meta.url)),
+    // },
+    tsconfigPaths: true,
   },
   plugins: [
     // cloudflare({ viteEnvironment: { name: "ssr" } }),
@@ -28,9 +28,9 @@ const config = defineConfig({
       dotEnvKey: "DATABASE_URL",
     }),
     // this is the plugin that enables path aliases
-    viteTsConfigPaths({
-      projects: ["./tsconfig.json"],
-    }),
+    // viteTsConfigPaths({
+    //   projects: ["./tsconfig.json"],
+    // }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),

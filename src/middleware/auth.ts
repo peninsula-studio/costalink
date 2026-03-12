@@ -26,11 +26,23 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
   },
 );
 
-export const adminMiddleware = createMiddleware({ type: "function" })
+export const adminRequiredMiddleware = createMiddleware({ type: "function" })
   .middleware([authMiddleware])
   .server(async ({ next, context }) => {
     console.log("Checking if user is Admin...");
     if (context.session.user.role !== "admin") {
+      throw redirect({ to: "/app" });
+    }
+    return await next({ context });
+  });
+
+export const hasActiveOrganizationMiddleware = createMiddleware({
+  type: "function",
+})
+  .middleware([authMiddleware])
+  .server(async ({ next, context }) => {
+    console.log("Checking if user has active Organization...");
+    if (!context.session.session.activeOrganizationId) {
       throw redirect({ to: "/app" });
     }
     return await next({ context });

@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
@@ -14,7 +15,7 @@ import { ProjectsMenu } from "./projects-group";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const params = useParams({
-    from: "/app/$agencyId",
+    from: "/app/$organizationId",
     shouldThrow: false,
   });
 
@@ -27,10 +28,11 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={undefined} />
-        {params?.agencyId && <NavMain items={undefined} />}
+        {/* {params?.organizationId && <NavMain items={undefined} />} */}
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>
+        {params?.organizationId && <SidebarSeparator />}
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

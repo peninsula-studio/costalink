@@ -34,7 +34,7 @@ import {
   extractPropertiesFromKyeroXMLFn,
 } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/$agencyId/property/import")({
+export const Route = createFileRoute("/app/$organizationId/property/import")({
   component: RouteComponent,
 });
 
