@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import {
   adminRequiredMiddleware,
   authMiddleware,
-  hasActiveOrganizationMiddleware,
+  orgMembershipMiddleware,
 } from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
@@ -127,7 +127,7 @@ export const createPropertyMutationOptions = () =>
 
 export const extractAndSavePropertiesFromKyeroXMLFn = createServerFn()
   .inputValidator((data: { url: string }) => data)
-  .middleware([authMiddleware, adminRequiredMiddleware])
+  .middleware([adminRequiredMiddleware])
   .handler(async ({ data: { url } }) => {
     const orgId = await getActiveOrganizationFn();
     if (!orgId) throw new Error("There is no valid active Organization");
@@ -175,7 +175,7 @@ export const extractAndSavePropertiesFromKyeroXMLFn = createServerFn()
 
 export const extractPropertiesFromKyeroXMLFn = createServerFn()
   .inputValidator((data: { url: string }) => data)
-  .middleware([authMiddleware, adminRequiredMiddleware])
+  .middleware([adminRequiredMiddleware])
   .handler(async ({ data: { url } }) => {
     const orgId = await getActiveOrganizationFn();
     if (!orgId) throw new Error("There is no valid active Organization");
@@ -233,18 +233,23 @@ export const deletePropertyFn = createServerFn({ method: "POST" })
   });
 
 export const getPropertyFn = createServerFn({ method: "GET" })
-  .inputValidator((data: { id: string }) => data)
-  .middleware([authMiddleware, hasActiveOrganizationMiddleware])
-  .handler(async ({ context, data }) => {
+  .inputValidator(
+    (data: { propertyId: string; organizationId: string }) => data,
+  )
+  .middleware([orgMembershipMiddleware])
+  .handler(async ({ data: { propertyId, organizationId } }) => {
     try {
       const result = await db.query.property.findFirst({
-        where: { id: { eq: data.id } },
+        where: { id: { eq: propertyId } },
       });
-      if (!result)
+
+      if (!result || result.organizationId !== organizationId) {
         throw redirect({
           to: "/app/$organizationId/property",
-          params: { organizationId: context.session.session.activeOrganizationId },
+          params: { organizationId },
         });
+      }
+
       return result;
     } catch (e) {
       if (e instanceof Error) {
@@ -254,10 +259,17 @@ export const getPropertyFn = createServerFn({ method: "GET" })
     }
   });
 
-export const getPropertyQueryOptions = ({ id }: { id: string }) =>
+export const getPropertyQueryOptions = ({
+  propertyId,
+  organizationId,
+}: {
+  propertyId: string;
+  organizationId: string;
+}) =>
   queryOptions({
-    queryKey: ["property", "detail", id],
-    queryFn: async () => await getPropertyFn({ data: { id } }),
+    queryKey: ["property", "detail", propertyId],
+    queryFn: async () =>
+      await getPropertyFn({ data: { propertyId, organizationId } }),
   });
 
 export const updatePropertyMutationOptions = () =>

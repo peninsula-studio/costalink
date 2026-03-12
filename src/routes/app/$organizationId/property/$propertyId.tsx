@@ -6,10 +6,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH1, TypographyP } from "@/components/ui/typography";
 import { getPropertyQueryOptions } from "@/lib/fn/property";
 
-export const Route = createFileRoute("/app/$organizationId/property/$propertyId")({
+export const Route = createFileRoute(
+  "/app/$organizationId/property/$propertyId",
+)({
   beforeLoad: async ({ context, params, routeId }) => {
     const property = await context.queryClient.ensureQueryData(
-      getPropertyQueryOptions({ id: params.propertyId }),
+      getPropertyQueryOptions({
+        propertyId: params.propertyId,
+        organizationId: params.organizationId,
+      }),
     );
     return {
       property,

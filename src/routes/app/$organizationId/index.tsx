@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  ArrowRightIcon,
   FolderCode,
   HouseIcon,
   HousePlusIcon,
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/app/$organizationId/")({
 
 function OrganizationPage() {
   const { activeOrganization } = Route.useRouteContext();
+  const { params } = Route.useParams();
 
   return (
     <FlexContainer>
@@ -70,12 +72,24 @@ function OrganizationPage() {
         spacing="sm"
       >
         <Item className="p-0">
-          <ItemMedia variant="icon">
-            <HouseIcon className="size-[1em] text-2xl" />
-          </ItemMedia>
-          <ItemContent>
+          <ItemHeader className="justify-start">
             <TypographyH4>Properties</TypographyH4>
+          </ItemHeader>
+          <ItemContent>
+            <Button
+              className="w-fit"
+              nativeButton={false}
+              render={
+                <Link params={params} to="/app/$organizationId/property">
+                  View all <ArrowRightIcon />
+                </Link>
+              }
+              variant="default"
+            ></Button>
           </ItemContent>
+        </Item>
+        <Item className="p-0">
+          <ItemContent></ItemContent>
         </Item>
 
         <Suspense fallback={<div>Loading...</div>}>
@@ -126,7 +140,10 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
               className="w-full"
               nativeButton={false}
               render={
-                <Link params={params} to={"/app/$organizationId/property/import"}>
+                <Link
+                  params={params}
+                  to={"/app/$organizationId/property/import"}
+                >
                   <ImportIcon /> Import Properties
                 </Link>
               }
@@ -174,7 +191,10 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                 className="w-full"
                 nativeButton={false}
                 render={
-                  <Link params={params} to="/app/$organizationId/property/create">
+                  <Link
+                    params={params}
+                    to="/app/$organizationId/property/create"
+                  >
                     <PlusIcon /> Add Property
                   </Link>
                 }
@@ -183,7 +203,10 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                 className="w-full"
                 nativeButton={false}
                 render={
-                  <Link params={params} to={"/app/$organizationId/property/import"}>
+                  <Link
+                    params={params}
+                    to={"/app/$organizationId/property/import"}
+                  >
                     <ImportIcon /> Import Properties
                   </Link>
                 }

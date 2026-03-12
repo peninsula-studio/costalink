@@ -1,6 +1,7 @@
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { getSessionCookie } from "better-auth/cookies";
+import { db } from "@/lib/db";
 import { getSessionFn } from "@/lib/fn/auth";
 
 export const sessionCookieMiddleware = createMiddleware().server(
@@ -45,5 +46,35 @@ export const hasActiveOrganizationMiddleware = createMiddleware({
     if (!context.session.session.activeOrganizationId) {
       throw redirect({ to: "/app" });
     }
+    return await next({ context });
+  });
+
+/**
+ * Verifies the authenticated user is a member of the organization identified
+ * by `organizationId` in the server function's input data.
+ *
+ * Must be used after `authMiddleware`. The server function's input must
+ * include an `organizationId: string` field.
+ */
+export const orgMembershipMiddleware = createMiddleware({ type: "function" })
+  .middleware([authMiddleware])
+  .server(async ({ next, context, data }) => {
+    const { organizationId } = data as unknown as { organizationId: string };
+    const userId = context.session.user.id;
+
+    const member = await db.query.member.findFirst({
+      where: {
+        organizationId: { eq: organizationId },
+        userId: { eq: userId },
+      },
+    });
+
+    if (!member) {
+      console.warn(
+        `User ${userId} attempted to access organization ${organizationId} without membership.`,
+      );
+      throw redirect({ to: "/app" });
+    }
+
     return await next({ context });
   });

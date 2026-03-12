@@ -4,13 +4,14 @@ import {
   ArrowDown,
   ArrowUp,
   CheckIcon,
+  CircleQuestionMark,
   EditIcon,
   EyeIcon,
   HousePlusIcon,
   StopCircleIcon,
   Trash2Icon,
 } from "lucide-react";
-import { type ComponentProps, Suspense } from "react";
+import { Component, type ComponentProps, Suspense } from "react";
 import { z } from "zod";
 import { FlexContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
@@ -130,7 +131,10 @@ function RouteComponent() {
           className="w-fit"
           nativeButton={false}
           render={
-            <Link params={{ organizationId }} to="/app/$organizationId/property/create">
+            <Link
+              params={{ organizationId }}
+              to="/app/$organizationId/property/create"
+            >
               <HousePlusIcon /> Add Property
             </Link>
           }
@@ -266,22 +270,22 @@ function ResultTable() {
     }
   };
 
-  const getStatusColor = (
+  const getStatusBadgeVariant = (
     status: z.infer<typeof routeParamSchema>["status"],
-  ) => {
+  ): ComponentProps<typeof Badge>["variant"] => {
     switch (status) {
       case "active":
-        return "bg-success text-success-foreground border";
+        return "success";
       case "inactive":
-        return "bg-destructive text-destructive-foreground border";
+        return "warning";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "link";
       case "sold":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "destructive";
       case "rented":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "destructive";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "secondary";
     }
   };
 
@@ -294,7 +298,7 @@ function ResultTable() {
       case "inactive":
         return <StopCircleIcon />;
       case "pending":
-        return <CheckIcon />;
+        return <CircleQuestionMark />;
       case "sold":
         return <CheckIcon />;
       case "rented":
@@ -412,7 +416,9 @@ function ResultTable() {
               </TableCell>
               <TableCell>
                 <Badge
-                  className={cn("capitalize", getStatusColor(property.status))}
+                  // className={cn("capitalize", getStatusColor(property.status))}
+                  className="capitalize"
+                  variant={getStatusBadgeVariant(property.status)}
                 >
                   {getStatusIcon(property.status)}
                   {property.status}
