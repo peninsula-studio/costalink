@@ -1,4 +1,5 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Link, useLocation, useRouteContext } from "@tanstack/react-router";
 import {
   BookOpen,
   Bot,
@@ -25,9 +26,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { cn } from "@/lib/utils";
 
-export const NavMain = ({
+export const AgencyNav = ({
   className,
   items = [
     {
@@ -130,29 +132,21 @@ export const NavMain = ({
     }[];
   }[];
 }) => {
+  const { member } = useRouteContext({ from: "/app/$organizationId" });
+
   const { pathname } = useLocation();
 
   return (
     <>
       <SidebarGroup>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            isActive={pathname === "/app"}
-            render={
-              <Link preload={false} to="/app">
-                <HomeIcon />
-                Dashboard
-              </Link>
-            }
-          ></SidebarMenuButton>
-        </SidebarMenuItem>
-
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <UsersIcon />
-            Bolsas
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        {(member.role === "owner" || member.role === "admin") && (
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <UsersIcon />
+              Invite
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )}
       </SidebarGroup>
       <SidebarGroup className={cn(className)}>
         <SidebarGroupLabel>Platform</SidebarGroupLabel>

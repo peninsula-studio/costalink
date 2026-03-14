@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Building2, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -7,18 +8,28 @@ import {
   TypographyH3,
   TypographyH5,
 } from "@/components/ui/typography";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 
-export const Route = createFileRoute("/app/admin/")({
+export const Route = createFileRoute("/app/(user)/admin/")({
   component: RouteComponent,
-  // beforeLoad: async ({ context }) => {
-  //   if (context.user.role !== "admin") {
-  //     throw redirect({ to: "/dashboard" });
-  //   }
-  // },
+  beforeLoad: async ({ context }) => {
+    if (context.user.role !== "admin") {
+      throw redirect({ to: "/app" });
+    }
+  },
+  loader: async ({ context }) => {
+    context.queryClient.ensureQueryData(
+      organizationListQueryOptions({ userId: context.user.id }),
+    );
+  },
 });
 
 function RouteComponent() {
-  const { organizationList } = Route.useRouteContext();
+  const { user } = Route.useRouteContext();
+
+  const { data: organizationList } = useSuspenseQuery(
+    organizationListQueryOptions({ userId: user.id }),
+  );
 
   return (
     <main className="flex flex-col gap-y-8 p-6">

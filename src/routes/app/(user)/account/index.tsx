@@ -5,7 +5,7 @@ import { TypographyH5 } from "@/components/ui/typography";
 import { setDefaultOrganizationFn } from "@/lib/fn/user";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/app/account/")({
+export const Route = createFileRoute("/app/(user)/account/")({
   component: RouteComponent,
   // loader: async ({ context }) => {
   //   const organizations = await context.queryClient.ensureQueryData(

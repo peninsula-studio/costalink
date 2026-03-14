@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { CreateOrganizationForm } from "@/components/create-organization-form";
 
-export const Route = createFileRoute("/app/admin/organization/create")({
+export const Route = createFileRoute("/app/(user)/admin/organization/create")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
     if (context.user.role !== "admin") {

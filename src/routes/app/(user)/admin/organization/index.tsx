@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
 
-export const Route = createFileRoute("/app/admin/organization/")({
+export const Route = createFileRoute("/app/(user)/admin/organization/")({
   component: RouteComponent,
   // loader: async ({ context }) => {
   //   context.queryClient.ensureQueryData(

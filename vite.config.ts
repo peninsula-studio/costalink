@@ -19,14 +19,14 @@ const config = defineConfig({
     // cloudflare({ viteEnvironment: { name: "ssr" } }),
     devtools(),
     nitro(),
-    postgres({
-      // seed: {
-      //   type: "sql-script",
-      //   path: "db/init.sql",
-      // },
-      referrer: "create-tanstack",
-      dotEnvKey: "DATABASE_URL",
-    }),
+    // postgres({
+    //   // seed: {
+    //   //   type: "sql-script",
+    //   //   path: "db/init.sql",
+    //   // },
+    //   referrer: "create-tanstack",
+    //   dotEnvKey: "DATABASE_URL",
+    // }),
     // this is the plugin that enables path aliases
     // viteTsConfigPaths({
     //   projects: ["./tsconfig.json"],

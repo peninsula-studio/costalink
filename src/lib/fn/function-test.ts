@@ -121,19 +121,3 @@ export const updateOrganizationFn = createServerFn({ method: "POST" })
     }
   });
 
-// Function to delete an organization (stub implementation)
-export const deleteOrganizationFn = createServerFn({ method: "POST" })
-  .inputValidator((data: { organizationId: string }) => data)
-  .handler(async ({ data }) => {
-    try {
-      // For now, we'll return a mock response
-      return {
-        success: true,
-        message: `Organization ${data.organizationId} deleted successfully`,
-      };
-    } catch (error) {
-      if (isRedirect(error)) throw error;
-      console.error(`Error deleting organization: ${(error as Error).message}`);
-      throw new Error("Failed to delete organization");
-    }
-  });

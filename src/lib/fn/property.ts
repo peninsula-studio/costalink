@@ -1,8 +1,7 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
-import type { z } from "zod";
+import { z } from "zod";
 import { db } from "@/lib/db";
 import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
 import { property } from "../db/schema";
@@ -13,11 +12,14 @@ import { getActiveOrganizationFn } from "./organization";
 
 export const getOrganizationProperyListFn = createServerFn()
   .inputValidator(
-    (data: { organizationId: string; pageSize?: number; page?: number }) =>
-      data,
+    z.object({
+      organizationId: z.string(),
+      pageSize: z.number().optional().default(5),
+      page: z.number().optional().default(1),
+    }),
   )
   .middleware([authMiddleware])
-  .handler(async ({ data: { organizationId, page = 1, pageSize = 5 } }) => {
+  .handler(async ({ data: { organizationId, page, pageSize } }) => {
     try {
       const propertyList = await db.query.property.findMany({
         where: { organizationId: { eq: organizationId } },
@@ -33,15 +35,12 @@ export const getOrganizationProperyListFn = createServerFn()
     }
   });
 
-export const getOrganizationPropertyListQueryOptions = ({
-  organizationId,
-}: {
-  organizationId: string;
-}) =>
+export const getOrganizationPropertyListQueryOptions = (
+  data: Parameters<typeof getOrganizationProperyListFn>[0]["data"],
+) =>
   queryOptions({
-    queryKey: ["property", "list", organizationId],
-    queryFn: async () =>
-      await getOrganizationProperyListFn({ data: { organizationId } }),
+    queryKey: propertyKeys.list(data),
+    queryFn: async () => await getOrganizationProperyListFn({ data }),
   });
 
 export const checkPropertyReferenceFn = createServerFn()

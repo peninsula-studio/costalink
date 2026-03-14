@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2, CogIcon, UserIcon } from "lucide-react";
 import { Suspense } from "react";
 import { toast } from "sonner";
@@ -32,26 +32,25 @@ import {
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 import { formatPrice } from "@/lib/i18n/format";
 
-export const Route = createFileRoute("/app/")({
-  // errorComponent: AppIndexErrorComponent,
-  beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
-    );
-    if (session?.session.activeOrganizationId) {
-      console.log(session.session.activeOrganizationId);
-      throw redirect({
-        to: "/app/$organizationId",
-        params: { organizationId: session.session.activeOrganizationId },
-      });
-    }
-    if (context.user.defaultOrganizationId) {
-      throw redirect({
-        to: "/app/$organizationId",
-        params: { organizationId: context.user.defaultOrganizationId },
-      });
-    }
-  },
+export const Route = createFileRoute("/app/(user)/")({
+  // beforeLoad: async ({ context }) => {
+  //   const session = await context.queryClient.ensureQueryData(
+  //     getSessionQueryOptions(),
+  //   );
+  //   if (session?.session.activeOrganizationId) {
+  //     console.log(session.session.activeOrganizationId);
+  //     throw redirect({
+  //       to: "/app/$organizationId",
+  //       params: { organizationId: session.session.activeOrganizationId },
+  //     });
+  //   }
+  //   if (context.user.defaultOrganizationId) {
+  //     throw redirect({
+  //       to: "/app/$organizationId",
+  //       params: { organizationId: context.user.defaultOrganizationId },
+  //     });
+  //   }
+  // },
   loader: async ({ context }) => {
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),

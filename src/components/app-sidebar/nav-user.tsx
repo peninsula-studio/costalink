@@ -35,7 +35,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { $signOutFn } from "@/lib/fn/auth";
+import { signOutFn } from "@/lib/fn/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 
@@ -51,7 +51,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
 
   const { mutate } = useMutation({
     mutationKey: ["signOut"],
-    mutationFn: async () => await $signOutFn(),
+    mutationFn: async () => await signOutFn(),
     onError: (error) => {
       console.error(`Sign-out error: ${error.message}`);
       toast.error("Error", {

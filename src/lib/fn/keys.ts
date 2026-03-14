@@ -1,20 +1,9 @@
-import type { XOR } from "@/types/util";
+import type { z } from "zod";
+import type { organizationSelectSchema } from "../zod/schemas/organization";
+import type { getFullOrganizationFn } from "./organization";
+import type { getOrganizationProperyListFn } from "./property";
 
 type UserId = { userId: string };
-
-export type OrganizationSelect = {
-  organizationSlug?: string;
-  organizationId?: string;
-};
-
-export type ActiveOrganizationSelect = XOR<
-  {
-    organizationSlug: string;
-  },
-  {
-    organizationId: string | null;
-  }
->;
 
 export const userKeys = {
   all: () => ["user"] as const,
@@ -29,13 +18,13 @@ export const organizationKeys = {
     [...organizationKeys.all(), "list", userId] as const,
   active: ({ userId }: UserId) =>
     [...organizationKeys.all(), "active", userId] as const,
-  fullOrganization: (data: OrganizationSelect = {}) =>
+  fullOrganization: ({ data }: Parameters<typeof getFullOrganizationFn>[0]) =>
     [
       ...organizationKeys.all(),
       "full",
-      data.organizationId || data.organizationSlug,
+      data?.organizationId || data?.organizationSlug,
     ] as const,
-  setActive: (data: UserId & ActiveOrganizationSelect) =>
+  setActive: (data: UserId & z.infer<typeof organizationSelectSchema>) =>
     // setActive: (data: UserId & ActiveOrganizationSelect) =>
     [
       ...organizationKeys.all(),
@@ -47,8 +36,14 @@ export const organizationKeys = {
 
 export const propertyKeys = {
   all: () => ["property"] as const,
-  list: ({ organizationId }: { organizationId: string }) =>
-    [...propertyKeys.all(), "list", organizationId] as const,
+  list: (data: Parameters<typeof getOrganizationProperyListFn>[0]["data"]) =>
+    [
+      ...propertyKeys.all(),
+      "list",
+      data.organizationId,
+      data.pageSize,
+      data.page,
+    ] as const,
   create: () => [...propertyKeys.all(), "create"] as const,
   detail: (id: string) => [...propertyKeys.all(), "detail", id] as const,
   update: () => [...propertyKeys.all(), "update"] as const,
@@ -64,7 +59,7 @@ export const memberKeys = {
     userId: string;
     organizationId: string;
   }) => [...memberKeys.all(), "active", userId, organizationId] as const,
-  list: (data: OrganizationSelect) =>
+  list: (data: z.infer<typeof organizationSelectSchema>) =>
     [
       ...memberKeys.all(),
       "list",

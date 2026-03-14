@@ -1,8 +1,9 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, Trash2 } from "lucide-react";
 import { Suspense } from "react";
 import { toast } from "sonner";
+import { FlexContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,22 +11,35 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
+} from "@/components/ui/item";
 import { TypographyH3 } from "@/components/ui/typography";
 import {
   addMemberFn,
   listMembersQueryOptions,
   removeMemberFn,
 } from "@/lib/fn/member";
-import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
+import {
+  deleteOrganizationMutationOptions,
+  getFullOrganizationQueryOptions,
+} from "@/lib/fn/organization";
 import { listUsersQueryOptions } from "@/lib/fn/user";
 
-export const Route = createFileRoute("/app/admin/organization/$id")({
+export const Route = createFileRoute("/app/(user)/admin/organization/$id")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   return (
-    <main>
+    <FlexContainer>
       <Suspense
         fallback={
           <div className="bg-emerald-200">LOADING ORGANIZATION DATA</div>
@@ -36,16 +50,58 @@ function RouteComponent() {
       <Suspense fallback={<div className="bg-sky-200">LOADING Users list</div>}>
         <UserList />
       </Suspense>
-    </main>
+    </FlexContainer>
   );
 }
 
 function OrgData() {
   const { id } = Route.useParams();
+  const navigate = Route.useNavigate();
+
   const { data: organization } = useSuspenseQuery(
     getFullOrganizationQueryOptions({ organizationId: id }),
   );
-  return <div>Organization with ID: {organization?.id}</div>;
+
+  const { mutate } = useMutation({
+    ...deleteOrganizationMutationOptions(),
+    onError: async (error) => {
+      toast.error(`Error deleting Organization`, {
+        description: error.message,
+      });
+    },
+    onSuccess: async (data) => {
+      toast.success(`Deleted Organization ${data.name}`);
+      await navigate({ to: "/app/admin", reloadDocument: true });
+    },
+  });
+
+  return (
+    <ItemGroup className="flex flex-col">
+      <Item className="px-0">
+        <ItemHeader>
+          <ItemTitle className="text-2xl">{organization.name}</ItemTitle>
+        </ItemHeader>
+        <ItemContent>
+          <ItemDescription>Id: {organization.id}</ItemDescription>
+        </ItemContent>
+        <ItemFooter>
+          <ItemActions>
+            <Button
+              className="w-fit"
+              onClick={() => {
+                mutate({
+                  data: { organizationId: id },
+                });
+              }}
+              variant="destructive"
+            >
+              <Trash2 data-icon="inline-start" /> Delete Organization
+            </Button>
+          </ItemActions>
+        </ItemFooter>
+      </Item>
+    </ItemGroup>
+  );
 }
 
 function UserList() {
@@ -56,7 +112,7 @@ function UserList() {
   );
   return (
     <div className="flex flex-col gap-4">
-      <TypographyH3>Add members:</TypographyH3>
+      <TypographyH3>Members:</TypographyH3>
       <div className="flex flex-wrap gap-2">
         {users.users.map((user) => (
           <Card className="w-full max-w-sm" key={user.id}>
@@ -101,7 +157,7 @@ function UserList() {
                   }}
                   variant="destructive"
                 >
-                  <MinusIcon /> Remove from Org
+                  <MinusIcon data-icon="inline-start" /> Remove from Org
                 </Button>
               )}
             </CardFooter>

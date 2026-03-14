@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "@tanstack/react-router";
-import { XCircle } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { CheckIcon, XCircle } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
@@ -22,15 +23,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth/client";
+import { createOrganizationMutationOptions } from "@/lib/fn/organization";
 import {
-  organizationPlan,
-  organizationSlug,
+  organizationPlanSchema,
+  organizationSlugSchema,
 } from "@/lib/zod/schemas/organization";
 
 export const createOrganizationFormSchema = z.object({
   name: z.string().min(4, { error: "Mínimo 4 caracteres" }),
-  slug: organizationSlug,
-  plan: organizationPlan,
+  slug: organizationSlugSchema,
+  plan: organizationPlanSchema,
+  logo: z.string().optional(),
 });
 
 export function CreateOrganizationForm({
@@ -41,7 +44,7 @@ export function CreateOrganizationForm({
   onSuccess?: () => void;
   callbackURL?: string;
 }) {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const { formState, handleSubmit, setValue, setError, clearErrors, register } =
     useForm({
@@ -58,38 +61,52 @@ export function CreateOrganizationForm({
     return result;
   }, []);
 
-  const submit = async ({
-    name,
-    slug,
-  }: z.infer<typeof createOrganizationFormSchema>) => {
-    clearErrors();
-    const { data, error } = await authClient.organization.create({
-      name,
-      slug,
-    });
-    if (error) {
+  const { mutate, isPending, isSuccess } = useMutation({
+    ...createOrganizationMutationOptions(),
+    onMutate: () => {
+      clearErrors();
+    },
+    onError: () => {
       setError("root", { message: "Error al crear la organización" });
-      if (error.message === "Organization already exists") {
-        setError("slug", { message: "Este subdominio ya está siendo usado" });
-      }
-      console.error(`Error creating organization -> ${error.message}`);
       toast.error("Error al crear la organización");
-    }
-    if (data) {
-      router.invalidate();
+    },
+    onSuccess: async ({ name, slug }) => {
+      // router.invalidate();
       toast.success(`Organización creada`, {
-        description: `Organización "${data?.name}" con ruta "${data?.slug}" creada con éxito`,
+        description: `Organización "${name}" con ruta "${slug}" creada con éxito`,
       });
-    }
-  };
+      await navigate({ to: "/app" });
+    },
+  });
+
+  // const submit = async ({
+  //   name,
+  //   slug,
+  // }: z.infer<typeof createOrganizationFormSchema>) => {
+  //   clearErrors();
+  //   const { data, error } = await authClient.organization.create({
+  //     name,
+  //     slug,
+  //   });
+  //   if (error) {
+  //     setError("root", { message: "Error al crear la organización" });
+  //     if (error.message === "Organization already exists") {
+  //       setError("slug", { message: "Este subdominio ya está siendo usado" });
+  //     }
+  //     console.error(`Error creating organization -> ${error.message}`);
+  //     toast.error("Error al crear la organización");
+  //   }
+  //   if (data) {
+  //     router.invalidate();
+  //     toast.success(`Organización creada`, {
+  //       description: `Organización "${data?.name}" con ruta "${data?.slug}" creada con éxito`,
+  //     });
+  //   }
+  // };
 
   return (
     <Card {...props}>
-      <form
-        onSubmit={handleSubmit(async (data) => {
-          await submit(data);
-        })}
-      >
+      <form onSubmit={handleSubmit((data) => mutate({ data }))}>
         <CardContent className="pb-4">
           <FieldSet>
             <FieldLegend className="text-center">
@@ -156,9 +173,19 @@ export function CreateOrganizationForm({
         <CardFooter>
           <FieldGroup>
             <Field>
-              <Button disabled={formState.isSubmitting} type="submit">
-                {formState.isSubmitting && <Spinner />}
-                Crear
+              <Button
+                disabled={
+                  formState.isSubmitting || formState.isSubmitSuccessful
+                }
+                type="submit"
+              >
+                {isPending && <Spinner />}
+                {isSuccess && <CheckIcon />}
+                {isPending
+                  ? "Creating..."
+                  : isSuccess
+                    ? "Successfully created!"
+                    : "Create"}
               </Button>
               {/* <FieldDescription className="px-6 pt-2 text-center"> */}
               {/*   No tiene una cuenta? <Link href="/sign-up">Crear cuenta</Link> */}

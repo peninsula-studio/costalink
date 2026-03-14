@@ -1,28 +1,74 @@
 import {
+  Link,
   useParams,
+  useRouteContext,
   useRouterState,
   type ValidateToPath,
 } from "@tanstack/react-router";
-import { HouseIcon, HousePlus, TableIcon } from "lucide-react";
+import {
+  Building2,
+  HouseIcon,
+  HousePlus,
+  TableIcon,
+  UserIcon,
+} from "lucide-react";
 import { type ComponentProps, Suspense } from "react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenuButton,
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { NavMain } from "./nav-main";
+import { AgencyNav } from "./agency-nav";
 import { NavUser } from "./nav-user";
-import { OrganizationSidebarNavigation } from "./organization-sidebar-navigation";
-import { OrganizationSwitcher } from "./organization-switcher";
-import { ProjectsMenu } from "./projects-group";
+import { OrganizationlessNav } from "./organizationless-nav";
 
-export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const params = useParams({
+export function UserSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const { user } = useRouteContext({ from: "/app" });
+
+  const matches = useRouterState({ select: (s) => s.matches });
+  const matchesRoute = (route: ValidateToPath) =>
+    matches.filter((match) => match.fullPath === route).length > 0;
+
+  return (
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <SidebarMenuButton
+          render={<Link to="/app" />}
+          size="lg"
+          variant="primary"
+        >
+          <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary-foreground text-sidebar-primary">
+            <UserIcon className="size-4" />
+          </div>
+          <div className="flex flex-col leading-tight">
+            <span className="truncate font-medium">{user.name}</span>
+            <span className="truncate font-light text-xs">{user.email}</span>
+          </div>
+        </SidebarMenuButton>
+      </SidebarHeader>
+      <SidebarContent>
+        <Suspense>
+          <OrganizationlessNav />
+        </Suspense>
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}
+
+export function OrganizationSidebar({
+  ...props
+}: ComponentProps<typeof Sidebar>) {
+  const params = useParams({ from: "/app/$organizationId" });
+  const { activeOrganization } = useRouteContext({
     from: "/app/$organizationId",
-    shouldThrow: false,
   });
 
   const matches = useRouterState({ select: (s) => s.matches });
@@ -32,37 +78,42 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Suspense>
-          <OrganizationSwitcher />
-        </Suspense>
+        <SidebarMenuButton
+          render={<Link params={params} to="/app/$organizationId" />}
+          size="lg"
+          variant="primary"
+        >
+          <div className="flex aspect-square size-8 items-center justify-center rounded bg-sidebar-primary-foreground text-sidebar-primary">
+            <Building2 className="size-4" />
+          </div>
+          <span className="truncate font-medium">
+            {activeOrganization.name}
+          </span>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        {params && (
-          <NavMain
-            items={[
-              {
-                title: "Properties",
-                icon: HouseIcon,
-                url: "#",
-                isActive: matchesRoute("/app/$organizationId/property"),
-                items: [
-                  {
-                    icon: TableIcon,
-                    title: "View properties",
-                    url: `/app/${params.organizationId}/property`,
-                  },
-                  {
-                    icon: HousePlus,
-                    title: "Create property",
-                    url: `/app/${params.organizationId}/property/create`,
-                  },
-                ],
-              },
-            ]}
-          />
-        )}
-        {params && <OrganizationSidebarNavigation />}
-        <ProjectsMenu />
+        <AgencyNav
+          items={[
+            {
+              title: "Properties",
+              icon: HouseIcon,
+              url: "#",
+              isActive: matchesRoute("/app/$organizationId/property"),
+              items: [
+                {
+                  icon: TableIcon,
+                  title: "View properties",
+                  url: `/app/${params.organizationId}/property`,
+                },
+                {
+                  icon: HousePlus,
+                  title: "Create property",
+                  url: `/app/${params.organizationId}/property/create`,
+                },
+              ],
+            },
+          ]}
+        />
       </SidebarContent>
       <SidebarFooter>
         {params?.organizationId && <SidebarSeparator />}

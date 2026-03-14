@@ -1,5 +1,22 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+  useRouterState,
+} from "@tanstack/react-router";
+import React, { Suspense } from "react";
+import { OrganizationSidebar } from "@/components/app-sidebar";
+import { AppSkeleton } from "@/components/app-skeleton";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { userKeys } from "@/lib/fn/keys";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
@@ -48,18 +65,59 @@ export const Route = createFileRoute("/app/$organizationId")({
       }),
     );
   },
-  pendingComponent: () => (
-    <div className="flex flex-col gap-y-6 p-6">
-      <Skeleton className="h-12 w-md" />
-      <div className="flex w-full gap-x-2">
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-      </div>
-    </div>
-  ),
+  pendingComponent: () => <AppSkeleton />,
   component: OrganizationLayout,
 });
 
 function OrganizationLayout() {
-  return <Outlet />;
+  const matches = useRouterState({ select: (s) => s.matches });
+
+  const breadcrumbs = matches
+    .filter((match) => match.context.breadcrumbs)
+    .at(-1)?.context.breadcrumbs;
+
+  return (
+    <>
+      <Suspense fallback={<div className="bg-red-400">Loading...</div>}>
+        <OrganizationSidebar />
+      </Suspense>
+      <SidebarInset>
+        <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
+          <div className="flex w-full items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              className="mr-2 data-vertical:h-4"
+              orientation="vertical"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                {breadcrumbs?.map(({ label, href }, i) => (
+                  <React.Fragment key={href}>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink
+                        render={<Link to={href}>{label}</Link>}
+                      ></BreadcrumbLink>
+                    </BreadcrumbItem>
+                    {i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                  </React.Fragment>
+                ))}
+                {/* <BreadcrumbItem className="hidden md:block"> */}
+                {/*   <BreadcrumbLink href="#"> */}
+                {/*     Building Your Application */}
+                {/*   </BreadcrumbLink> */}
+                {/* </BreadcrumbItem> */}
+                {/* <BreadcrumbSeparator className="hidden md:block" /> */}
+                {/* <BreadcrumbItem> */}
+                {/*   <BreadcrumbPage>Data Fetching</BreadcrumbPage> */}
+                {/* </BreadcrumbItem> */}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <main>
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </>
+  );
 }

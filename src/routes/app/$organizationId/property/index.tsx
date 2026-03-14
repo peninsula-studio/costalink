@@ -1,5 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { count, eq } from "drizzle-orm";
 import {
   ArrowDown,
   ArrowUp,
@@ -11,13 +13,14 @@ import {
   StopCircleIcon,
   Trash2Icon,
 } from "lucide-react";
-import { Component, type ComponentProps, Suspense } from "react";
+import { type ComponentProps, Suspense } from "react";
 import { z } from "zod";
 import { FlexContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ItemGroup } from "@/components/ui/item";
 import {
   Select,
   SelectContent,
@@ -36,7 +39,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TypographyH1, TypographyP } from "@/components/ui/typography";
-import { PROPERTY_STATUS_ENUM } from "@/lib/db/schema";
+import { db } from "@/lib/db";
+import { PROPERTY_STATUS_ENUM, property } from "@/lib/db/schema";
 import {
   deletePropertyMutationOptions,
   getOrganizationPropertyListQueryOptions,
@@ -52,19 +56,38 @@ const routeParamSchema = z.object({
     .enum(["price", "createdAt", "ref", "status", "province", "town"])
     .optional(),
   sortOrder: z.enum(["asc", "desc"]).optional(),
-  page: z.number().optional(),
+  page: z.number().optional().default(1),
+  pageSize: z.number().optional().default(10),
 });
+
+const propertyCount = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ organizationId: z.string() }))
+  .handler(async ({ data }) => {
+    const propertyCount = await db
+      .select({ count: count() })
+      .from(property)
+      .where(eq(property.organizationId, data.organizationId));
+    console.log(propertyCount);
+    return propertyCount[0].count;
+  });
 
 export const Route = createFileRoute("/app/$organizationId/property/")({
   validateSearch: routeParamSchema,
+  // loader: async ({ context }) => {
+  //   const propertyCount = await db
+  //     .select({ count: count() })
+  //     .from(property)
+  //     .where(eq(property.organizationId, context.activeOrganization.id));
+  //   console.log(propertyCount);
+  // },
   component: RouteComponent,
 });
 
-const ITEMS_PER_PAGE = 20;
-
 function RouteComponent() {
   const { organizationId } = Route.useParams();
-  const { search, type, status, sortBy, sortOrder, page } = Route.useSearch();
+  const { search, type, status, sortBy, sortOrder, page, pageSize } =
+    Route.useSearch();
+
   const navigate = useNavigate();
 
   const handleSearch = (value: string) => {
@@ -112,6 +135,22 @@ function RouteComponent() {
     });
   };
 
+  const handlePageSizeFilter = (value: number) => {
+    const newValue = value === pageSize ? undefined : value || undefined;
+    navigate({
+      to: ".",
+      search: {
+        search,
+        type,
+        status,
+        sortBy,
+        sortOrder,
+        page,
+        pageSize: newValue,
+      },
+    });
+  };
+
   const allTypes: ComponentProps<typeof Select>["items"] = [
     { label: "Select type", value: "" },
     { label: "Detached", value: "detached" },
@@ -142,7 +181,7 @@ function RouteComponent() {
       </FlexContainer>
 
       <FlexContainer padding="none" spacing="sm">
-        <FlexContainer className="*:flex-1 md:flex-row" padding="none">
+        <ItemGroup className="*:flex-1 md:flex-row">
           <Field>
             <FieldContent>
               <FieldLabel>Search</FieldLabel>
@@ -203,7 +242,35 @@ function RouteComponent() {
               </Select>
             </FieldContent>
           </Field>
-        </FlexContainer>
+
+          <Field>
+            <FieldContent>
+              <FieldLabel>Status</FieldLabel>
+              <Select
+                defaultValue={10}
+                onValueChange={(value) => handlePageSizeFilter(value || 10)}
+                value={Number(pageSize) || 10}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {[
+                      { label: "10", value: 10 },
+                      { label: "20", value: 20 },
+                      { label: "50", value: 50 },
+                    ].map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FieldContent>
+          </Field>
+        </ItemGroup>
 
         <Suspense fallback={<Skeleton className="h-20 w-full" />}>
           <ResultTable />
@@ -215,12 +282,19 @@ function RouteComponent() {
 
 function ResultTable() {
   const { organizationId } = Route.useParams();
-  const { search, type, status, sortBy, sortOrder, page } = Route.useSearch();
+
+  const { search, type, status, sortBy, sortOrder, page, pageSize } =
+    Route.useSearch();
+
+  const ITEMS_PER_PAGE = Number(pageSize);
+
   const navigate = Route.useNavigate();
 
   const { data: organizationProperties } = useSuspenseQuery(
     getOrganizationPropertyListQueryOptions({
       organizationId: organizationId,
+      page,
+      pageSize,
     }),
   );
 
@@ -253,9 +327,15 @@ function ResultTable() {
     return order === "asc" ? 1 : -1;
   });
 
+  const { data: totalPropertyCount } = useSuspenseQuery({
+    queryKey: ["propertycount", organizationId],
+    queryFn: () => propertyCount({ data: { organizationId } }),
+  });
+
   // Pagination
   const currentPage = page || 1;
-  const totalPages = Math.ceil(sortedProperties.length / ITEMS_PER_PAGE);
+  // const totalPages = Math.ceil(sortedProperties.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalPropertyCount / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedProperties = sortedProperties.slice(
     startIndex,
@@ -466,7 +546,7 @@ function ResultTable() {
             {Math.min(startIndex + ITEMS_PER_PAGE, sortedProperties.length)} of{" "}
             {sortedProperties.length} properties
           </TypographyP>
-          <div className="flex gap-2">
+          <div className="flex w-fit gap-2">
             <Button
               disabled={currentPage === 1}
               onClick={() =>

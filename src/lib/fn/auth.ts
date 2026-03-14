@@ -32,8 +32,8 @@ export const getSessionQueryOptions = () =>
     queryFn: getSessionFn,
   });
 
-export const $signUpFn = createServerFn()
-  .inputValidator((data: z.infer<typeof signUpFormSchema>) => data)
+export const signUpFn = createServerFn()
+  .inputValidator(signUpFormSchema)
   .handler(async ({ data }) => {
     const isValid = signUpFormSchema.safeParse(data);
 
@@ -53,8 +53,8 @@ export const $signUpFn = createServerFn()
     }
   });
 
-export const $signInFn = createServerFn()
-  .inputValidator((data: z.infer<typeof signInFormSchema>) => data)
+export const signInFn = createServerFn()
+  .inputValidator(signInFormSchema)
   .handler(async ({ data }) => {
     const isValid = signInFormSchema.safeParse(data);
 
@@ -76,9 +76,7 @@ export const $signInFn = createServerFn()
 
 export const signInMutationOptions = () =>
   mutationOptions({
-    mutationFn: async (data: z.infer<typeof signInFormSchema>) => {
-      return await $signInFn({ data });
-    },
+    mutationFn: signInFn,
     onError: (e) => {
       console.error(`Sign-in error -> "/sign-in": ${e.message}`);
     },
@@ -88,7 +86,7 @@ export const signInMutationOptions = () =>
     },
   });
 
-export const $signOutFn = createServerFn().handler(async () => {
+export const signOutFn = createServerFn().handler(async () => {
   try {
     const data = await auth.api.signOut({ headers: getRequestHeaders() });
     return data;
