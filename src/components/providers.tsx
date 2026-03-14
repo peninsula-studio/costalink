@@ -11,12 +11,16 @@ type Props = {
 export const Providers = ({ children }: Props) => {
   return (
     <SidebarProvider>
-      <ReactQueryDevtools
-        buttonPosition="bottom-right"
-        initialIsOpen={false}
-        position="bottom"
-      />
-      <TanStackRouterDevtools position="bottom-right" />
+      {import.meta.env.DEV && (
+        <>
+          <ReactQueryDevtools
+            buttonPosition="bottom-right"
+            initialIsOpen={false}
+            position="bottom"
+          />
+          <TanStackRouterDevtools position="bottom-right" />
+        </>
+      )}
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Toaster closeButton={true} richColors visibleToasts={5} />
         {children}
