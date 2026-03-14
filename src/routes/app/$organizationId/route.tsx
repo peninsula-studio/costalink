@@ -1,8 +1,9 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { userKeys } from "@/lib/fn/keys";
+import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
-import { getPropertiesQueryOptions } from "@/lib/fn/property";
+import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$organizationId")({
   beforeLoad: async ({ context, params, routeId }) => {
@@ -16,11 +17,23 @@ export const Route = createFileRoute("/app/$organizationId")({
 
     if (!activeOrganization) throw redirect({ to: "/app" });
 
-    if (context.session?.session.activeOrganizationId !== params.organizationId) {
+    if (
+      context.session?.session.activeOrganizationId !== params.organizationId
+    ) {
       context.queryClient.resetQueries({ queryKey: userKeys.session() });
     }
 
+    const member = await context.queryClient.ensureQueryData(
+      getActiveMemberQueryOptions({
+        organizationId: activeOrganization.id,
+        userId: context.user.id,
+      }),
+    );
+
+    if (!member) throw redirect({ to: "/app" });
+
     return {
+      member,
       activeOrganization,
       breadcrumbs: [
         // ...context.breadcrumbs,
@@ -30,7 +43,7 @@ export const Route = createFileRoute("/app/$organizationId")({
   },
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(
-      getPropertiesQueryOptions({
+      getOrganizationPropertyListQueryOptions({
         organizationId: context.activeOrganization.id,
       }),
     );

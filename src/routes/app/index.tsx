@@ -1,20 +1,43 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Building2 } from "lucide-react";
+import { Building2, CogIcon, UserIcon } from "lucide-react";
+import { Suspense } from "react";
 import { toast } from "sonner";
 import { FlexContainer } from "@/components/container";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemFooter,
+  ItemHeader,
+  ItemTitle,
+} from "@/components/ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TypographyH2 } from "@/components/ui/typography";
+import { TypographyH5 } from "@/components/ui/typography";
+import type { organization } from "@/lib/db/schema";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { organizationListQueryOptions } from "@/lib/fn/organization";
+import {
+  getFullOrganizationQueryOptions,
+  organizationListQueryOptions,
+} from "@/lib/fn/organization";
+import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
+import { formatPrice } from "@/lib/i18n/format";
 
 export const Route = createFileRoute("/app/")({
+  // errorComponent: AppIndexErrorComponent,
   beforeLoad: async ({ context }) => {
     const session = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
-    // const sessionCookie = await checkSessionCookieFn();
     if (session?.session.activeOrganizationId) {
       console.log(session.session.activeOrganizationId);
       throw redirect({
@@ -28,7 +51,6 @@ export const Route = createFileRoute("/app/")({
         params: { organizationId: context.user.defaultOrganizationId },
       });
     }
-    return { breadcrumb: undefined };
   },
   loader: async ({ context }) => {
     const session = await context.queryClient.ensureQueryData(
@@ -53,50 +75,117 @@ function AppIndexPage() {
 
   return (
     <FlexContainer>
-      <TypographyH2>Dashboard</TypographyH2>
       {user.role === "admin" && (
-        <div>
-          <Button nativeButton={false} render={<Link to="/app/admin"></Link>}>
-            Admin panel
-          </Button>
-        </div>
+        <Item className="w-fit" variant="secondary">
+          <ItemHeader>
+            <ItemTitle>
+              <UserIcon />
+              <TypographyH5>{user.name}</TypographyH5>
+            </ItemTitle>
+          </ItemHeader>
+          <ItemContent>
+            <ul>
+              <li>
+                <span className="text-muted-foreground">id:</span> {user.id}
+              </li>
+              <li>
+                <span className="text-muted-foreground">Email:</span>{" "}
+                {user.email}
+              </li>
+            </ul>
+          </ItemContent>
+          <ItemFooter>
+            <ItemActions>
+              <Button
+                onClick={() => toast.success("Success toast")}
+                render={<Link to="/app/admin" />}
+                variant="default"
+              >
+                <CogIcon data-icon="inline-start" />
+                Settings
+              </Button>
+              <Button
+                onClick={() => toast.error("Error toast")}
+                variant="destructive"
+              >
+                Toast error
+              </Button>
+            </ItemActions>
+          </ItemFooter>
+        </Item>
       )}
-      <div className="flex gap-2">
-        <Button
-          onClick={() => toast.success("Success toast")}
-          variant="default"
-        >
-          Toast success
-        </Button>
-        <Button
-          onClick={() => toast.error("Error toast")}
-          variant="destructive"
-        >
-          Toast error
-        </Button>
-      </div>
-      <div className="flex flex-col gap-4 py-10">
-        {organizationList?.map((o, i) => (
-          <Button
-            className="flex w-fit items-center"
-            key={o.name}
-            nativeButton={false}
-            render={
-              <Link
-                params={{ organizationId: o.id }}
-                preload={false}
-                to="/app/$organizationId"
-              ></Link>
-            }
-          >
-            <Building2 className="stroke-white/80" />
-            {o.name}
-            <DropdownMenuShortcut className="text-white/70">
-              ⌘{i + 1}
-            </DropdownMenuShortcut>
-          </Button>
+
+      <div className="flex flex-col gap-6">
+        {organizationList?.map((org) => (
+          <Suspense fallback={<div>Loading...</div>} key={org.id}>
+            <OrganizationPreview data={org} />
+          </Suspense>
         ))}
       </div>
     </FlexContainer>
+  );
+}
+
+function OrganizationPreview({
+  data,
+}: {
+  data: typeof organization.$inferSelect;
+}) {
+  const { data: fullOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: data.id }),
+  );
+
+  const { data: properties } = useSuspenseQuery(
+    getOrganizationPropertyListQueryOptions({ organizationId: data.id }),
+  );
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Item className="p-0">
+        <Building2 className="size-[1em] stroke-foreground/75" />
+        <TypographyH5>{fullOrganization.name}</TypographyH5>
+        <Badge className="capitalize" variant="success">
+          {fullOrganization.plan}
+        </Badge>
+        <Button>Go to Agency</Button>
+      </Item>
+
+      {properties.length > 1 ? (
+        <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(12rem,auto))] gap-3">
+          {properties.map((p) => (
+            <Card
+              className="overflow-hidden pt-0! transition-shadow duration-150 hover:shadow-lg"
+              key={p.id}
+              size="sm"
+            >
+              <CardHeader className="aspect-video w-full overflow-hidden p-0!">
+                <img
+                  alt={p.images?.[0].id}
+                  className="size-full object-cover"
+                  src={p.images?.[0].url}
+                />
+              </CardHeader>
+
+              <CardContent className="flex flex-col">
+                <CardTitle className="flex justify-between pb-1 text-base">
+                  {p.ref}
+                  <span className="rounded-full border border-primary/20 bg-primary/5 px-2 text-primary">
+                    {formatPrice(p.price, p.currency, "es")}
+                  </span>
+                  {/* <Badge variant="success"> */}
+                  {/*   {formatPrice(p.price, p.currency, "es")} */}
+                  {/* </Badge> */}
+                </CardTitle>
+                <CardDescription className="line-clamp-2 leading-tight">
+                  {p.desc?.en}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div>NO PROPERTIES</div>
+      )}
+    </div>
   );
 }

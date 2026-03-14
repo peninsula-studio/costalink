@@ -48,7 +48,7 @@ export const Route = createFileRoute("/app")({
         },
       });
     }
-    console.log(session.session.activeOrganizationId);
+
     return {
       user: session.user,
       breadcrumbs: [{ label: "Dashboard", href: routeId }],
@@ -108,7 +108,7 @@ function AppLayout() {
       <AppSidebar />
       <SidebarInset>
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
-          <div className="flex items-center gap-2 px-4">
+          <div className="flex w-full items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
               className="mr-2 data-vertical:h-4"
@@ -117,7 +117,7 @@ function AppLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 {breadcrumbs?.map(({ label, href }, i) => (
-                  <React.Fragment key={label}>
+                  <React.Fragment key={href}>
                     <BreadcrumbItem>
                       <BreadcrumbLink
                         render={<Link to={href}>{label}</Link>}

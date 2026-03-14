@@ -125,6 +125,7 @@ export const NavMain = ({
     isActive?: boolean;
     items?: {
       title: string;
+      icon?: LucideIcon;
       url: string;
     }[];
   }[];
@@ -138,7 +139,7 @@ export const NavMain = ({
           <SidebarMenuButton
             isActive={pathname === "/app"}
             render={
-              <Link preload={false} to={"/app"}>
+              <Link preload={false} to="/app">
                 <HomeIcon />
                 Dashboard
               </Link>
@@ -165,7 +166,12 @@ export const NavMain = ({
                 <SidebarMenuItem>
                   <CollapsibleTrigger
                     render={
-                      <SidebarMenuButton tooltip={item.title}>
+                      <SidebarMenuButton
+                        className={cn({
+                          "bg-sidebar-accent": item.isActive,
+                        })}
+                        tooltip={item.title}
+                      >
                         {item.icon && <item.icon />}
                         <span>{item.title}</span>
                         <ChevronRight className="ml-auto transition-transform duration-150 group-data-open/collapsible:rotate-90" />
@@ -179,6 +185,7 @@ export const NavMain = ({
                           <SidebarMenuSubButton
                             render={
                               <Link to={subItem.url}>
+                                {subItem.icon && <subItem.icon />}
                                 <span>{subItem.title}</span>
                               </Link>
                             }

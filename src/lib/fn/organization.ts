@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { isRedirect, redirect } from "@tanstack/react-router";
+import { isRedirect, notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
@@ -93,10 +93,12 @@ export const getFullOrganizationFn = createServerFn()
         query: data,
         headers: getRequestHeaders(),
       });
+      if (!organization) throw new Error("Organization not found");
       return organization;
     } catch (e) {
-      console.error(`Error getting organization info: ${(e as Error).message}`);
-      throw redirect({ to: "/app" });
+      console.error(`Error getting organization: ${(e as Error).message}`);
+      throw new Error("Organization not found");
+      // throw redirect({ to: "/app" });
     }
   });
 

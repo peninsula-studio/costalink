@@ -28,7 +28,7 @@ import {
   TypographyH4,
   TypographyLarge,
 } from "@/components/ui/typography";
-import { getPropertiesQueryOptions } from "@/lib/fn/property";
+import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$organizationId/")({
   pendingComponent: () => (
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/app/$organizationId/")({
 
 function OrganizationPage() {
   const { activeOrganization } = Route.useRouteContext();
-  const { params } = Route.useParams();
+  const params = Route.useParams();
 
   return (
     <FlexContainer>
@@ -65,12 +65,7 @@ function OrganizationPage() {
         </ItemContent>
       </Item>
 
-      <FlexContainer
-        className="flex-wrap"
-        direction="horizontal"
-        padding="none"
-        spacing="sm"
-      >
+      <FlexContainer className="flex-row flex-wrap" padding="none" spacing="sm">
         <Item className="p-0">
           <ItemHeader className="justify-start">
             <TypographyH4>Properties</TypographyH4>
@@ -103,7 +98,7 @@ function OrganizationPage() {
 const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
   const params = Route.useParams();
   const { data: properties } = useSuspenseQuery(
-    getPropertiesQueryOptions({ organizationId }),
+    getOrganizationPropertyListQueryOptions({ organizationId }),
   );
 
   return (

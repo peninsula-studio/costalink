@@ -39,7 +39,7 @@ import { TypographyH1, TypographyP } from "@/components/ui/typography";
 import { PROPERTY_STATUS_ENUM } from "@/lib/db/schema";
 import {
   deletePropertyMutationOptions,
-  getPropertiesQueryOptions,
+  getOrganizationPropertyListQueryOptions,
 } from "@/lib/fn/property";
 import { cn } from "@/lib/utils";
 
@@ -219,7 +219,7 @@ function ResultTable() {
   const navigate = Route.useNavigate();
 
   const { data: organizationProperties } = useSuspenseQuery(
-    getPropertiesQueryOptions({
+    getOrganizationPropertyListQueryOptions({
       organizationId: organizationId,
     }),
   );

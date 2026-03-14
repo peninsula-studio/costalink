@@ -4,27 +4,25 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import type { z } from "zod";
 import { db } from "@/lib/db";
-import {
-  adminRequiredMiddleware,
-  authMiddleware,
-  orgMembershipMiddleware,
-} from "@/middleware/auth";
+import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
 import type { kyeroPropertySchema } from "./kyero/schemas";
 import { getActiveOrganizationFn } from "./organization";
 
-export const getOrganizationPropertiesFn = createServerFn()
-  .inputValidator((data: { organizationId: string }) => data)
+export const getOrganizationProperyListFn = createServerFn()
+  .inputValidator(
+    (data: { organizationId: string; pageSize?: number; page?: number }) =>
+      data,
+  )
   .middleware([authMiddleware])
-  // .inputValidator(
-  //   (data: Parameters<typeof db.query.property.findMany>["0"]) => data,
-  // )
-  .handler(async ({ data }) => {
+  .handler(async ({ data: { organizationId, page = 1, pageSize = 5 } }) => {
     try {
       const propertyList = await db.query.property.findMany({
-        where: { organizationId: { eq: data.organizationId } },
+        where: { organizationId: { eq: organizationId } },
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
       });
       return propertyList;
     } catch (error) {
@@ -35,7 +33,7 @@ export const getOrganizationPropertiesFn = createServerFn()
     }
   });
 
-export const getPropertiesQueryOptions = ({
+export const getOrganizationPropertyListQueryOptions = ({
   organizationId,
 }: {
   organizationId: string;
@@ -43,7 +41,7 @@ export const getPropertiesQueryOptions = ({
   queryOptions({
     queryKey: ["property", "list", organizationId],
     queryFn: async () =>
-      await getOrganizationPropertiesFn({ data: { organizationId } }),
+      await getOrganizationProperyListFn({ data: { organizationId } }),
   });
 
 export const checkPropertyReferenceFn = createServerFn()
@@ -233,22 +231,37 @@ export const deletePropertyFn = createServerFn({ method: "POST" })
   });
 
 export const getPropertyFn = createServerFn({ method: "GET" })
-  .inputValidator(
-    (data: { propertyId: string; organizationId: string }) => data,
-  )
-  .middleware([orgMembershipMiddleware])
-  .handler(async ({ data: { propertyId, organizationId } }) => {
+  .inputValidator((data: { propertyId: string }) => data)
+  .middleware([authMiddleware])
+  .handler(async ({ data: { propertyId } }) => {
     try {
       const result = await db.query.property.findFirst({
         where: { id: { eq: propertyId } },
       });
 
-      if (!result || result.organizationId !== organizationId) {
-        throw redirect({
-          to: "/app/$organizationId/property",
-          params: { organizationId },
-        });
+      // TODO: Manage role based information return
+
+      return result;
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error(`❌ Error getting property: ${(e as Error).message}`);
       }
+      throw e;
+    }
+  });
+
+export const getPropertiesFn = createServerFn({ method: "GET" })
+  .inputValidator(
+    (data: typeof db.query.property.findMany.arguments.where) => data,
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data: { propertyId } }) => {
+    try {
+      const result = await db.query.property.findFirst({
+        where: { id: { eq: propertyId } },
+      });
+
+      // TODO: Manage role based information return
 
       return result;
     } catch (e) {
@@ -261,15 +274,13 @@ export const getPropertyFn = createServerFn({ method: "GET" })
 
 export const getPropertyQueryOptions = ({
   propertyId,
-  organizationId,
 }: {
   propertyId: string;
-  organizationId: string;
+  userId: string;
 }) =>
   queryOptions({
     queryKey: ["property", "detail", propertyId],
-    queryFn: async () =>
-      await getPropertyFn({ data: { propertyId, organizationId } }),
+    queryFn: async () => await getPropertyFn({ data: { propertyId } }),
   });
 
 export const updatePropertyMutationOptions = () =>

@@ -56,25 +56,18 @@ export const hasActiveOrganizationMiddleware = createMiddleware({
  * Must be used after `authMiddleware`. The server function's input must
  * include an `organizationId: string` field.
  */
-export const orgMembershipMiddleware = createMiddleware({ type: "function" })
-  .middleware([authMiddleware])
-  .server(async ({ next, context, data }) => {
-    const { organizationId } = data as unknown as { organizationId: string };
-    const userId = context.session.user.id;
-
-    const member = await db.query.member.findFirst({
-      where: {
-        organizationId: { eq: organizationId },
-        userId: { eq: userId },
-      },
-    });
-
-    if (!member) {
-      console.warn(
-        `User ${userId} attempted to access organization ${organizationId} without membership.`,
-      );
-      throw redirect({ to: "/app" });
-    }
-
-    return await next({ context });
-  });
+// export const orgMembershipMiddleware = createMiddleware({ type: "function" })
+//   .middleware([authMiddleware])
+//   .inputValidator((d: { propertyId: string; userId: string }) => d)
+//   .server(async ({ next, context, data }) => {
+//     const { propertyId, userId } = data;
+//
+//     if (!member) {
+//       console.warn(
+//         `User ${userId} attempted to access organization ${organizationId} without membership.`,
+//       );
+//       throw redirect({ to: "/app" });
+//     }
+//
+//     return await next({ context });
+//   });

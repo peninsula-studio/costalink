@@ -2,26 +2,20 @@ import { mergeProps, useRender } from "@base-ui/react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const containerVariants = cva("flex", {
+const containerVariants = cva("flex flex-col", {
   variants: {
-    direction: {
-      vertical: "flex-col",
-      horizontal: "flex-row",
-    },
     padding: {
       none: "p-0",
+      xs: "p-2",
       sm: "p-4",
       md: "p-8",
       lg: "p-12",
     },
     spacing: {
-      // none: "gap-x-0 gap-y-0",
       none: "gap-0",
-      // sm: "gap-x-2 gap-y-4",
-      sm: "gap-4",
-      // md: "gap-x-4 gap-y-8",
-      md: "gap-8",
-      // lg: "gap-x-8 gap-y-12",
+      xs: "gap-3",
+      sm: "gap-6",
+      md: "gap-10",
       lg: "gap-12",
     },
   },
@@ -29,7 +23,6 @@ const containerVariants = cva("flex", {
 
 export function FlexContainer({
   className,
-  direction = "vertical",
   padding = "md",
   spacing = "md",
   render,
@@ -39,10 +32,7 @@ export function FlexContainer({
     defaultTagName: "div",
     props: mergeProps<"div">(
       {
-        className: cn(
-          containerVariants({ direction, spacing, padding }),
-          className,
-        ),
+        className: cn(containerVariants({ spacing, padding }), className),
       },
       props,
     ),

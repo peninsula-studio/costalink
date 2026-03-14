@@ -34,18 +34,20 @@ function ItemSeparator({
 }
 
 const itemVariants = cva(
-  "group/item flex w-full flex-wrap items-center rounded-md border text-sm outline-none transition-colors duration-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted",
+  "group/item flex w-full flex-wrap items-center rounded-md border outline-none transition-colors duration-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted",
   {
     variants: {
       variant: {
         default: "border-transparent",
         outline: "border-border",
-        muted: "border-transparent bg-muted/50",
+        muted: "border-transparent bg-muted",
+        secondary: "border-transparent bg-secondary",
+        primary: "border-transparent bg-primary text-primary-foreground",
       },
       size: {
-        default: "gap-3.5 px-4 py-3.5",
-        sm: "gap-2.5 px-3 py-2.5",
-        xs: "gap-2 in-data-[slot=dropdown-menu-content]:p-0 px-2.5 py-2",
+        default: "gap-3.5 px-4 py-3.5 text-base",
+        sm: "gap-2.5 px-3 py-2.5 text-sm",
+        xs: "gap-2 in-data-[slot=dropdown-menu-content]:p-0 px-2.5 py-2 text-xs",
       },
     },
     defaultVariants: {
@@ -80,7 +82,7 @@ function Item({
 }
 
 const itemMediaVariants = cva(
-  "flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&_svg]:pointer-events-none",
+  "flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:self-start [&_svg]:pointer-events-none",
   {
     variants: {
       variant: {
@@ -128,7 +130,7 @@ function ItemTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "line-clamp-1 flex w-fit items-center gap-2 font-medium text-sm leading-snug underline-offset-4",
+        "line-clamp-1 flex w-fit items-center gap-2 font-medium leading-snug underline-offset-4 group-data-[size=sm]/item:text-base group-data-[size=xs]/item:text-sm",
         className,
       )}
       data-slot="item-title"
@@ -141,7 +143,7 @@ function ItemDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       className={cn(
-        "line-clamp-2 text-left font-normal text-muted-foreground text-sm leading-normal group-data-[size=xs]/item:text-xs [&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
+        "line-clamp-2 text-left font-normal text-muted-foreground leading-normal group-data-[size=sm]/item:text-sm group-data-[size=xs]/item:text-xs [&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
         className,
       )}
       data-slot="item-description"
@@ -188,13 +190,13 @@ function ItemFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
   Item,
-  ItemMedia,
-  ItemContent,
   ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
   ItemGroup,
+  ItemHeader,
+  ItemMedia,
   ItemSeparator,
   ItemTitle,
-  ItemDescription,
-  ItemHeader,
-  ItemFooter,
 };

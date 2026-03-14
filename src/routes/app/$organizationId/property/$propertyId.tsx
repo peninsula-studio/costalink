@@ -13,7 +13,7 @@ export const Route = createFileRoute(
     const property = await context.queryClient.ensureQueryData(
       getPropertyQueryOptions({
         propertyId: params.propertyId,
-        organizationId: params.organizationId,
+        userId: params.organizationId,
       }),
     );
     return {

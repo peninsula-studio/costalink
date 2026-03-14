@@ -13,9 +13,10 @@ import appCss from "@/styles/globals.css?url";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
-    );
+    const session = await context.queryClient.ensureQueryData({
+      ...getSessionQueryOptions(),
+      revalidateIfStale: true,
+    });
     return { session };
   },
   head: () => ({

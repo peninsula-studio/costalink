@@ -104,16 +104,16 @@ export function CreatePropertyForm({
               </FieldContent>
             </Field>
 
-            {/* <Field data-invalid={false}> */}
-            {/*   <FieldLabel htmlFor="date">Date</FieldLabel> */}
-            {/*   <Input */}
-            {/*     id="date" */}
-            {/*     name="date" */}
-            {/*     placeholder="YYYY-MM-DD" */}
-            {/*     required */}
-            {/*     type="date" */}
-            {/*   /> */}
-            {/* </Field> */}
+            {/* <Field data-invalid={false}>
+              <FieldLabel htmlFor="date">Date</FieldLabel>
+              <Input
+                id="date"
+                name="date"
+                placeholder="YYYY-MM-DD"
+                required
+                type="date"
+              />
+            </Field> */}
 
             <Field data-invalid={false}>
               <FieldLabel htmlFor="price">Price</FieldLabel>

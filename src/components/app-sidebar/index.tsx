@@ -1,4 +1,9 @@
-import { useParams } from "@tanstack/react-router";
+import {
+  useParams,
+  useRouterState,
+  type ValidateToPath,
+} from "@tanstack/react-router";
+import { HouseIcon, HousePlus, TableIcon } from "lucide-react";
 import { type ComponentProps, Suspense } from "react";
 import {
   Sidebar,
@@ -10,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
+import { OrganizationSidebarNavigation } from "./organization-sidebar-navigation";
 import { OrganizationSwitcher } from "./organization-switcher";
 import { ProjectsMenu } from "./projects-group";
 
@@ -19,6 +25,10 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     shouldThrow: false,
   });
 
+  const matches = useRouterState({ select: (s) => s.matches });
+  const matchesRoute = (route: ValidateToPath) =>
+    matches.filter((match) => match.fullPath === route).length > 0;
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -27,8 +37,31 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         </Suspense>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={undefined} />
-        {/* {params?.organizationId && <NavMain items={undefined} />} */}
+        {params && (
+          <NavMain
+            items={[
+              {
+                title: "Properties",
+                icon: HouseIcon,
+                url: "#",
+                isActive: matchesRoute("/app/$organizationId/property"),
+                items: [
+                  {
+                    icon: TableIcon,
+                    title: "View properties",
+                    url: `/app/${params.organizationId}/property`,
+                  },
+                  {
+                    icon: HousePlus,
+                    title: "Create property",
+                    url: `/app/${params.organizationId}/property/create`,
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
+        {params && <OrganizationSidebarNavigation />}
         <ProjectsMenu />
       </SidebarContent>
       <SidebarFooter>
