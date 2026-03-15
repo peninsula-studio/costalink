@@ -32,22 +32,30 @@ import {
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 import { formatPrice } from "@/lib/i18n/format";
 
-export const Route = createFileRoute("/app/(user)/")({
+export const Route = createFileRoute("/app/")({
+  // server: { middleware: [sessionRequiredMiddleware] },
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
-    );
-    if (session?.session.activeOrganizationId) {
-      console.log(session.session.activeOrganizationId);
+    // const session = await context.queryClient.ensureQueryData(
+    //   getSessionQueryOptions(),
+    // );
+    //
+    // if (!session) throw redirect({ to: "/sign-in" });
+
+    const {
+      session: { user, session },
+    } = context;
+
+    if (session.activeOrganizationId) {
+      console.log(session.activeOrganizationId);
       throw redirect({
         to: "/app/$organizationId",
-        params: { organizationId: session.session.activeOrganizationId },
+        params: { organizationId: session.activeOrganizationId },
       });
     }
-    if (context.user.defaultOrganizationId) {
+    if (user.defaultOrganizationId) {
       throw redirect({
         to: "/app/$organizationId",
-        params: { organizationId: context.user.defaultOrganizationId },
+        params: { organizationId: user.defaultOrganizationId },
       });
     }
   },

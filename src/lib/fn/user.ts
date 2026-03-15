@@ -40,11 +40,15 @@ export const setDefaultOrganizationFn = createServerFn()
         .update(user)
         .set({ defaultOrganizationId: organizationId })
         .where(eq(user.id, userId))
-        .returning({ updatedId: user.id });
-      console.info("[ 󰊕]:listUsersFn", "Listing all Users...");
+        .returning({ user });
+      console.info(
+        `✅ Set default organization for ${updatedUser[0].user.name}}`,
+      );
       return updatedUser;
     } catch (e) {
-      console.error(`Error listing Users: ${(e as Error).message}`);
+      console.error(
+        `❌ Error setting default Organization: ${(e as Error).message}`,
+      );
       throw e;
     }
   });

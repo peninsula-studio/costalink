@@ -7,18 +7,10 @@ import {
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { Providers } from "@/components/providers";
-import { getSessionQueryOptions } from "@/lib/fn/auth";
 import type { MyRouterContext } from "@/router";
 import appCss from "@/styles/globals.css?url";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData({
-      ...getSessionQueryOptions(),
-      revalidateIfStale: true,
-    });
-    return { session };
-  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

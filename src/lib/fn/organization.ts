@@ -6,7 +6,7 @@ import { z } from "zod";
 import { createOrganizationFormSchema } from "@/components/create-organization-form";
 import { auth } from "@/lib/auth";
 import { organizationKeys } from "@/lib/fn/keys";
-import { adminRequiredMiddleware } from "@/middleware/auth";
+import { adminRequiredMiddleware, sessionRequiredMiddleware } from "@/middleware/auth";
 import { organizationSelectSchema } from "../zod/schemas/organization";
 
 export const getListOrganizationsFn = createServerFn({ method: "GET" }).handler(
@@ -178,4 +178,31 @@ export const deleteOrganizationMutationOptions = () =>
         queryKey: organizationKeys.list({ userId: data.user.id }),
       });
     },
+  });
+
+export const getOrganizationPermissionFn = createServerFn()
+  .inputValidator(
+    z.object({
+      organization: z.array(z.enum(["delete", "update"])),
+    }),
+  )
+  .middleware([sessionRequiredMiddleware])
+  .handler(async ({ data }) => {
+    const result = await auth.api.hasPermission({
+      headers: getRequestHeaders(),
+      // body: { permissions: { organization: ["update"] } },
+      body: { permissions: data },
+    });
+    return result;
+  });
+
+export const getOrganizationPermissionQueryOptions = ({
+  memberId,
+  ...data
+}: Parameters<typeof getOrganizationPermissionFn>[0]["data"] & {
+  memberId: string;
+}) =>
+  queryOptions({
+    queryKey: ["permissions", memberId, "organization"],
+    queryFn: () => getOrganizationPermissionFn({ data }),
   });

@@ -51,8 +51,23 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-:root {
+@theme inline {
   --topnav-h: 3rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --text-xl: 1.266rem;
+  --text-xl--line-height: calc(1.75 / 1.266);
+  --text-2xl: 1.424rem;
+  --text-2xl--line-height: calc(1.75 / 1.424);
+  --text-3xl: 1.602rem;
+  --text-3xl--line-height: calc(2 / 1.602);
+  --text-4xl: 1.802rem;
+  --text-4xl--line-height: calc(2.25 / 1.802);
+  --text-5xl: 2.027rem;
+  --text-5xl--line-height: calc(2.25 / 2.027);
+}
+
+:root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

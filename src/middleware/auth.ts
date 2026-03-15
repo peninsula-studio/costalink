@@ -19,7 +19,7 @@ export const sessionCookieMiddleware = createMiddleware().server(
   },
 );
 
-export const authMiddleware = createMiddleware({ type: "function" }).server(
+export const sessionRequiredMiddleware = createMiddleware().server(
   async ({ next }) => {
     const session = await getSessionFn();
     if (!session) {
@@ -29,8 +29,8 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
   },
 );
 
-export const adminRequiredMiddleware = createMiddleware({ type: "function" })
-  .middleware([authMiddleware])
+export const adminRequiredMiddleware = createMiddleware()
+  .middleware([sessionRequiredMiddleware])
   .server(async ({ next, context }) => {
     console.log("Checking if user is Admin...");
     if (context.session.user.role !== "admin") {
@@ -42,7 +42,7 @@ export const adminRequiredMiddleware = createMiddleware({ type: "function" })
 export const hasActiveOrganizationMiddleware = createMiddleware({
   type: "function",
 })
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .server(async ({ next, context }) => {
     console.log("Checking if user has active Organization...");
     if (!context.session.session.activeOrganizationId) {
@@ -52,7 +52,7 @@ export const hasActiveOrganizationMiddleware = createMiddleware({
   });
 
 export const memberRequiredMiddleware = createMiddleware({ type: "function" })
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .inputValidator(z.object({ organizationId: z.string() }))
   .server(async ({ data, next, context }) => {
     const orgs = await auth.api.listOrganizations({
@@ -68,7 +68,7 @@ export const memberRequiredMiddleware = createMiddleware({ type: "function" })
   });
 
 export const adminMemberMiddleware = createMiddleware({ type: "function" })
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .server(async ({ next, context }) => {
     const memberRole = await auth.api.getActiveMemberRole({
       headers: getRequestHeaders(),
@@ -81,7 +81,7 @@ export const adminMemberMiddleware = createMiddleware({ type: "function" })
   });
 
 export const ownerMemberMiddleware = createMiddleware({ type: "function" })
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .server(async ({ next, context }) => {
     const memberRole = await auth.api.getActiveMemberRole({
       headers: getRequestHeaders(),

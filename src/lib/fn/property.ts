@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
+import { adminRequiredMiddleware, sessionRequiredMiddleware } from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
@@ -18,7 +18,7 @@ export const getOrganizationProperyListFn = createServerFn()
       page: z.number().optional().default(1),
     }),
   )
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .handler(async ({ data: { organizationId, page, pageSize } }) => {
     try {
       const propertyList = await db.query.property.findMany({
@@ -231,7 +231,7 @@ export const deletePropertyFn = createServerFn({ method: "POST" })
 
 export const getPropertyFn = createServerFn({ method: "GET" })
   .inputValidator((data: { propertyId: string }) => data)
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .handler(async ({ data: { propertyId } }) => {
     try {
       const result = await db.query.property.findFirst({
@@ -253,7 +253,7 @@ export const getPropertiesFn = createServerFn({ method: "GET" })
   .inputValidator(
     (data: typeof db.query.property.findMany.arguments.where) => data,
   )
-  .middleware([authMiddleware])
+  .middleware([sessionRequiredMiddleware])
   .handler(async ({ data: { propertyId } }) => {
     try {
       const result = await db.query.property.findFirst({

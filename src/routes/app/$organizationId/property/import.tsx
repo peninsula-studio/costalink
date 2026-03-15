@@ -194,9 +194,10 @@ function XMLFetchPreview({
                 >
                   <CircleIcon className="size-5 fill-background stroke-1 stroke-foreground group-data-selected:fill-primary" />
                 </div>
-                <CardHeader className="px-0">
+                <CardHeader className="w-full px-0">
                   <img
                     alt={property.images[0].id}
+                    className="aspect-video w-full object-cover object-center"
                     src={property.images[0].url}
                   />
                 </CardHeader>

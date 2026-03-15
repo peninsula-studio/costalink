@@ -3,12 +3,10 @@ import {
   createFileRoute,
   Link,
   Outlet,
-  redirect,
   useRouterState,
 } from "@tanstack/react-router";
-import React, { Suspense } from "react";
-import { AppSkeleton } from "@/components/app-skeleton";
-import { UserSidebar } from "@/components/dashboard/user-sidebar";
+import React from "react";
+import { AccountSidebar } from "@/components/dashboard/account-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,41 +15,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { organizationListQueryOptions } from "@/lib/fn/organization";
-import { sessionCookieMiddleware } from "@/middleware/auth";
-import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
 
-export const Route = createFileRoute("/app/(user)")({
-  server: {
-    middleware: [sessionCookieMiddleware],
-  },
-  ssr: "data-only",
-  beforeLoad: async ({ context, routeId }) => {
-    const session = await context.queryClient.ensureQueryData(
-      getSessionQueryOptions(),
-    );
-    // const sessionCookie = await $checkSessionCookieFn();
-    if (!session) {
-      throw redirect({
-        to: "/sign-in",
-        search: {
-          callbackUrl: location.pathname as SignInRouteSearch["callbackUrl"],
-        },
-      });
-    }
-
-    return {
-      user: session.user,
-      breadcrumbs: [{ label: "Dashboard", href: routeId }],
-    };
-  },
-  loader: async ({ context }) => {
-    context.queryClient.ensureQueryData(
-      organizationListQueryOptions({ userId: context.user.id }),
-    );
-  },
-  pendingComponent: () => <AppSkeleton />,
+export const Route = createFileRoute("/app/account")({
+  // server: {
+  //   middleware: [sessionCookieMiddleware],
+  // },
   component: AppLayout,
 });
 
@@ -64,9 +32,7 @@ function AppLayout() {
 
   return (
     <>
-      <Suspense fallback={<div className="bg-red-400">Loading...</div>}>
-        <UserSidebar />
-      </Suspense>
+      <AccountSidebar />
       <SidebarInset>
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
           <div className="flex w-full items-center gap-2 px-4">
@@ -91,9 +57,8 @@ function AppLayout() {
             </Breadcrumb>
           </div>
         </header>
-        <main>
-          <Outlet />
-        </main>
+
+        <Outlet />
       </SidebarInset>
     </>
   );

@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRightIcon,
   FolderCode,
-  HouseIcon,
   HousePlusIcon,
   ImportIcon,
   PlusIcon,
@@ -11,6 +10,7 @@ import {
 import { Suspense } from "react";
 import { FlexContainer } from "@/components/container";
 import { PropertyCard } from "@/components/property-card";
+import { RouteSkeleton } from "@/components/route-skeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -22,7 +22,6 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Item, ItemContent, ItemHeader, ItemMedia } from "@/components/ui/item";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   TypographyH2,
   TypographyH4,
@@ -32,15 +31,7 @@ import { PLACEHOLDER_AGENCY_LOGO } from "@/lib/constants";
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$organizationId/")({
-  pendingComponent: () => (
-    <div className="flex flex-col gap-y-6 p-6">
-      <Skeleton className="h-12 w-md" />
-      <div className="flex w-full gap-x-2">
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-      </div>
-    </div>
-  ),
+  pendingComponent: RouteSkeleton,
   component: OrganizationPage,
 });
 
@@ -49,7 +40,7 @@ function OrganizationPage() {
   const params = Route.useParams();
 
   return (
-    <FlexContainer>
+    <FlexContainer render={<main></main>}>
       <Item className="p-0">
         <ItemHeader className="justify-start">
           <ItemMedia variant="image">
@@ -163,11 +154,11 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
           ))}
 
           <Card className="group relative w-full min-w-xs max-w-82 pt-0 transition-shadow hover:shadow-3xl">
-            <CardContent>
+            <CardContent className="flex h-full items-center">
               <Empty>
                 <EmptyHeader>
                   <EmptyMedia variant="icon">
-                    <HousePlusIcon />
+                    <HousePlusIcon className="size-3/4 stroke-primary" />
                   </EmptyMedia>
                   <EmptyTitle className="text-lg">
                     Add more properties
@@ -191,7 +182,8 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                     params={params}
                     to="/app/$organizationId/property/create"
                   >
-                    <PlusIcon /> Add Property
+                    <PlusIcon data-icon="inline-start" />
+                    Add Property
                   </Link>
                 }
               ></Button>
@@ -203,7 +195,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
                     params={params}
                     to={"/app/$organizationId/property/import"}
                   >
-                    <ImportIcon /> Import Properties
+                    <ImportIcon data-icon="inline-start" /> Import Properties
                   </Link>
                 }
                 variant="outline"

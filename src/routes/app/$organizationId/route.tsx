@@ -5,7 +5,7 @@ import {
   redirect,
   useRouterState,
 } from "@tanstack/react-router";
-import React, { Suspense } from "react";
+import React from "react";
 import { AppSkeleton } from "@/components/app-skeleton";
 import { OrganizationSidebar } from "@/components/dashboard/organization-sidebar";
 import {
@@ -32,13 +32,17 @@ export const Route = createFileRoute("/app/$organizationId")({
       revalidateIfStale: true,
     });
 
-    if (!activeOrganization) throw redirect({ to: "/app" });
-
     if (
       context.session?.session.activeOrganizationId !== params.organizationId
     ) {
-      context.queryClient.resetQueries({ queryKey: userKeys.session() });
+      console.log("revalidating session...");
+      await Promise.all([
+        context.queryClient.resetQueries({ queryKey: userKeys.session() }),
+        context.queryClient.refetchQueries({ queryKey: userKeys.session() }),
+      ]);
     }
+
+    if (!activeOrganization) throw redirect({ to: "/app" });
 
     const member = await context.queryClient.ensureQueryData(
       getActiveMemberQueryOptions({
@@ -65,7 +69,7 @@ export const Route = createFileRoute("/app/$organizationId")({
       }),
     );
   },
-  pendingComponent: () => <AppSkeleton />,
+  pendingComponent: AppSkeleton,
   component: OrganizationLayout,
 });
 
@@ -78,9 +82,7 @@ function OrganizationLayout() {
 
   return (
     <>
-      <Suspense fallback={<div className="bg-red-400">Loading...</div>}>
-        <OrganizationSidebar />
-      </Suspense>
+      <OrganizationSidebar />
       <SidebarInset>
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
           <div className="flex w-full items-center gap-2 px-4">
@@ -101,22 +103,12 @@ function OrganizationLayout() {
                     {i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
                   </React.Fragment>
                 ))}
-                {/* <BreadcrumbItem className="hidden md:block"> */}
-                {/*   <BreadcrumbLink href="#"> */}
-                {/*     Building Your Application */}
-                {/*   </BreadcrumbLink> */}
-                {/* </BreadcrumbItem> */}
-                {/* <BreadcrumbSeparator className="hidden md:block" /> */}
-                {/* <BreadcrumbItem> */}
-                {/*   <BreadcrumbPage>Data Fetching</BreadcrumbPage> */}
-                {/* </BreadcrumbItem> */}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
-        <main>
-          <Outlet />
-        </main>
+
+        <Outlet />
       </SidebarInset>
     </>
   );

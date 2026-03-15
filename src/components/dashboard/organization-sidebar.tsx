@@ -1,5 +1,7 @@
 import {
   Link,
+  type LinkOptions,
+  linkOptions,
   useParams,
   useRouteContext,
   useRouterState,
@@ -8,10 +10,10 @@ import {
 import {
   Building2,
   ChevronRight,
-  CogIcon,
-  HouseIcon,
   HousePlus,
+  ImportIcon,
   type LucideIcon,
+  SettingsIcon,
   TableIcon,
   UsersIcon,
 } from "lucide-react";
@@ -26,6 +28,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -42,13 +45,13 @@ import { NavUser } from "./nav-user";
 
 type SidebarItem = {
   title: string;
-  url: string;
+  linkOptions?: LinkOptions;
   icon?: LucideIcon;
   isActive?: boolean;
   items?: {
     title: string;
     icon?: LucideIcon;
-    url: string;
+    linkOptions: LinkOptions;
   }[];
 };
 
@@ -67,25 +70,29 @@ export function OrganizationSidebar({
 
   const defaultItems: SidebarItem[] = [
     {
-      title: "Properties",
-      icon: HouseIcon,
-      url: "#",
-      isActive: matchesRoute("/app/$organizationId/property"),
-      // items: [ ],
-    },
-    {
       icon: TableIcon,
       title: "View properties",
-      url: `/app/${params.organizationId}/property`,
+      linkOptions: linkOptions({ to: "/app/$organizationId/property", params }),
     },
     {
       icon: HousePlus,
       title: "Create property",
-      url: `/app/${params.organizationId}/property/create`,
+      linkOptions: linkOptions({
+        to: "/app/$organizationId/property/create",
+        params,
+      }),
+    },
+    {
+      title: "Import Properties",
+      icon: ImportIcon,
+      linkOptions: linkOptions({
+        to: "/app/$organizationId/property/import",
+        params,
+      }),
+      isActive: matchesRoute("/app/$organizationId/property"),
+      // items: [ ],
     },
   ];
-
-  const items: SidebarItem[] = [];
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -107,90 +114,37 @@ export function OrganizationSidebar({
         {/* <AgencyNav items={[{ title: "Test", isActive: false, url: "#" }]} /> */}
         <SidebarGroup>
           <SidebarGroupLabel>Properties</SidebarGroupLabel>
-          <SidebarMenu>
-            {defaultItems.map((item) => (
-              <Collapsible
-                className="group/collapsible"
-                defaultOpen={item.isActive}
-                key={item.title}
-                render={
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger
-                      render={
-                        <SidebarMenuButton
-                          className={cn({
-                            "bg-sidebar-accent": item.isActive,
-                          })}
-                          tooltip={item.title}
-                        >
-                          {item.icon && <item.icon />}
-                          <span>{item.title}</span>
-                          {item.items && (
-                            <ChevronRight className="ml-auto transition-transform duration-150 group-data-open/collapsible:rotate-90" />
-                          )}
-                        </SidebarMenuButton>
-                      }
-                    ></CollapsibleTrigger>
-                    {item.items && (
-                      <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-all duration-150 data-ending-style:h-0 data-starting-style:h-0">
-                        <SidebarMenuSub>
-                          {item.items?.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                render={
-                                  <Link to={subItem.url}>
-                                    {subItem.icon && <subItem.icon />}
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                }
-                              ></SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    )}
-                  </SidebarMenuItem>
-                }
-              ></Collapsible>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          {/* <SidebarGroupLabel>Platform</SidebarGroupLabel> */}
-          {items && (
+          <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <Collapsible
-                  className="group/collapsible"
-                  defaultOpen={item.isActive}
-                  key={item.title}
-                  render={
-                    <SidebarMenuItem>
-                      <CollapsibleTrigger
-                        render={
-                          <SidebarMenuButton
-                            className={cn({
-                              "bg-sidebar-accent": item.isActive,
-                            })}
-                            tooltip={item.title}
-                          >
-                            {item.icon && <item.icon />}
-                            <span>{item.title}</span>
-                            {item.items && (
+              {defaultItems.map((item) =>
+                item.items ? (
+                  <Collapsible
+                    className="group/collapsible"
+                    defaultOpen={item.isActive}
+                    key={item.title}
+                    render={
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger
+                          render={
+                            <SidebarMenuButton
+                              className={cn({
+                                "bg-sidebar-accent": item.isActive,
+                              })}
+                              tooltip={item.title}
+                            >
+                              {item.icon && <item.icon />}
+                              {item.title}
                               <ChevronRight className="ml-auto transition-transform duration-150 group-data-open/collapsible:rotate-90" />
-                            )}
-                          </SidebarMenuButton>
-                        }
-                      ></CollapsibleTrigger>
-                      {item.items && (
+                            </SidebarMenuButton>
+                          }
+                        ></CollapsibleTrigger>
                         <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-all duration-150 data-ending-style:h-0 data-starting-style:h-0">
                           <SidebarMenuSub>
                             {item.items?.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton
                                   render={
-                                    <Link to={subItem.url}>
+                                    <Link {...subItem.linkOptions}>
                                       {subItem.icon && <subItem.icon />}
                                       <span>{subItem.title}</span>
                                     </Link>
@@ -200,30 +154,59 @@ export function OrganizationSidebar({
                             ))}
                           </SidebarMenuSub>
                         </CollapsibleContent>
-                      )}
-                    </SidebarMenuItem>
-                  }
-                ></Collapsible>
-              ))}
+                      </SidebarMenuItem>
+                    }
+                  ></Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      render={
+                        <Link {...item.linkOptions}>
+                          {item.icon && <item.icon />}
+                          {item.title}
+                        </Link>
+                      }
+                    ></SidebarMenuButton>
+                  </SidebarMenuItem>
+                ),
+              )}
             </SidebarMenu>
-          )}
+          </SidebarGroupContent>
         </SidebarGroup>
 
         {(member.role === "owner" || member.role === "admin") && (
           <SidebarGroup>
             <SidebarGroupLabel>Agency Management</SidebarGroupLabel>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <CogIcon />
-                Settings
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <UsersIcon />
-                Agents
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    render={
+                      <Link
+                        params={params}
+                        to={"/app/$organizationId/settings"}
+                      >
+                        <SettingsIcon />
+                        Settings
+                      </Link>
+                    }
+                  ></SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    render={
+                      <Link
+                        params={params}
+                        to={"/app/$organizationId/settings"}
+                      >
+                        <UsersIcon />
+                        Agents
+                      </Link>
+                    }
+                  ></SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
           </SidebarGroup>
         )}
       </SidebarContent>
