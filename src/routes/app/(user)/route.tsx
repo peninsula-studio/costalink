@@ -7,8 +7,8 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import React, { Suspense } from "react";
-import { UserSidebar } from "@/components/app-sidebar";
 import { AppSkeleton } from "@/components/app-skeleton";
+import { UserSidebar } from "@/components/dashboard/user-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,16 +16,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarInset,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { organizationListQueryOptions } from "@/lib/fn/organization";
 import { sessionCookieMiddleware } from "@/middleware/auth";

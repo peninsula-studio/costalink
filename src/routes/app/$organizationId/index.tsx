@@ -28,6 +28,7 @@ import {
   TypographyH4,
   TypographyLarge,
 } from "@/components/ui/typography";
+import { PLACEHOLDER_AGENCY_LOGO } from "@/lib/constants";
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$organizationId/")({
@@ -53,9 +54,9 @@ function OrganizationPage() {
         <ItemHeader className="justify-start">
           <ItemMedia variant="image">
             <img
-              alt="placeholder logo"
+              alt={PLACEHOLDER_AGENCY_LOGO.alt}
               className="size-12 object-cover"
-              src="/placeholder-mesh-gradient.svg"
+              src={PLACEHOLDER_AGENCY_LOGO.src}
             />
           </ItemMedia>
           <TypographyH2>{activeOrganization.name}</TypographyH2>

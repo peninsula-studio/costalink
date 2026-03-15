@@ -6,8 +6,8 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import React, { Suspense } from "react";
-import { OrganizationSidebar } from "@/components/app-sidebar";
 import { AppSkeleton } from "@/components/app-skeleton";
+import { OrganizationSidebar } from "@/components/dashboard/organization-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
