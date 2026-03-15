@@ -5,7 +5,7 @@ function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 text-balance rounded border-dashed p-4 text-center",
+        "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 text-balance rounded border-dashed p-6 text-center",
         className,
       )}
       data-slot="empty"
@@ -25,12 +25,12 @@ function EmptyHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 const emptyMediaVariants = cva(
-  "flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default: "bg-transparent",
-        icon: "flex size-6 shrink-0 items-center justify-center rounded bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6",
+        icon: "flex size-8 shrink-0 items-center justify-center rounded bg-muted text-foreground [&_svg:not([class*='size-'])]:size-4",
       },
     },
     defaultVariants: {
@@ -57,7 +57,7 @@ function EmptyMedia({
 function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("font-medium text-md tracking-tight", className)}
+      className={cn("font-medium text-sm tracking-tight", className)}
       data-slot="empty-title"
       {...props}
     />
@@ -81,7 +81,7 @@ function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex w-full min-w-0 max-w-sm flex-col items-center gap-2 text-balance text-sm",
+        "flex w-full min-w-0 max-w-sm flex-col items-center gap-2.5 text-balance text-sm",
         className,
       )}
       data-slot="empty-content"
@@ -92,9 +92,9 @@ function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
   Empty,
-  EmptyHeader,
-  EmptyTitle,
-  EmptyDescription,
   EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
   EmptyMedia,
+  EmptyTitle,
 };
