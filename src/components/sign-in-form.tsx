@@ -77,20 +77,23 @@ export function SignInForm({
           <form
             className="p-4 md:p-6"
             onSubmit={handleSubmit((data) =>
-              mutate(data, {
-                onError: (e) => {
-                  const message =
-                    e.message.charAt(0).toUpperCase() + e.message.slice(1);
-                  setError("root", { message });
-                  toast.error(`${message}`);
+              mutate(
+                { data },
+                {
+                  onError: (e) => {
+                    const message =
+                      e.message.charAt(0).toUpperCase() + e.message.slice(1);
+                    setError("root", { message });
+                    toast.error(`${message}`);
+                  },
+                  onSuccess: async (data) => {
+                    await router.invalidate();
+                    toast.success(`Welcome ${data.user.name}`);
+                    router.history.push(callbackUrl);
+                    return;
+                  },
                 },
-                onSuccess: async (data) => {
-                  await router.invalidate();
-                  toast.success(`Welcome ${data.user.name}`);
-                  router.history.push(callbackUrl);
-                  return;
-                },
-              }),
+              ),
             )}
           >
             <FieldSet>
