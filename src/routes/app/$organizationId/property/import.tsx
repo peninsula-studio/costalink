@@ -1,20 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useIsFetching,
-  useMutation,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckIcon, FileXCorner, HouseIcon, ImportIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CircleIcon,
+  FileXCorner,
+  HouseIcon,
+  ImportIcon,
+  XIcon,
+} from "lucide-react";
 import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FlexContainer } from "@/components/container";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Empty,
   EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
@@ -22,17 +27,21 @@ import {
 import {
   Field,
   FieldContent,
+  FieldError,
   FieldLabel,
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ItemGroup } from "@/components/ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
-import { TypographyH2, TypographyLarge } from "@/components/ui/typography";
+import { TypographyH2 } from "@/components/ui/typography";
+import type { kyeroPropertySchema } from "@/lib/fn/kyero/schemas";
 import {
   createPropertyMutationOptions,
   extractPropertiesFromKyeroXMLFn,
 } from "@/lib/fn/property";
+import { formatPrice } from "@/lib/i18n/format";
 
 export const Route = createFileRoute("/app/$organizationId/property/import")({
   component: RouteComponent,
@@ -40,31 +49,26 @@ export const Route = createFileRoute("/app/$organizationId/property/import")({
 
 function RouteComponent() {
   const importKyeroXMLSchema = z.object({
-    url: z.string(),
+    url: z.url(),
   });
 
-  const { formState, register, watch, reset, handleSubmit } = useForm({
+  const { formState, register, getValues, reset, handleSubmit } = useForm({
     defaultValues: {
-      // biome-error: THIS IS TESTING
-      // ERROR: Don't build with this value
+      // WARNING: Don't build with this value
       // url: "https://feeds.kyero.com/assets/kyero_v3_test_feed.xml",
-      url: "https://www.vandamestates.com/kyero/direct",
+      // url: "https://www.vandamestates.com/kyero/direct",
     },
     mode: "onSubmit",
     resolver: zodResolver(importKyeroXMLSchema),
   });
 
-  watch(() => {
-    reset(undefined, {
-      keepIsSubmitted: false,
-      keepValues: true,
-      keepIsSubmitSuccessful: false,
-    });
-  });
-
-  const isFetching = useIsFetching({
-    fetchStatus: "fetching",
-    queryKey: ["kyeroXML"],
+  const { data, refetch, isFetching, isSuccess, isError } = useQuery({
+    queryKey: ["kyeroXML", getValues("url")],
+    queryFn: async () =>
+      await extractPropertiesFromKyeroXMLFn({
+        data: { url: getValues("url") },
+      }),
+    enabled: false,
   });
 
   return (
@@ -72,46 +76,54 @@ function RouteComponent() {
       <TypographyH2>Import properties from Kyero XML</TypographyH2>
       <form
         name="Import Kyero XML form"
-        onSubmit={handleSubmit(() => reset(undefined, { keepValues: true }))}
-        // onSubmit={handleSubmit(async (data) => {
-        //   mutate(data);
-        // })}
+        onSubmit={handleSubmit(async () => {
+          reset(undefined, { keepValues: true });
+          await refetch();
+        })}
       >
         <FieldSet>
-          <Field className="max-w-2xl">
+          <Field className="max-w-2xl" data-invalid={!!formState.errors.url}>
             <FieldContent>
               <FieldLabel htmlFor="kyero-feed-url">Kyero feed URL</FieldLabel>
               <Input
+                aria-invalid={!!formState.errors.url}
                 id="url"
                 placeholder="https://www.website.com/feed/kyero-v3.xml"
                 type="url"
                 {...register("url")}
               />
+              <FieldError errors={[formState.errors.url]} />
             </FieldContent>
           </Field>
           <Field className="w-fit">
             <Button
-              disabled={!!isFetching}
+              disabled={isFetching || isSuccess}
               type="submit"
               variant={
-                formState.isSubmitted
-                  ? isFetching
-                    ? "secondary"
-                    : "success"
-                  : "default"
+                isFetching
+                  ? "secondary"
+                  : isError
+                    ? "destructive"
+                    : isSuccess
+                      ? "success"
+                      : "default"
               }
             >
               {isFetching ? (
                 <>
-                  <Spinner /> Loading
+                  <Spinner data-icon="inline-start" /> Fetching
                 </>
-              ) : formState.isSubmitted ? (
+              ) : isError ? (
                 <>
-                  <CheckIcon /> Imported
+                  <XIcon data-icon="inline-start" /> Error fetching XML
+                </>
+              ) : isSuccess ? (
+                <>
+                  <CheckIcon data-icon="inline-start" /> Fetched URL
                 </>
               ) : (
                 <>
-                  <ImportIcon /> Import
+                  <ImportIcon /> Fetch from URL
                 </>
               )}
             </Button>
@@ -121,75 +133,105 @@ function RouteComponent() {
 
       {(formState.isSubmitting || formState.isSubmitted) && (
         <Suspense fallback={<Skeleton className="h-12 w-full max-w-2xl" />}>
-          <Results url={watch("url")} />
+          <XMLFetchPreview data={data} />
         </Suspense>
       )}
     </FlexContainer>
   );
 }
 
-function Results({ url }: { url: string }) {
-  const { data } = useSuspenseQuery({
-    queryKey: ["kyeroXML", url],
-    queryFn: async () =>
-      await extractPropertiesFromKyeroXMLFn({ data: { url } }),
-    refetchOnWindowFocus: false,
-  });
-
-  const { mutateAsync, isPending, isError } = useMutation(
+function XMLFetchPreview({
+  data,
+}: {
+  data?: z.infer<typeof kyeroPropertySchema>[];
+}) {
+  const { mutateAsync, isPending, isError, isSuccess } = useMutation(
     createPropertyMutationOptions(),
   );
 
   return data ? (
     <FlexContainer padding="none">
-      <Button
-        className="w-fit"
-        disabled={isPending}
-        onClick={async () => {
-          await Promise.all(data.map((p) => mutateAsync(p)));
-        }}
-        type="submit"
-        variant={isError ? "destructive" : "default"}
-      >
-        {isPending ? (
-          <>
-            <Spinner /> Importing
-          </>
-        ) : isError ? (
-          <>Error importing</>
-        ) : (
-          <>Import {data.length} properties</>
-        )}
-      </Button>
-      <FlexContainer className="flex-row flex-wrap" padding="none">
-        {data.map((property) => (
-          <Card className="w-full min-w-sm max-w-lg" key={property.ref}>
-            <CardHeader>
-              <TypographyLarge className="inline-flex">
-                <HouseIcon /> {property.ref}
-              </TypographyLarge>
-            </CardHeader>
-            <CardContent>
-              <TypographyLarge>
-                {Number(property.price).toLocaleString()}&nbsp;
-                {property.currency}
-              </TypographyLarge>
-              <pre>{JSON.stringify(property, null, 2)}</pre>
-              {/* <div className="grid grid-cols-3 gap-4"> */}
-              {/*   {property.images?.slice(0, 6).map((img) => ( */}
-              {/*     <img */}
-              {/*       alt={`Element ${img.id}`} */}
-              {/*       className="aspect-square w-full min-w-28 max-w-64" */}
-              {/*       key={img.id} */}
-              {/*       src={img.url} */}
-              {/*     /> */}
-              {/*   ))} */}
-              {/* </div> */}
-              <span>{property.province}</span>
-            </CardContent>
-          </Card>
-        ))}
-      </FlexContainer>
+      {data.length > 0 ? (
+        <>
+          <Button
+            className="w-fit"
+            disabled={isPending || isSuccess}
+            onClick={async () => {
+              await Promise.all(data.map((p) => mutateAsync(p)));
+            }}
+            type="submit"
+            variant={
+              isError ? "destructive" : isSuccess ? "success" : "default"
+            }
+          >
+            {isPending ? (
+              <>
+                <Spinner data-icon="inline-start" /> Importing
+              </>
+            ) : isError ? (
+              <>
+                <XIcon data-icon="inline-start" /> Error importing properties
+              </>
+            ) : isSuccess ? (
+              <>
+                <CheckIcon data-icon="inline-start" /> Imported {data.length}{" "}
+                properties
+              </>
+            ) : (
+              <>Import {data.length} properties</>
+            )}
+          </Button>
+          <ItemGroup className="flex-row flex-wrap">
+            {data.map((property) => (
+              <Card
+                className="relative w-full min-w-46 max-w-xs pt-0 transition-transform hover:scale-101"
+                key={property.ref}
+              >
+                <div
+                  aria-hidden="true"
+                  className="group absolute z-10 flex size-full justify-end rounded-lg p-2 outline-3 outline-transparent -outline-offset-3 transition-colors hover:outline-primary/20 data-[selected=true]:outline-primary"
+                  data-selected={true}
+                >
+                  <CircleIcon className="size-5 fill-background stroke-1 stroke-foreground group-data-selected:fill-primary" />
+                </div>
+                <CardHeader className="px-0">
+                  <img
+                    alt={property.images[0].id}
+                    src={property.images[0].url}
+                  />
+                </CardHeader>
+                <CardContent>
+                  <CardTitle className="flex justify-between pb-2 text-base">
+                    <span>{property.ref}</span>
+                    <Badge className="font-medium" variant="default">
+                      {formatPrice(property.price, property.currency, "es")}
+                      &nbsp;
+                    </Badge>
+                  </CardTitle>
+                  <pre className="max-h-44 overflow-scroll rounded-sm border border-border bg-secondary">
+                    {JSON.stringify(property, null, 2)}
+                  </pre>
+                  <span>{property.province}</span>
+                </CardContent>
+              </Card>
+            ))}
+          </ItemGroup>
+        </>
+      ) : (
+        <Empty className="max-w-xl self-center border bg-muted">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileXCorner className="size-6" />
+            </EmptyMedia>
+            <EmptyTitle className="text-base">URL is empty</EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent>
+            <EmptyDescription>
+              There are no properties in the provided URL
+            </EmptyDescription>
+          </EmptyContent>
+        </Empty>
+      )}
     </FlexContainer>
   ) : (
     <Empty className="mx-auto w-fit">
