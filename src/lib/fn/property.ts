@@ -26,7 +26,7 @@ export const getOrganizationProperyListFn = createServerFn()
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
-      return propertyList;
+      return propertyList || null;
     } catch (error) {
       console.error(
         `Error getting list of organizations: ${(error as Error).message}`,
