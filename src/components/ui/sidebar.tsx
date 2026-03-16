@@ -618,10 +618,11 @@ function SidebarMenuSkeleton({
 }: React.ComponentProps<"div"> & {
   showIcon?: boolean;
 }) {
-  // Random width between 50 to 90%.
-  const [width] = React.useState(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  });
+  // // WARNING: This produces hydration mismatch since it's random and has different values on server and client
+  // // Random width between 50 to 90%.
+  // const [width] = React.useState(() => {
+  //   return `${Math.floor(Math.random() * 40) + 50}%`;
+  // });
 
   return (
     <div
@@ -641,7 +642,7 @@ function SidebarMenuSkeleton({
         data-sidebar="menu-skeleton-text"
         style={
           {
-            "--skeleton-width": width,
+            // "--skeleton-width": width,
           } as React.CSSProperties
         }
       />

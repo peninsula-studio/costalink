@@ -30,12 +30,12 @@ export function DashboardSkeleton() {
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                <SidebarMenuSkeleton className="h-6 w-4/5" showIcon />
-                <Skeleton className="h-6 w-5/8" />
-                <Skeleton className="h-6 w-5/7" />
-                <Skeleton className="h-6 w-4/5" />
-                <Skeleton className="h-6 w-5/7" />
-                <Skeleton className="h-6 w-5/8" />
+                <SidebarMenuSkeleton className="w-4/5" showIcon />
+                <SidebarMenuSkeleton className="w-5/8" showIcon />
+                <SidebarMenuSkeleton className="w-5/7" showIcon />
+                <SidebarMenuSkeleton className="w-4/5" showIcon />
+                <SidebarMenuSkeleton className="w-5/7" showIcon />
+                <SidebarMenuSkeleton className="w-5/8" showIcon />
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

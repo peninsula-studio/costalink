@@ -17,9 +17,17 @@ export const auth = betterAuth({
       create: {
         before: async (session) => {
           // Implement your custom logic to set initial active organization
-          const initialOrganizationId = await getInitialOrganization(
-            session.userId,
-          );
+          let initialOrganizationId = null;
+          const user = await db.query.user.findFirst({
+            where: { id: { eq: session.userId } },
+          });
+          initialOrganizationId = user?.defaultOrganizationId || null;
+          if (!initialOrganizationId) {
+            const member = await db.query.member.findFirst({
+              where: { userId: { eq: session.userId } },
+            });
+            initialOrganizationId = member?.organizationId || null;
+          }
           return {
             data: {
               ...session,
