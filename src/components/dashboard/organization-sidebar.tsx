@@ -2,12 +2,12 @@ import {
   Link,
   type LinkOptions,
   linkOptions,
+  useMatch,
   useParams,
   useRouteContext,
-  useRouterState,
-  type ValidateToPath,
 } from "@tanstack/react-router";
 import {
+  BinocularsIcon,
   Building2,
   ChevronRight,
   HousePlus,
@@ -64,15 +64,30 @@ export function OrganizationSidebar({
     from: "/app/$organizationId",
   });
 
-  const matches = useRouterState({ select: (s) => s.matches });
-  const matchesRoute = (route: ValidateToPath) =>
-    matches.filter((match) => match.fullPath === route).length > 0;
+  const collabItems: SidebarItem[] = [
+    {
+      icon: BinocularsIcon,
+      title: "Search MLS",
+      linkOptions: linkOptions({
+        to: "/app/$organizationId/property/search",
+        params,
+      }),
+      isActive: useMatch({
+        from: "/app/$organizationId/property/search",
+        shouldThrow: false,
+      }),
+    },
+  ];
 
   const defaultItems: SidebarItem[] = [
     {
       icon: TableIcon,
       title: "View properties",
       linkOptions: linkOptions({ to: "/app/$organizationId/property", params }),
+      isActive: useMatch({
+        from: "/app/$organizationId/property/",
+        shouldThrow: false,
+      }),
     },
     {
       icon: HousePlus,
@@ -80,6 +95,10 @@ export function OrganizationSidebar({
       linkOptions: linkOptions({
         to: "/app/$organizationId/property/create",
         params,
+      }),
+      isActive: useMatch({
+        from: "/app/$organizationId/property/create",
+        shouldThrow: false,
       }),
     },
     {
@@ -89,8 +108,10 @@ export function OrganizationSidebar({
         to: "/app/$organizationId/property/import",
         params,
       }),
-      isActive: matchesRoute("/app/$organizationId/property"),
-      // items: [ ],
+      isActive: useMatch({
+        from: "/app/$organizationId/property/import",
+        shouldThrow: false,
+      }),
     },
   ];
 
@@ -111,7 +132,69 @@ export function OrganizationSidebar({
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        {/* <AgencyNav items={[{ title: "Test", isActive: false, url: "#" }]} /> */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Search Collab</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {collabItems.map((item) =>
+                item.items ? (
+                  <Collapsible
+                    className="group/collapsible"
+                    defaultOpen={item.isActive}
+                    key={item.title}
+                    render={
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger
+                          render={
+                            <SidebarMenuButton
+                              className={cn({
+                                "bg-sidebar-accent": item.isActive,
+                              })}
+                              tooltip={item.title}
+                            >
+                              {item.icon && <item.icon />}
+                              {item.title}
+                              <ChevronRight className="ml-auto transition-transform duration-150 group-data-open/collapsible:rotate-90" />
+                            </SidebarMenuButton>
+                          }
+                        ></CollapsibleTrigger>
+                        <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-all duration-150 data-ending-style:h-0 data-starting-style:h-0">
+                          <SidebarMenuSub>
+                            {item.items?.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton
+                                  render={
+                                    <Link {...subItem.linkOptions}>
+                                      {subItem.icon && <subItem.icon />}
+                                      <span>{subItem.title}</span>
+                                    </Link>
+                                  }
+                                ></SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    }
+                  ></Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      isActive={item.isActive}
+                      render={
+                        <Link {...item.linkOptions}>
+                          {item.icon && <item.icon />}
+                          {item.title}
+                        </Link>
+                      }
+                    ></SidebarMenuButton>
+                  </SidebarMenuItem>
+                ),
+              )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
         <SidebarGroup>
           <SidebarGroupLabel>Properties</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -160,6 +243,7 @@ export function OrganizationSidebar({
                 ) : (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
+                      isActive={item.isActive}
                       render={
                         <Link {...item.linkOptions}>
                           {item.icon && <item.icon />}
@@ -176,7 +260,7 @@ export function OrganizationSidebar({
 
         {(member.role === "owner" || member.role === "admin") && (
           <SidebarGroup>
-            <SidebarGroupLabel>Agency Management</SidebarGroupLabel>
+            <SidebarGroupLabel>Agency</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>

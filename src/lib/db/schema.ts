@@ -15,7 +15,7 @@ import type {
   kyeroImageSchema,
   kyeroSurfaceAreaSchema,
 } from "@/lib/fn/kyero/schemas";
-import type { i18nStringSchema } from "../i18n/schema";
+import type { i18nStringSchema } from "@/lib/i18n/schema";
 
 export const USER_ROLE_ENUM = ["user", "admin"] as const;
 export const MEMBER_ROLE_ENUM = ["owner", "editor", "member"] as const;

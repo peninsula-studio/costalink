@@ -6,8 +6,8 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import React from "react";
-import { AppSkeleton } from "@/components/app-skeleton";
 import { OrganizationSidebar } from "@/components/dashboard/organization-sidebar";
+import { DashboardSkeleton } from "@/components/dashboard-skeleton";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -69,7 +69,7 @@ export const Route = createFileRoute("/app/$organizationId")({
       }),
     );
   },
-  pendingComponent: AppSkeleton,
+  pendingComponent: DashboardSkeleton,
   component: OrganizationLayout,
 });
 
@@ -84,28 +84,23 @@ function OrganizationLayout() {
     <>
       <OrganizationSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
-          <div className="flex w-full items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              className="mr-2 data-vertical:h-4"
-              orientation="vertical"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                {breadcrumbs?.map(({ label, href }, i) => (
-                  <React.Fragment key={href}>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink
-                        render={<Link to={href}>{label}</Link>}
-                      ></BreadcrumbLink>
-                    </BreadcrumbItem>
-                    {i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
-                  </React.Fragment>
-                ))}
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
+        <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-3 border-b bg-background px-3 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
+          <SidebarTrigger />
+          <Separator className="mr-2" orientation="vertical" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              {breadcrumbs?.map(({ label, href }, i) => (
+                <React.Fragment key={href}>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      render={<Link to={href}>{label}</Link>}
+                    ></BreadcrumbLink>
+                  </BreadcrumbItem>
+                  {i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                </React.Fragment>
+              ))}
+            </BreadcrumbList>
+          </Breadcrumb>
         </header>
 
         <Outlet />

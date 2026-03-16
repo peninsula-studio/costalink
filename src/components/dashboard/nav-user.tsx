@@ -76,6 +76,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
             render={
               <SidebarMenuButton
                 className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
+                closeMobileOnClick={false}
                 size="lg"
               >
                 <Avatar>
@@ -91,7 +92,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
             }
-          />
+          ></DropdownMenuTrigger>
 
           <DropdownMenuContent
             align={isMobile ? "center" : "start"}
@@ -122,14 +123,18 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem
+              <SidebarMenuButton
                 render={
-                  <Link to="/app/account">
-                    <BadgeCheck />
-                    Account
-                  </Link>
+                  <DropdownMenuItem
+                    render={
+                      <Link to="/app/account">
+                        <BadgeCheck />
+                        Account
+                      </Link>
+                    }
+                  ></DropdownMenuItem>
                 }
-              ></DropdownMenuItem>
+              ></SidebarMenuButton>
               <DropdownMenuItem>
                 <CreditCard />
                 Billing
@@ -143,7 +148,11 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                   <Palette />
                   Apariencia
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent sideOffset={0}>
+                <DropdownMenuSubContent
+                  align={isMobile ? "center" : "start"}
+                  side={isMobile ? "right" : "right"}
+                  sideOffset={4}
+                >
                   <DropdownMenuItem
                     aria-selected={theme === "light"}
                     onClick={() => {

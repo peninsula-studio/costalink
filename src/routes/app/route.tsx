@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AppSkeleton } from "@/components/app-skeleton";
+import { DashboardSkeleton } from "@/components/dashboard-skeleton";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { organizationListQueryOptions } from "@/lib/fn/organization";
 import type { SignInRouteSearch } from "@/routes/_auth/sign-in";
@@ -31,6 +31,6 @@ export const Route = createFileRoute("/app")({
       organizationListQueryOptions({ userId: context.user.id }),
     );
   },
-  pendingComponent: AppSkeleton,
+  pendingComponent: DashboardSkeleton,
   component: Outlet,
 });

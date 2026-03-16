@@ -190,7 +190,7 @@ function Sidebar({
     return (
       <Sheet onOpenChange={setOpenMobile} open={openMobile} {...props}>
         <SheetContent
-          className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+          className="w-(--sidebar-width)! bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
           data-mobile="true"
           data-sidebar="sidebar"
           data-slot="sidebar"
@@ -291,7 +291,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
     <button
       aria-label="Toggle Sidebar"
       className={cn(
-        "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
+        "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear after:absolute after:inset-s-1/2 after:inset-y-0 after:w-0.5 hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
         "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         "group-data-[collapsible=offcanvas]:translate-x-0 hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:after:left-full",
@@ -462,7 +462,7 @@ function SidebarGroupContent({
 function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
-      className={cn("flex w-full min-w-0 flex-col gap-0", className)}
+      className={cn("flex w-full min-w-0 flex-col gap-px", className)}
       data-sidebar="menu"
       data-slot="sidebar-menu"
       {...props}
@@ -512,18 +512,23 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  closeMobileOnClick = true,
   ...props
 }: useRender.ComponentProps<"button"> &
   React.ComponentProps<"button"> & {
     isActive?: boolean;
     tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+    closeMobileOnClick?: boolean;
   } & VariantProps<typeof sidebarMenuButtonVariants>) {
-  const { isMobile, state } = useSidebar();
+  const { isMobile, state, setOpenMobile } = useSidebar();
   const comp = useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
       {
         className: cn(sidebarMenuButtonVariants({ variant, size }), className),
+        onClick: () => {
+          closeMobileOnClick && setTimeout(() => setOpenMobile(false), 0);
+        },
       },
       props,
     ),
@@ -648,7 +653,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       className={cn(
-        "ml-3.5 flex min-w-0 translate-x-px flex-col gap-0 border-sidebar-border border-l pl-2.5 group-data-[collapsible=icon]:hidden",
+        "ml-3.5 flex min-w-0 translate-x-px flex-col gap-px border-sidebar-border border-l pl-2.5 group-data-[collapsible=icon]:hidden",
         className,
       )}
       data-sidebar="menu-sub"
@@ -677,12 +682,15 @@ function SidebarMenuSubButton({
   size = "md",
   isActive = false,
   className,
+  closeMobileOnClick = true,
   ...props
 }: useRender.ComponentProps<"a"> &
   React.ComponentProps<"a"> & {
+    closeMobileOnClick?: boolean;
     size?: "sm" | "md";
     isActive?: boolean;
   }) {
+  const { setOpenMobile } = useSidebar();
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(
@@ -691,6 +699,9 @@ function SidebarMenuSubButton({
           "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-hidden ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-active:bg-sidebar-accent data-[size=md]:text-sm data-[size=sm]:text-xs data-active:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
           className,
         ),
+        onClick: () => {
+          closeMobileOnClick && setTimeout(() => setOpenMobile(false), 0);
+        },
       },
       props,
     ),

@@ -67,7 +67,6 @@ const propertyCount = createServerFn({ method: "GET" })
       .select({ count: count() })
       .from(property)
       .where(eq(property.organizationId, data.organizationId));
-    console.log(propertyCount);
     return propertyCount[0].count;
   });
 

@@ -1,8 +1,8 @@
 // ============================================================================
-// GEOGRAPHIC DATA - Autonomous Communities & Provinces of Spain
+// GEOGRAPHIC DATA - All Spanish Provinces (Flat Array)
 // ============================================================================
 
-export const SPAIN_AUTONOMOUS_COMMUNITIES = {
+export const COMUNIDADES_AUTONOMAS = {
   // Andalusia - Costa del Sol, Costa de Almería, Cádiz coastline
   Andalucía: [
     "Almería",
@@ -86,11 +86,12 @@ export const SPAIN_AUTONOMOUS_COMMUNITIES = {
   "Comunidad Valenciana": ["Alicante", "Castellón", "Valencia"],
 } as const;
 
-export type SpanishAutonomousCommunity =
-  keyof typeof SPAIN_AUTONOMOUS_COMMUNITIES;
+export const PROVINCIAS = Object.values(COMUNIDADES_AUTONOMAS).flat().sort();
+
+export type SpanishAutonomousCommunity = keyof typeof COMUNIDADES_AUTONOMAS;
 
 export type SpanishProvince =
-  (typeof SPAIN_AUTONOMOUS_COMMUNITIES)[SpanishAutonomousCommunity][number];
+  (typeof COMUNIDADES_AUTONOMAS)[SpanishAutonomousCommunity][number];
 
 // Individual coastal provinces (for easier filtering)
 const COASTAL_PROVINCES_LIST = [

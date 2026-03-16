@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AppSkeleton } from "@/components/app-skeleton";
+import { DashboardSkeleton } from "@/components/dashboard-skeleton";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 // import { adminRequiredMiddleware } from "@/middleware/auth";
 
@@ -13,5 +13,5 @@ export const Route = createFileRoute("/app/(user)/admin")({
       throw redirect({ to: "/app" });
     }
   },
-  pendingComponent: AppSkeleton,
+  pendingComponent: DashboardSkeleton,
 });

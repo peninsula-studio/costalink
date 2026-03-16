@@ -1,9 +1,13 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { and, eq, gt, ilike, lt } from "drizzle-orm";
 import { z } from "zod";
+import { searchPropertySchema } from "@/components/search-property-form";
 import { db } from "@/lib/db";
-import { adminRequiredMiddleware, sessionRequiredMiddleware } from "@/middleware/auth";
+import {
+  adminRequiredMiddleware,
+  sessionRequiredMiddleware,
+} from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
@@ -302,4 +306,42 @@ export const deletePropertyMutationOptions = () =>
       console.info(`✅ Property with ID ${data.id} deleted.`);
       await client.resetQueries({ queryKey: ["property", "list"] });
     },
+  });
+
+export const searchPropertyFn = createServerFn({ method: "GET" })
+  .middleware([sessionRequiredMiddleware])
+  .inputValidator(searchPropertySchema)
+  .handler(async ({ data }) => {
+    const propertyCount = await db
+      .select({
+        id: property.id,
+        price: property.price,
+        currency: property.currency,
+        town: property.town,
+        province: property.province,
+        ref: property.ref,
+        date: property.updatedAt,
+        organizationId: property.organizationId,
+      })
+      .from(property)
+      .where(
+        and(
+          data.id ? eq(property.organizationId, data.id) : undefined,
+          data.price_min ? gt(property.price, data.price_min) : undefined,
+          data.price_max ? lt(property.price, data.price_max) : undefined,
+          data.ref ? ilike(property.ref, data.ref) : undefined,
+          data.town ? ilike(property.town, data.town) : undefined,
+          data.province ? eq(property.province, data.province) : undefined,
+          data.type ? ilike(property.type, data.type) : undefined,
+        ),
+      );
+    return propertyCount;
+  });
+
+export const searchPropertyMutationOptions = (
+  data: z.infer<typeof searchPropertySchema>,
+) =>
+  mutationOptions({
+    mutationKey: ["property", "search", Object.values(data)],
+    mutationFn: searchPropertyFn,
   });
