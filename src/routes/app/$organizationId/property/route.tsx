@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { RouteSkeleton } from "@/components/route-skeleton";
 
 export const Route = createFileRoute("/app/$organizationId/property")({
   beforeLoad: async ({ context, routeId }) => {
@@ -9,5 +10,6 @@ export const Route = createFileRoute("/app/$organizationId/property")({
       ],
     };
   },
+  pendingComponent: RouteSkeleton,
   component: Outlet,
 });

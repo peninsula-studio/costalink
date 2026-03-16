@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { FlexContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +16,9 @@ export const Route = createFileRoute(
         userId: params.organizationId,
       }),
     );
+
+    if (!property) throw redirect({ from: routeId, to: ".." });
+
     return {
       property,
       breadcrumbs: [

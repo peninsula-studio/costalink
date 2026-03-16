@@ -87,9 +87,9 @@ export function SignInForm({
                     toast.error(`${message}`);
                   },
                   onSuccess: async (data) => {
+                    router.history.push(callbackUrl);
                     await router.invalidate();
                     toast.success(`Welcome ${data.user.name}`);
-                    router.history.push(callbackUrl);
                     return;
                   },
                 },

@@ -16,6 +16,7 @@ export const checkSessionCookieFn = createServerFn().handler(() => {
 export const getSessionFn = createServerFn().handler(async () => {
   try {
     const session = await auth.api.getSession({ headers: getRequestHeaders() });
+    // if (!session) throw redirect({ to: "/sign-in" });
     return session;
   } catch (error) {
     // Re-throw redirects (they're intentional, not errors)
@@ -52,7 +53,7 @@ export const signUpFn = createServerFn()
     }
   });
 
-export const signInFn = createServerFn()
+export const signInEmailFn = createServerFn()
   .inputValidator(signInFormSchema)
   .handler(async ({ data }) => {
     const isValid = signInFormSchema.safeParse(data);
@@ -75,7 +76,7 @@ export const signInFn = createServerFn()
 
 export const signInMutationOptions = () =>
   mutationOptions({
-    mutationFn: signInFn,
+    mutationFn: signInEmailFn,
     onError: (e) => {
       console.error(`Sign-in error -> "/sign-in": ${e.message}`);
     },
