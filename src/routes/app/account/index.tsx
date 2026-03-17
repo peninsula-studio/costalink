@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { EyeIcon } from "lucide-react";
 import { FlexContainer } from "@/components/container";
@@ -6,25 +10,15 @@ import { RouteSkeleton } from "@/components/route-skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Item,
   ItemActions,
   ItemContent,
-  ItemDescription,
-  ItemFooter,
   ItemGroup,
-  ItemHeader,
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
 import { Spinner } from "@/components/ui/spinner";
-import { TypographyH2, TypographyH5 } from "@/components/ui/typography";
+import { TypographyH2 } from "@/components/ui/typography";
 import { PLACEHOLDER_AGENCY_LOGO } from "@/lib/constants";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { organizationListQueryOptions } from "@/lib/fn/organization";
@@ -35,8 +29,11 @@ export const Route = createFileRoute("/app/account/")({
   component: RouteComponent,
   pendingComponent: RouteSkeleton,
   loader: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
     const organizationList = await context.queryClient.ensureQueryData(
-      organizationListQueryOptions({ userId: context.user.id }),
+      organizationListQueryOptions({ userId: session.user.id }),
     );
     return { organizationList };
   },
@@ -44,7 +41,8 @@ export const Route = createFileRoute("/app/account/")({
 
 function RouteComponent() {
   const router = useRouter();
-  const { user } = Route.useRouteContext();
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+  const { user } = session;
   const { organizationList } = Route.useLoaderData();
   const qc = useQueryClient();
 
@@ -113,6 +111,7 @@ function RouteComponent() {
                   render={
                     <Link
                       params={{ organizationId: org.id }}
+                      preload={false}
                       to={"/app/$organizationId"}
                     >
                       <EyeIcon />

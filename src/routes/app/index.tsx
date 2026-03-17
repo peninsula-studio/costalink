@@ -35,15 +35,13 @@ import { formatPrice } from "@/lib/i18n/format";
 export const Route = createFileRoute("/app/")({
   // server: { middleware: [sessionRequiredMiddleware] },
   beforeLoad: async ({ context }) => {
-    // const session = await context.queryClient.ensureQueryData(
-    //   getSessionQueryOptions(),
-    // );
+    const sessionData = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
     //
     // if (!session) throw redirect({ to: "/sign-in" });
 
-    const {
-      session: { user, session },
-    } = context;
+    const { user, session } = sessionData;
 
     if (session.activeOrganizationId) {
       console.log(session.activeOrganizationId);
@@ -64,7 +62,7 @@ export const Route = createFileRoute("/app/")({
       getSessionQueryOptions(),
     );
     const organizationList = await context.queryClient.ensureQueryData(
-      organizationListQueryOptions({ userId: context.user.id }),
+      organizationListQueryOptions({ userId: session.user.id }),
     );
     return { session, organizationList };
   },
@@ -77,8 +75,10 @@ export const Route = createFileRoute("/app/")({
 });
 
 function AppIndexPage() {
-  const { user } = Route.useRouteContext();
-  const { organizationList } = Route.useLoaderData();
+  const {
+    organizationList,
+    session: { user },
+  } = Route.useLoaderData();
 
   return (
     <FlexContainer>

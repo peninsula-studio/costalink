@@ -1,10 +1,10 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
   type LinkOptions,
   linkOptions,
   useMatch,
   useParams,
-  useRouteContext,
 } from "@tanstack/react-router";
 import {
   BinocularsIcon,
@@ -40,6 +40,9 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
+import { getActiveMemberQueryOptions } from "@/lib/fn/member";
+import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { cn } from "@/lib/utils";
 import { NavUser } from "./nav-user";
 
@@ -60,9 +63,22 @@ export function OrganizationSidebar({
 }: ComponentProps<typeof Sidebar>) {
   const params = useParams({ from: "/app/$organizationId" });
 
-  const { activeOrganization, member } = useRouteContext({
-    from: "/app/$organizationId",
-  });
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: params.organizationId }),
+  );
+
+  const { data: member } = useSuspenseQuery(
+    getActiveMemberQueryOptions({
+      userId: session.user.id,
+      organizationId: params.organizationId,
+    }),
+  );
+
+  // const { activeOrganization, member } = useRouteContext({
+  //   from: "/app/$organizationId",
+  // });
 
   const collabItems: SidebarItem[] = [
     {

@@ -1,26 +1,39 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FlexContainer } from "@/components/container";
 import { CreatePropertyForm } from "@/components/create-property-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypographyH2 } from "@/components/ui/typography";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
+import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/$organizationId/property/create")({
   loader: async ({ context, params }) => {
-    context.queryClient.ensureQueryData(
-      getActiveMemberQueryOptions({
-        userId: context.user.id,
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+
+    const fullOrganization = await context.queryClient.ensureQueryData(
+      getFullOrganizationQueryOptions({
         organizationId: params.organizationId,
       }),
     );
+
+    const member = await context.queryClient.ensureQueryData(
+      getActiveMemberQueryOptions({
+        userId: session.user.id,
+        organizationId: params.organizationId,
+      }),
+    );
+
+    return { member, session, fullOrganization };
   },
   pendingComponent: () => (
     <FlexContainer>
       <div>LOADING PROPERTIES...</div>
       <Skeleton className="h-12 w-sm" />
-      <div className="flex w-full max-w-lg flex-col gap-y-2 bg-red-500 *:h-10">
+      <div className="flex w-full max-w-lg flex-col gap-y-2 *:h-10">
         <Skeleton />
         <Skeleton />
       </div>
@@ -31,13 +44,8 @@ export const Route = createFileRoute("/app/$organizationId/property/create")({
 });
 
 function RouteComponent() {
-  const { user, activeOrganization } = Route.useRouteContext();
-  const { data: member } = useSuspenseQuery(
-    getActiveMemberQueryOptions({
-      userId: user.id,
-      organizationId: activeOrganization.id,
-    }),
-  );
+  const { member, fullOrganization: activeOrganization } =
+    Route.useLoaderData();
 
   return (
     <FlexContainer>

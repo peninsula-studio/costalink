@@ -1,6 +1,6 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
-  useRouteContext,
   useRouterState,
   type ValidateToPath,
 } from "@tanstack/react-router";
@@ -15,17 +15,18 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { NavUser } from "./nav-user";
 
 export function AccountSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const { user } = useRouteContext({ from: "/app/account" });
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+  const { user } = session;
 
   const matches = useRouterState({ select: (s) => s.matches });
   const matchesRoute = (route: ValidateToPath) =>

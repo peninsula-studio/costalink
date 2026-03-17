@@ -6,7 +6,7 @@ import { z } from "zod";
 import { createOrganizationFormSchema } from "@/components/create-organization-form";
 import { auth } from "@/lib/auth";
 import { organizationKeys } from "@/lib/fn/keys";
-import { adminRequiredMiddleware, sessionRequiredMiddleware } from "@/middleware/auth";
+import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
 import { organizationSelectSchema } from "../zod/schemas/organization";
 
 export const getListOrganizationsFn = createServerFn({ method: "GET" }).handler(
@@ -186,7 +186,7 @@ export const getOrganizationPermissionFn = createServerFn()
       organization: z.array(z.enum(["delete", "update"])),
     }),
   )
-  .middleware([sessionRequiredMiddleware])
+  .middleware([authMiddleware])
   .handler(async ({ data }) => {
     const result = await auth.api.hasPermission({
       headers: getRequestHeaders(),

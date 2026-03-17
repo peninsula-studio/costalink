@@ -1,18 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TypographyH5 } from "@/components/ui/typography";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
+import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export const Route = createFileRoute("/app/(user)/admin/organization/")({
   component: RouteComponent,
-  // loader: async ({ context }) => {
-  //   context.queryClient.ensureQueryData(
-  //     organizationListQueryOptions({ userId: context.user.id }),
-  //   );
-  // },
+  loader: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
+
+    const organizationList = await context.queryClient.ensureQueryData(
+      organizationListQueryOptions({ userId: session.user.id }),
+    );
+
+    return { organizationList };
+  },
 });
 
 function RouteComponent() {
-  const { organizationList } = Route.useRouteContext();
+  const { organizationList } = Route.useLoaderData();
 
   return (
     <div>

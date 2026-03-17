@@ -17,55 +17,71 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { userKeys } from "@/lib/fn/keys";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
-import { setActiveOrganizationQueryOptions } from "@/lib/fn/organization";
+import {
+  getFullOrganizationQueryOptions,
+  setActiveOrganizationQueryOptions,
+} from "@/lib/fn/organization";
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$organizationId")({
   beforeLoad: async ({ context, params, routeId }) => {
-    const activeOrganization = await context.queryClient.ensureQueryData({
-      ...setActiveOrganizationQueryOptions({
-        userId: context.user.id,
-        organizationId: params.organizationId,
-      }),
-      revalidateIfStale: true,
-    });
+    const session = await context.queryClient.ensureQueryData(
+      getSessionQueryOptions(),
+    );
 
-    if (
-      context.session?.session.activeOrganizationId !== params.organizationId
-    ) {
+    if (session.session.activeOrganizationId !== params.organizationId) {
       console.log("revalidating session...");
-      await Promise.all([
-        context.queryClient.resetQueries({ queryKey: userKeys.session() }),
-        context.queryClient.refetchQueries({ queryKey: userKeys.session() }),
-      ]);
+      context.queryClient
+        .ensureQueryData({
+          ...setActiveOrganizationQueryOptions({
+            userId: session.user.id,
+            organizationId: params.organizationId,
+          }),
+          revalidateIfStale: true,
+        })
+        .then(() => context.queryClient.fetchQuery(getSessionQueryOptions()));
+      // await Promise.all([
+      //   context.queryClient.ensureQueryData({
+      //     ...setActiveOrganizationQueryOptions({
+      //       userId: session.user.id,
+      //       organizationId: params.organizationId,
+      //     }),
+      //     revalidateIfStale: true,
+      //   }),
+      //   context.queryClient.fetchQuery({ queryKey: userKeys.session() }),
+      // ]);
     }
 
-    if (!activeOrganization) throw redirect({ to: "/app" });
-
-    const member = await context.queryClient.ensureQueryData(
-      getActiveMemberQueryOptions({
-        organizationId: activeOrganization.id,
-        userId: context.user.id,
+    const fullOrganization = await context.queryClient.ensureQueryData(
+      getFullOrganizationQueryOptions({
+        organizationId: params.organizationId,
       }),
     );
 
-    if (!member) throw redirect({ to: "/app" });
+    if (!fullOrganization) throw redirect({ to: "/app" });
+
+    context.queryClient.ensureQueryData(
+      getActiveMemberQueryOptions({
+        organizationId: params.organizationId,
+        userId: session.user.id,
+      }),
+    );
 
     return {
-      member,
-      activeOrganization,
+      // member,
+      // activeOrganization,
       breadcrumbs: [
         // ...context.breadcrumbs,
-        { label: activeOrganization.name, href: routeId },
+        { label: fullOrganization.name, href: routeId },
       ],
     };
   },
-  loader: ({ context }) => {
+  loader: async ({ context, params }) => {
     context.queryClient.ensureQueryData(
       getOrganizationPropertyListQueryOptions({
-        organizationId: context.activeOrganization.id,
+        organizationId: params.organizationId,
       }),
     );
   },

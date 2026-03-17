@@ -1,4 +1,4 @@
-import { Link, useRouteContext } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { EditIcon, EyeIcon, SearchXIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ export function PropertySearchResultTableBody({
 }: ComponentProps<typeof TableBody> & {
   data: Awaited<ReturnType<typeof searchPropertyFn>>;
 }) {
-  const { activeOrganization } = useRouteContext({
+  const { organizationId } = useParams({
     from: "/app/$organizationId",
   });
 
@@ -47,7 +47,7 @@ export function PropertySearchResultTableBody({
                 render={
                   <Link
                     params={{
-                      organizationId: activeOrganization.id,
+                      organizationId: organizationId,
                       propertyId: property.id,
                     }}
                     to={"/app/$organizationId/property/$propertyId"}
@@ -58,13 +58,13 @@ export function PropertySearchResultTableBody({
                 size="sm"
                 variant="outline"
               ></Button>
-              {property.organizationId === activeOrganization.id && (
+              {property.organizationId === organizationId && (
                 <Button
                   nativeButton={false}
                   render={
                     <Link
                       params={{
-                        organizationId: activeOrganization.id,
+                        organizationId: organizationId,
                         propertyId: property.id,
                       }}
                       to={"/app/$organizationId/property/$propertyId"}

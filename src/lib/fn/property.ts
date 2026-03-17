@@ -6,7 +6,7 @@ import { searchPropertySchema } from "@/components/search-property-form";
 import { db } from "@/lib/db";
 import {
   adminRequiredMiddleware,
-  sessionRequiredMiddleware,
+  authMiddleware,
 } from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
@@ -22,7 +22,7 @@ export const getOrganizationProperyListFn = createServerFn()
       page: z.number().optional().default(1),
     }),
   )
-  .middleware([sessionRequiredMiddleware])
+  .middleware([authMiddleware])
   .handler(async ({ data: { organizationId, page, pageSize } }) => {
     try {
       const propertyList = await db.query.property.findMany({
@@ -235,7 +235,7 @@ export const deletePropertyFn = createServerFn({ method: "POST" })
 
 export const getPropertyFn = createServerFn({ method: "GET" })
   .inputValidator((data: { propertyId: string }) => data)
-  .middleware([sessionRequiredMiddleware])
+  .middleware([authMiddleware])
   .handler(async ({ data: { propertyId } }) => {
     try {
       const result = await db.query.property.findFirst({
@@ -257,7 +257,7 @@ export const getPropertiesFn = createServerFn({ method: "GET" })
   .inputValidator(
     (data: typeof db.query.property.findMany.arguments.where) => data,
   )
-  .middleware([sessionRequiredMiddleware])
+  .middleware([authMiddleware])
   .handler(async ({ data: { propertyId } }) => {
     try {
       const result = await db.query.property.findFirst({
@@ -309,7 +309,7 @@ export const deletePropertyMutationOptions = () =>
   });
 
 export const searchPropertyFn = createServerFn({ method: "GET" })
-  .middleware([sessionRequiredMiddleware])
+  .middleware([authMiddleware])
   .inputValidator(searchPropertySchema)
   .handler(async ({ data }) => {
     const propertyCount = await db

@@ -7,24 +7,23 @@ import { signInFormSchema } from "@/components/sign-in-form";
 import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
+import { authMiddleware } from "@/middleware/auth";
 
 export const checkSessionCookieFn = createServerFn().handler(() => {
   const sessionCookie = getSessionCookie(getRequest());
   return sessionCookie;
 });
 
-export const getSessionFn = createServerFn().handler(async () => {
-  try {
-    const session = await auth.api.getSession({ headers: getRequestHeaders() });
-    // if (!session) throw redirect({ to: "/sign-in" });
-    return session;
-  } catch (error) {
-    // Re-throw redirects (they're intentional, not errors)
-    if (isRedirect(error)) throw error;
-    // Auth check failed (network error, etc.) - redirect to login
-    throw redirect({ to: "/sign-in" });
-  }
+export const checkSessionFn = createServerFn().handler(async () => {
+  const session = await auth.api.getSession({ headers: getRequestHeaders() });
+  return session;
 });
+
+export const getSessionFn = createServerFn()
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    return context.session;
+  });
 
 export const getSessionQueryOptions = () =>
   queryOptions({

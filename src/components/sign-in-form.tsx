@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -27,6 +27,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
 import { signInMutationOptions } from "@/lib/fn/auth";
+import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
 
@@ -47,6 +48,7 @@ export function SignInForm({
   callbackUrl?: string;
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -87,8 +89,11 @@ export function SignInForm({
                     toast.error(`${message}`);
                   },
                   onSuccess: async (data) => {
+                    await queryClient.resetQueries({
+                      queryKey: userKeys.session(),
+                    });
                     router.history.push(callbackUrl);
-                    await router.invalidate();
+                    // await router.invalidate();
                     toast.success(`Welcome ${data.user.name}`);
                     return;
                   },

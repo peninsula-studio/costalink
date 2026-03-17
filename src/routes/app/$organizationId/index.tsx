@@ -12,7 +12,14 @@ import { FlexContainer } from "@/components/container";
 import { PropertyCard } from "@/components/property-card";
 import { RouteSkeleton } from "@/components/route-skeleton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Empty,
   EmptyContent,
@@ -28,6 +35,7 @@ import {
   TypographyLarge,
 } from "@/components/ui/typography";
 import { PLACEHOLDER_AGENCY_LOGO } from "@/lib/constants";
+import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute("/app/$organizationId/")({
@@ -36,8 +44,11 @@ export const Route = createFileRoute("/app/$organizationId/")({
 });
 
 function OrganizationPage() {
-  const { activeOrganization } = Route.useRouteContext();
   const params = Route.useParams();
+
+  const { data: activeOrganization } = useSuspenseQuery(
+    getFullOrganizationQueryOptions({ organizationId: params.organizationId }),
+  );
 
   return (
     <FlexContainer render={<main></main>}>
@@ -89,8 +100,9 @@ function OrganizationPage() {
 
 const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
   const params = Route.useParams();
+
   const { data: properties } = useSuspenseQuery(
-    getOrganizationPropertyListQueryOptions({ organizationId }),
+    getOrganizationPropertyListQueryOptions({ organizationId, pageSize: 10 }),
   );
 
   return (
@@ -154,25 +166,16 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
             </Link>
           ))}
 
-          <Card className="group relative w-full min-w-xs max-w-82 pt-0 transition-shadow hover:shadow-3xl">
-            <CardContent className="flex h-full items-center">
-              <Empty>
-                <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <HousePlusIcon className="size-3/4 stroke-primary" />
-                  </EmptyMedia>
-                  <EmptyTitle className="text-lg">
-                    Add more properties
-                  </EmptyTitle>
-                </EmptyHeader>
-                <EmptyContent>
-                  <EmptyDescription>
-                    You can add up to <b>{100 - properties.length}</b> more
-                    properties to your portfolio to collaborate with other
-                    agents.
-                  </EmptyDescription>
-                </EmptyContent>
-              </Empty>
+          <Card className="group transition-shadow hover:shadow-3xl">
+            <CardHeader>
+              <HousePlusIcon className="mx-auto size-6 stroke-primary" />
+            </CardHeader>
+            <CardContent>
+              <CardTitle className="text-lg">Add more properties</CardTitle>
+              <CardDescription>
+                Add up to <b>{100 - properties.length}</b> additional properties
+                to your portfolio.
+              </CardDescription>
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
               <Button

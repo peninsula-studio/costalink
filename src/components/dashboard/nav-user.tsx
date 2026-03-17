@@ -1,5 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { Link, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
   Bell,
@@ -35,12 +39,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOutFn } from "@/lib/fn/auth";
+import { getSessionQueryOptions, signOutFn } from "@/lib/fn/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 
 export function NavUser({ className }: { className?: ClassNameValue }) {
-  const { user } = useRouteContext({ from: "/app" });
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+  const { user } = session;
 
   const { isMobile } = useSidebar();
 
