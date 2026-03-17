@@ -15,11 +15,11 @@ export const PropertyCard = ({
   data: typeof property.$inferSelect;
 }) => {
   return (
-    <Card className="group relative w-full min-w-xs max-w-82 pt-0 transition-shadow hover:shadow-3xl">
+    <Card className="group relative w-full max-w-sm pt-0 transition-shadow hover:shadow-3xl">
       <CardHeader className="overflow-hidden p-0">
         <img
           alt="Serenity Residential Home"
-          className="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
           height={300}
           src={
             data.images?.[0].url ||
@@ -37,26 +37,6 @@ export const PropertyCard = ({
         <p className="inline-flex items-center gap-x-1 text-sm">
           <MapPin className="size-[1em]" /> {data.town}
         </p>
-
-        {/* <ItemGroup className="flex-row justify-between *:w-fit"> */}
-        {/*   <Item> */}
-        {/*     <ItemContent> */}
-        {/*       <h3 className="font-medium text-xl duration-300 group-hover:text-primary"> */}
-        {/*         Serenity Residential Home */}
-        {/*       </h3> */}
-        {/**/}
-        {/*       <p className="font-normal text-base text-muted-foreground"> */}
-        {/*         15 S Aurora Ave, Miami */}
-        {/*       </p> */}
-        {/*     </ItemContent> */}
-        {/*   </Item> */}
-        {/**/}
-        {/*   <Item> */}
-        {/*     <ItemContent className="font-medium text-lg"> */}
-        {/*       {formatPrice(data.price, data.currency, "es")} */}
-        {/*     </ItemContent> */}
-        {/*   </Item> */}
-        {/* </ItemGroup> */}
 
         <div className="flex flex-row">
           <Item className="flex-col" size="xs">

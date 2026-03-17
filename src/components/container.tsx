@@ -7,9 +7,9 @@ const containerVariants = cva("flex flex-col", {
     padding: {
       none: "p-0",
       xs: "p-2",
-      sm: "p-4",
-      md: "p-8",
-      lg: "p-12",
+      sm: "p-3 lg:p-4",
+      md: "p-4 lg:p-8",
+      lg: "p-8 lg:p-12",
     },
     spacing: {
       none: "gap-0",
