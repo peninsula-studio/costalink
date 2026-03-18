@@ -33,15 +33,10 @@ import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
 import { formatPrice } from "@/lib/i18n/format";
 
 export const Route = createFileRoute("/app/")({
-  // server: { middleware: [sessionRequiredMiddleware] },
   beforeLoad: async ({ context }) => {
-    const sessionData = await context.queryClient.ensureQueryData(
+    const { session, user } = await context.queryClient.ensureQueryData(
       getSessionQueryOptions(),
     );
-    //
-    // if (!session) throw redirect({ to: "/sign-in" });
-
-    const { user, session } = sessionData;
 
     if (session.activeOrganizationId) {
       console.log(session.activeOrganizationId);
