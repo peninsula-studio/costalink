@@ -39,8 +39,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { getSessionQueryOptions, signOutFn } from "@/lib/fn/auth";
-import { userKeys } from "@/lib/fn/keys";
+import { getSessionQueryOptions, signOutMutationOptions } from "@/lib/fn/auth";
 import { cn } from "@/lib/utils";
 
 export function NavUser({ className }: { className?: ClassNameValue }) {
@@ -52,23 +51,19 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
   const { theme, setTheme } = useTheme();
 
   const router = useRouter();
-  const qc = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationKey: ["signOut"],
-    mutationFn: async () => await signOutFn(),
+  const { mutateAsync } = useMutation({
+    ...signOutMutationOptions(),
     onError: (error) => {
-      console.error(`Sign-out error: ${error.message}`);
       toast.error("Error", {
         description: error.message || "Error while signing out",
       });
     },
     onSuccess: async () => {
-      // await router.invalidate();
-      await qc.resetQueries({ queryKey: userKeys.session() });
-      toast.info("Signed out successfully");
-      // router.navigate({ to: "/sign-in" });
+      // qc.resetQueries({ queryKey: userKeys.session() }).then(() => {
+      // });
       router.history.push("/sign-in");
+      toast.info("Signed out successfully");
       return;
     },
   });
@@ -182,7 +177,10 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
               </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => mutate()} variant="destructive">
+            <DropdownMenuItem
+              onClick={async () => await mutateAsync({})}
+              variant="destructive"
+            >
               <LogOut />
               Sign Out
             </DropdownMenuItem>
