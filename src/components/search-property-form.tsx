@@ -1,10 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { ArrowDown, ArrowUp, SearchIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlexContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -40,31 +39,29 @@ export const searchPropertySchema = z.object({
   type: z.string().optional(),
   province: z.enum(Object.values(COMUNIDADES_AUTONOMAS).flat()).optional(),
   comunidad: z.enum(Object.keys(COMUNIDADES_AUTONOMAS).flat()).optional(),
+  page: z.number().optional().default(1),
+  pageSize: z.number().optional().default(10),
 });
 
 export function SearchPropertyForm() {
-  const { type, sortBy, sortOrder, page, pageSize } = useSearch({
+  const searchParams = useSearch({
     from: "/app/$organizationId/property/search",
   });
 
-  const { organizationId } = useParams({
-    from: "/app/$organizationId/property/search",
-  });
-
-  const navigate = useNavigate({
-    from: "/app/$organizationId/property/search",
-  });
+  const navigate = useNavigate();
 
   const handleSort = (field: string) => {
-    const currentSort = sortOrder || "desc";
-    const newSort = sortBy === field && currentSort === "desc" ? "asc" : "desc";
+    const currentSort = searchParams.sortOrder || "desc";
+    const newSort =
+      searchParams.sortBy === field && currentSort === "desc" ? "asc" : "desc";
     navigate({
       to: ".",
       search: {
-        type,
+        type: searchParams.type,
         sortBy: field as "price" | "createdAt" | "ref",
         sortOrder: newSort,
-        page: 1,
+        page: searchParams.page,
+        pageSize: searchParams.pageSize,
       },
     });
   };
@@ -79,33 +76,45 @@ export function SearchPropertyForm() {
     );
 
   const { handleSubmit, reset, control, watch } = useForm({
-    defaultValues: { ref: "" },
+    defaultValues: { province: searchParams.province },
     mode: "onSubmit",
     resolver: zodResolver(searchPropertySchema),
     resetOptions: { keepValues: true },
   });
 
   const { data, mutateAsync, isPending, isIdle } = useMutation({
-    // ...searchPropertyMutationOptions(watch()),
     mutationFn: searchPropertyFn,
     onMutate: async ({ data }) => {
       reset(data, { keepValues: true });
-      await navigate({ to: ".", search: { province: data.province } });
+      await navigate({
+        to: ".",
+        search: {
+          province: data.province,
+          page: data.page,
+          pageSize: data.pageSize,
+        },
+      });
     },
   });
 
   const provinciasItems = PROVINCIAS.map((o) => ({ label: o, value: o }));
 
   return (
-    <FlexContainer padding="none" spacing="sm">
+    <div className="flex flex-col gap-md">
       <form
-        className="flex flex-col gap-2"
+        className="flex flex-col gap-sm"
         onSubmit={handleSubmit(async (data) => {
-          await mutateAsync({ data });
+          await mutateAsync({
+            data: {
+              ...data,
+              page: searchParams.page,
+              pageSize: searchParams.pageSize,
+            },
+          });
         })}
       >
         <FieldSet className="*:flex-1 md:flex-row">
-          <Field className="max-w-sm">
+          <Field className="max-w-62">
             <FieldContent>
               <FieldLabel>Search</FieldLabel>
               <Input placeholder="Search by ref, town, province..." />
@@ -177,52 +186,62 @@ export function SearchPropertyForm() {
           <TableRow className="*:transition-colors *:hover:bg-accent/80">
             <TableHead
               className={cn("cursor-pointer", {
-                "bg-accent": sortBy === "ref",
+                "bg-accent": searchParams.sortBy === "ref",
               })}
               onClick={() => handleSort("ref")}
             >
               <span className="flex items-center gap-1">
-                Ref {sortBy === "ref" && arrowDirection(sortOrder)}
+                Ref{" "}
+                {searchParams.sortBy === "ref" &&
+                  arrowDirection(searchParams.sortOrder)}
               </span>
             </TableHead>
             <TableHead
               className={cn("cursor-pointer", {
-                "bg-accent": sortBy === "price",
+                "bg-accent": searchParams.sortBy === "price",
               })}
               onClick={() => handleSort("price")}
             >
               <span className="flex items-center gap-1">
-                Price {sortBy === "price" && arrowDirection(sortOrder)}
+                Price{" "}
+                {searchParams.sortBy === "price" &&
+                  arrowDirection(searchParams.sortOrder)}
               </span>
             </TableHead>
             <TableHead
               className={cn("cursor-pointer", {
-                "bg-accent": sortBy === "town",
+                "bg-accent": searchParams.sortBy === "town",
               })}
               onClick={() => handleSort("town")}
             >
               <span className="flex items-center gap-1">
-                Town {sortBy === "town" && arrowDirection(sortOrder)}
+                Town{" "}
+                {searchParams.sortBy === "town" &&
+                  arrowDirection(searchParams.sortOrder)}
               </span>
             </TableHead>
             <TableHead
               className={cn("cursor-pointer", {
-                "bg-accent": sortBy === "province",
+                "bg-accent": searchParams.sortBy === "province",
               })}
               onClick={() => handleSort("province")}
             >
               <span className="flex items-center gap-1">
-                Province {sortBy === "province" && arrowDirection(sortOrder)}
+                Province{" "}
+                {searchParams.sortBy === "province" &&
+                  arrowDirection(searchParams.sortOrder)}
               </span>
             </TableHead>
             <TableHead
               className={cn("cursor-pointer", {
-                "bg-accent": sortBy === "createdAt",
+                "bg-accent": searchParams.sortBy === "createdAt",
               })}
               onClick={() => handleSort("createdAt")}
             >
               <span className="flex items-center gap-1">
-                Date {sortBy === "createdAt" && arrowDirection(sortOrder)}
+                Date{" "}
+                {searchParams.sortBy === "createdAt" &&
+                  arrowDirection(searchParams.sortOrder)}
               </span>
             </TableHead>
             <TableHead>Actions</TableHead>
@@ -237,6 +256,6 @@ export function SearchPropertyForm() {
             <PropertySearchResultTableBody data={data} />
           ))}
       </Table>
-    </FlexContainer>
+    </div>
   );
 }

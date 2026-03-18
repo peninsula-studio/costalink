@@ -4,10 +4,7 @@ import { and, eq, gt, ilike, lt } from "drizzle-orm";
 import { z } from "zod";
 import { searchPropertySchema } from "@/components/search-property-form";
 import { db } from "@/lib/db";
-import {
-  adminRequiredMiddleware,
-  authMiddleware,
-} from "@/middleware/auth";
+import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
@@ -312,7 +309,7 @@ export const searchPropertyFn = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .inputValidator(searchPropertySchema)
   .handler(async ({ data }) => {
-    const propertyCount = await db
+    const query = db
       .select({
         id: property.id,
         price: property.price,
@@ -335,7 +332,11 @@ export const searchPropertyFn = createServerFn({ method: "GET" })
           data.type ? ilike(property.type, data.type) : undefined,
         ),
       );
-    return propertyCount;
+    const count = await db.$count(query);
+    const result = await query
+      .limit(data.pageSize)
+      .offset((data.page - 1) * data.pageSize);
+    return { result, count };
   });
 
 export const searchPropertyMutationOptions = (

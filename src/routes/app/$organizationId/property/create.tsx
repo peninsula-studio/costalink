@@ -1,8 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FlexContainer } from "@/components/container";
 import { CreatePropertyForm } from "@/components/create-property-form";
+import { RouteSkeleton } from "@/components/route-skeleton";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Item,
+  ItemActions,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
+} from "@/components/ui/item";
 import { TypographyH2 } from "@/components/ui/typography";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
@@ -29,17 +36,7 @@ export const Route = createFileRoute("/app/$organizationId/property/create")({
 
     return { member, session, fullOrganization };
   },
-  pendingComponent: () => (
-    <FlexContainer>
-      <div>LOADING PROPERTIES...</div>
-      <Skeleton className="h-12 w-sm" />
-      <div className="flex w-full max-w-lg flex-col gap-y-2 *:h-10">
-        <Skeleton />
-        <Skeleton />
-      </div>
-      <Skeleton className="size-20" />
-    </FlexContainer>
-  ),
+  pendingComponent: RouteSkeleton,
   component: RouteComponent,
 });
 
@@ -48,26 +45,28 @@ function RouteComponent() {
     Route.useLoaderData();
 
   return (
-    <FlexContainer>
-      <TypographyH2>
-        Role: <i>{member.role}</i>
-      </TypographyH2>
-      <Button
-        className="w-fit"
-        nativeButton={false}
-        render={
-          <Link
-            params={{ organizationId: activeOrganization.id }}
-            to="/app/$organizationId/property"
-          >
-            Property list
-          </Link>
-        }
-      ></Button>
+    <main className="flex w-full flex-col items-center p-md">
+      <FlexContainer className="w-full max-w-5xl" spacing="sm">
+        <FlexContainer spacing="xs">
+          <TypographyH2>
+            Role: <i>{member.role}</i>
+          </TypographyH2>
+          <Button
+            className="w-fit"
+            nativeButton={false}
+            render={
+              <Link
+                params={{ organizationId: activeOrganization.id }}
+                to="/app/$organizationId/property"
+              >
+                Property list
+              </Link>
+            }
+          ></Button>
+        </FlexContainer>
 
-      <FlexContainer className="items-center" padding="none" spacing="sm">
         <CreatePropertyForm className="w-full max-w-2xl" />
       </FlexContainer>
-    </FlexContainer>
+    </main>
   );
 }

@@ -46,9 +46,9 @@ function RouteComponent() {
   // ];
 
   return (
-    <FlexContainer>
+    <div className="flex flex-col gap-md p-md">
       <TypographyH1>Search Property</TypographyH1>
       <SearchPropertyForm />
-    </FlexContainer>
+    </div>
   );
 }

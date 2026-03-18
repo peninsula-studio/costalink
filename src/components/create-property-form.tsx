@@ -43,7 +43,7 @@ export function CreatePropertyForm({
       resolver: zodResolver(createPropertyFormSchema),
     });
 
-  const isValidFn = React.cache(async (val: string) => {
+  const isRefValidFn = React.cache(async (val: string) => {
     const refExists = await checkPropertyReferenceFn({
       data: { ref: val },
     });
@@ -87,7 +87,7 @@ export function CreatePropertyForm({
                   id="reference"
                   placeholder="Reference"
                   required
-                  validCheckFn={isValidFn}
+                  validCheckFn={isRefValidFn}
                   {...register("ref", {
                     required: true,
                     onChange: (e) => {

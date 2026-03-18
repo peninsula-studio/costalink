@@ -23,8 +23,8 @@ const containerVariants = cva("flex flex-col", {
 
 export function FlexContainer({
   className,
-  padding = "md",
-  spacing = "md",
+  padding = "none",
+  spacing = "none",
   render,
   ...props
 }: useRender.ComponentProps<"div"> & VariantProps<typeof containerVariants>) {

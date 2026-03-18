@@ -15,7 +15,7 @@ import type { searchPropertyFn } from "@/lib/fn/property";
 import { cn } from "@/lib/utils";
 
 export function PropertySearchResultTableBody({
-  data,
+  data: { result, count },
   className,
   ...props
 }: ComponentProps<typeof TableBody> & {
@@ -30,8 +30,8 @@ export function PropertySearchResultTableBody({
       className={cn("relative divide-y divide-border", className)}
       {...props}
     >
-      {data && data.length > 0 ? (
-        data.map((property) => (
+      {result && result.length > 0 ? (
+        result.map((property) => (
           <TableRow key={property.id}>
             <TableCell className="font-medium">{property.ref}</TableCell>
             <TableCell>

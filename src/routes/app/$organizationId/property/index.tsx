@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { type ComponentProps, Suspense } from "react";
 import { z } from "zod";
-import { FlexContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
@@ -162,8 +161,8 @@ function RouteComponent() {
   ];
 
   return (
-    <FlexContainer className="space-y-6">
-      <FlexContainer className="" padding="none">
+    <main className="flex flex-col gap-md p-md">
+      <div className="flex flex-col gap-xs">
         <TypographyH1>Properties</TypographyH1>
         <Button
           className="w-fit"
@@ -177,10 +176,10 @@ function RouteComponent() {
             </Link>
           }
         ></Button>
-      </FlexContainer>
+      </div>
 
-      <FlexContainer padding="none" spacing="sm">
-        <ItemGroup className="*:flex-1 md:flex-row">
+      <div className="flex max-w-screen flex-col gap-sm">
+        <ItemGroup className="flex flex-wrap md:flex-row">
           <Field>
             <FieldContent>
               <FieldLabel>Search</FieldLabel>
@@ -274,8 +273,8 @@ function RouteComponent() {
         <Suspense fallback={<Skeleton className="h-20 w-full" />}>
           <ResultTable />
         </Suspense>
-      </FlexContainer>
-    </FlexContainer>
+      </div>
+    </main>
   );
 }
 
@@ -414,7 +413,7 @@ function ResultTable() {
 
   return (
     <>
-      <Table>
+      <Table className="w-full max-w-full overflow-scroll">
         <TableHeader>
           <TableRow className="*:transition-colors *:hover:bg-accent/80">
             <TableHead
