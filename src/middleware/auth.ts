@@ -8,7 +8,7 @@ import { auth } from "@/lib/auth";
 export const sessionCookieMiddleware = createMiddleware().server(
   async ({ next, request }) => {
     console.log(
-      `Getting session cookie from middleware... ${(new Date()).toLocaleTimeString()}`,
+      `Getting session cookie from middleware... ${new Date().toLocaleTimeString()}`,
     );
     const sessionCookie = getSessionCookie(request);
     if (!sessionCookie) {
@@ -20,18 +20,22 @@ export const sessionCookieMiddleware = createMiddleware().server(
 
 export const authMiddleware = createMiddleware().server(
   async ({ next, pathname }) => {
-    const session = await auth.api.getSession({
-      headers: getRequestHeaders(),
-    });
-    if (!session) {
-      throw redirect({
-        to: "/sign-in",
-        search: {
-          callbackUrl: pathname,
-        },
+    try {
+      const session = await auth.api.getSession({
+        headers: getRequestHeaders(),
       });
+      if (!session) {
+        throw redirect({
+          to: "/sign-in",
+          search: {
+            callbackUrl: pathname,
+          },
+        });
+      }
+      return await next({ context: { session } });
+    } catch (e) {
+      throw new Error("Unauthorized", { cause: 401 });
     }
-    return await next({ context: { session } });
   },
 );
 
