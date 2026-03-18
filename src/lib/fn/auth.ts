@@ -1,8 +1,8 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
-import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie } from "better-auth/cookies";
+import { z } from "zod";
 import { signInFormSchema } from "@/components/sign-in-form";
 import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
@@ -94,3 +94,15 @@ export const signOutFn = createServerFn().handler(async () => {
     throw e;
   }
 });
+
+export const signOutMutationOptions = () =>
+  mutationOptions({
+    mutationFn: signOutFn,
+    onError: (e) => {
+      console.error(`Sign-out error -> "/sign-out": ${e.message}`);
+    },
+    onSuccess: async (_ret, _data, _, { client }) => {
+      await client.resetQueries({ queryKey: userKeys.session() });
+      return;
+    },
+  });
