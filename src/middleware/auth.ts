@@ -1,4 +1,4 @@
-import { redirect } from "@tanstack/react-router";
+import { isRedirect, redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie } from "better-auth/cookies";
@@ -34,7 +34,13 @@ export const authMiddleware = createMiddleware().server(
       }
       return await next({ context: { session } });
     } catch (e) {
-      throw new Error("Unauthorized", { cause: 401 });
+      if (isRedirect(e)) throw e;
+      throw redirect({
+        to: "/sign-in",
+        search: {
+          callbackUrl: pathname,
+        },
+      });
     }
   },
 );
