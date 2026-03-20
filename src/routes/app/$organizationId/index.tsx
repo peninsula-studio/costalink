@@ -108,7 +108,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
   return (
     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
       {properties.length < 1 ? (
-        <Card className="group relative w-full  pt-0 transition-shadow hover:shadow-3xl">
+        <Card className="group relative w-full min-w-36 max-w-82 pt-0 transition-shadow hover:shadow-3xl">
           <CardContent>
             <Empty>
               <EmptyHeader>
