@@ -15,7 +15,7 @@ export const PropertyCard = ({
   data: typeof property.$inferSelect;
 }) => {
   return (
-    <Card className="group relative w-full max-w-sm pt-0 transition-shadow hover:shadow-3xl">
+    <Card className="group relative w-full max-w-80 pt-0 transition-shadow hover:shadow-3xl">
       <CardHeader className="overflow-hidden p-0">
         <img
           alt="Serenity Residential Home"

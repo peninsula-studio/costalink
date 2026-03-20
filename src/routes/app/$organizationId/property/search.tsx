@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { FlexContainer } from "@/components/container";
+import { FlexContainer, PageContainer } from "@/components/container";
 import {
   SearchPropertyForm,
   searchPropertySchema,
@@ -18,6 +18,11 @@ const routeParamSchema = searchPropertySchema.extend({
 
 export const Route = createFileRoute("/app/$organizationId/property/search")({
   validateSearch: routeParamSchema,
+  beforeLoad: async ({ context, routeId }) => {
+    return {
+      breadcrumbs: [...context.breadcrumbs, { label: "Search", href: routeId }],
+    };
+  },
   // loader: async ({ context }) => {
   //   const propertyCount = await db
   //     .select({ count: count() })
@@ -46,9 +51,9 @@ function RouteComponent() {
   // ];
 
   return (
-    <div className="flex flex-col gap-md p-md">
+    <PageContainer>
       <TypographyH1>Search Property</TypographyH1>
       <SearchPropertyForm />
-    </div>
+    </PageContainer>
   );
 }

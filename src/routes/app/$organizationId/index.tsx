@@ -8,7 +8,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { Suspense } from "react";
-import { FlexContainer } from "@/components/container";
+import { FlexContainer, PageContainer } from "@/components/container";
 import { PropertyCard } from "@/components/property-card";
 import { RouteSkeleton } from "@/components/route-skeleton";
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,7 @@ function OrganizationPage() {
   );
 
   return (
-    <FlexContainer render={<main></main>}>
+    <PageContainer>
       <Item className="p-0">
         <ItemHeader className="justify-start">
           <ItemMedia variant="image">
@@ -68,7 +68,7 @@ function OrganizationPage() {
         </ItemContent>
       </Item>
 
-      <FlexContainer className="flex-row flex-wrap" padding="none" spacing="sm">
+      <div className="flex flex-row flex-wrap gap-sm">
         <Item className="p-0">
           <ItemHeader className="justify-start">
             <TypographyH4>Properties</TypographyH4>
@@ -93,8 +93,8 @@ function OrganizationPage() {
         <Suspense fallback={<div>Loading...</div>}>
           <PropertyGrid organizationId={activeOrganization.id} />
         </Suspense>
-      </FlexContainer>
-    </FlexContainer>
+      </div>
+    </PageContainer>
   );
 }
 
@@ -108,7 +108,7 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
   return (
     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
       {properties.length < 1 ? (
-        <Card className="group relative w-full min-w-xs max-w-82 pt-0 transition-shadow hover:shadow-3xl">
+        <Card className="group relative w-full  pt-0 transition-shadow hover:shadow-3xl">
           <CardContent>
             <Empty>
               <EmptyHeader>

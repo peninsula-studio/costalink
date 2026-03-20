@@ -46,8 +46,8 @@ function RouteComponent() {
 
   return (
     <main className="flex w-full flex-col items-center p-md">
-      <FlexContainer className="w-full max-w-5xl" spacing="sm">
-        <FlexContainer spacing="xs">
+      <FlexContainer className="w-full max-w-5xl" gap="sm">
+        <FlexContainer gap="xs">
           <TypographyH2>
             Role: <i>{member.role}</i>
           </TypographyH2>

@@ -82,7 +82,7 @@ function RouteComponent() {
         }
       />
 
-      <FlexContainer className="items-center" padding="none" spacing="sm">
+      <FlexContainer className="items-center" padding="none" gap="sm">
         <CreatePropertyForm
           className="w-full max-w-2xl"
           defaultValues={property}

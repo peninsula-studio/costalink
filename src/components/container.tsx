@@ -11,7 +11,7 @@ const containerVariants = cva("flex flex-col", {
       md: "p-4 lg:p-8",
       lg: "p-8 lg:p-12",
     },
-    spacing: {
+    gap: {
       none: "gap-0",
       xs: "gap-3",
       sm: "gap-6",
@@ -24,7 +24,7 @@ const containerVariants = cva("flex flex-col", {
 export function FlexContainer({
   className,
   padding = "none",
-  spacing = "none",
+  gap = "none",
   render,
   ...props
 }: useRender.ComponentProps<"div"> & VariantProps<typeof containerVariants>) {
@@ -32,7 +32,27 @@ export function FlexContainer({
     defaultTagName: "div",
     props: mergeProps<"div">(
       {
-        className: cn(containerVariants({ spacing, padding }), className),
+        className: cn(
+          containerVariants({ gap: gap, padding: padding }),
+          className,
+        ),
+      },
+      props,
+    ),
+    render,
+  });
+}
+
+export function PageContainer({
+  className,
+  render,
+  ...props
+}: useRender.ComponentProps<"main"> & VariantProps<typeof containerVariants>) {
+  return useRender({
+    defaultTagName: "main",
+    props: mergeProps<"main">(
+      {
+        className: cn("flex flex-col gap-sm p-sm lg:gap-md lg:p-md", className),
       },
       props,
     ),
