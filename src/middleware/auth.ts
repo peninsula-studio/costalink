@@ -32,7 +32,7 @@ export const authMiddleware = createMiddleware().server(
           },
         });
       }
-      return await next({ context: { session } });
+      return next({ context: { session } });
     } catch (e) {
       if (isRedirect(e)) throw e;
       throw redirect({
@@ -47,12 +47,12 @@ export const authMiddleware = createMiddleware().server(
 
 export const adminRequiredMiddleware = createMiddleware()
   .middleware([authMiddleware])
-  .server(async ({ next, context }) => {
-    console.log("Checking if user is Admin...");
+  .server(async ({ next, context, pathname }) => {
+    console.info(`Checking if user is Admin at ${pathname}`);
     if (context.session.user.role !== "admin") {
       throw redirect({ to: "/app" });
     }
-    return await next({ context });
+    return next({ context });
   });
 
 export const hasActiveOrganizationMiddleware = createMiddleware({
@@ -64,7 +64,7 @@ export const hasActiveOrganizationMiddleware = createMiddleware({
     if (!context.session.session.activeOrganizationId) {
       throw redirect({ to: "/app" });
     }
-    return await next({ context });
+    return next({ context });
   });
 
 export const memberRequiredMiddleware = createMiddleware({ type: "function" })
@@ -80,7 +80,7 @@ export const memberRequiredMiddleware = createMiddleware({ type: "function" })
         `You aren't a member of organizationId ${data.organizationId}`,
       );
     }
-    return await next({ context });
+    return next({ context });
   });
 
 export const adminMemberMiddleware = createMiddleware({ type: "function" })
@@ -93,7 +93,7 @@ export const adminMemberMiddleware = createMiddleware({ type: "function" })
     if (memberRole.role !== "admin" && memberRole.role !== "owner") {
       throw new Error("You don't have enough privileges for this action");
     }
-    return await next({ context });
+    return next({ context });
   });
 
 export const ownerMemberMiddleware = createMiddleware({ type: "function" })
@@ -106,5 +106,5 @@ export const ownerMemberMiddleware = createMiddleware({ type: "function" })
     if (memberRole.role !== "owner") {
       throw new Error("You don't have enough privileges for this action");
     }
-    return await next({ context });
+    return next({ context });
   });

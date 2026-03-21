@@ -147,6 +147,7 @@ export function OrganizationSidebar({
           </span>
         </SidebarMenuButton>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Search Collab</SidebarGroupLabel>
@@ -310,6 +311,7 @@ export function OrganizationSidebar({
           </SidebarGroup>
         )}
       </SidebarContent>
+
       <SidebarFooter>
         {params?.organizationId && <SidebarSeparator />}
         <NavUser />

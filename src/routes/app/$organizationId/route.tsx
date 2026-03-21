@@ -32,7 +32,7 @@ export const Route = createFileRoute("/app/$organizationId")({
     );
 
     if (session.session.activeOrganizationId !== params.organizationId) {
-      console.log("revalidating session...");
+      console.info(`Switching session at ${routeId}...`);
       context.queryClient
         .ensureQueryData({
           ...setActiveOrganizationQueryOptions({
@@ -99,6 +99,7 @@ function OrganizationLayout() {
   return (
     <>
       <OrganizationSidebar />
+
       <SidebarInset>
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-3 border-b bg-background px-3 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:h-14">
           <SidebarTrigger />

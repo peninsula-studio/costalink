@@ -6,7 +6,8 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
 import { auth } from "@/lib/auth";
 import { MEMBER_ROLE_ENUM } from "@/lib/db/schema";
-import { memberKeys, type OrganizationSelect } from "@/lib/fn/keys";
+import { memberKeys } from "@/lib/fn/keys";
+import type { organizationSelectSchema } from "../zod/schemas/organization";
 // import { authMiddleware } from "@/middleware/auth";
 
 export const getActiveMemberFn = createServerFn()
@@ -20,9 +21,7 @@ export const getActiveMemberFn = createServerFn()
         console.error("Not a member of the organization");
         throw redirect({ to: "/app" });
       }
-      console.info(
-        `Getting active member for user: ${member.user.name} in org: ${member.organizationId}`,
-      );
+      console.info("🔷", "Getting info for:\n", "Name:", member.user.name);
       return member;
     } catch (error) {
       // Re-throw redirects (they're intentional, not errors)
@@ -76,7 +75,9 @@ export const listMembersFn = createServerFn()
     }
   });
 
-export const listMembersQueryOptions = (props: OrganizationSelect) =>
+export const listMembersQueryOptions = (
+  props: z.infer<typeof organizationSelectSchema>,
+) =>
   queryOptions({
     queryKey: memberKeys.list(props),
     queryFn: () => listMembersFn({ data: { ...props } }),

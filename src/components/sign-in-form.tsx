@@ -63,16 +63,6 @@ export function SignInForm({
     onMutate: () => {
       clearErrors();
     },
-    onError: (e) => {
-      const message = e.message.charAt(0).toUpperCase() + e.message.slice(1);
-      setError("root", { message });
-      toast.error(`${message}`);
-    },
-    onSuccess: async (data) => {
-      router.history.push(callbackUrl);
-      toast.success(`Welcome ${data.user.name}`);
-      return;
-    },
   });
 
   return (
@@ -88,7 +78,25 @@ export function SignInForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
             className="p-4 md:p-6"
-            onSubmit={handleSubmit(async (data) => await mutateAsync({ data }))}
+            onSubmit={handleSubmit(
+              async (data) =>
+                await mutateAsync(
+                  { data },
+                  {
+                    onError: (e) => {
+                      const message =
+                        e.message.charAt(0).toUpperCase() + e.message.slice(1);
+                      setError("root", { message });
+                      toast.error(`${message}`);
+                    },
+                    onSuccess: async (data) => {
+                      router.history.push(callbackUrl);
+                      toast.success(`Welcome ${data.user.name}`);
+                      return;
+                    },
+                  },
+                ),
+            )}
           >
             <FieldSet>
               <FieldLegend className="text-center">

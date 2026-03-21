@@ -39,7 +39,7 @@ export const Route = createFileRoute("/app/")({
     );
 
     if (session.activeOrganizationId) {
-      console.log(session.activeOrganizationId);
+      console.info("Active Organization ID: ", session.activeOrganizationId);
       throw redirect({
         to: "/app/$organizationId",
         params: { organizationId: session.activeOrganizationId },

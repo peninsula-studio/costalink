@@ -8,7 +8,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { Suspense } from "react";
-import { FlexContainer, PageContainer } from "@/components/container";
+import { PageContainer } from "@/components/container";
 import { PropertyCard } from "@/components/property-card";
 import { RouteSkeleton } from "@/components/route-skeleton";
 import { Button } from "@/components/ui/button";
