@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
@@ -54,11 +54,18 @@ export function SearchPropertyForm() {
     resetOptions: { keepValues: true },
   });
 
-  const { data, refetch, isFetching } = useQuery({
+  const { data, isFetching } = useQuery({
     // enabled: false,
     queryKey: ["property", "search", ...Object.values(searchParams)],
     queryFn: async () => await searchPropertyFn({ data: searchParams }),
+    // staleTime: 99999999999,
   });
+
+  // const { data, mutateAsync, isPending } = useMutation({
+  //   mutationKey: ["property", "search", ...Object.values(searchParams)],
+  //   mutationFn: async () => await searchPropertyFn({ data: searchParams }),
+  //   networkMode: "offlineFirst",
+  // });
 
   const provinciasItems = PROVINCIAS.map((o) => ({ label: o, value: o }));
 
@@ -75,7 +82,6 @@ export function SearchPropertyForm() {
               pageSize: data.pageSize,
             },
           });
-          await refetch();
         })}
       >
         <FieldSet className="*:flex-1 md:flex-row">
@@ -131,8 +137,13 @@ export function SearchPropertyForm() {
         </FieldSet>
 
         <Field className="w-fit">
-          <Button disabled={isFetching} type="submit">
+          <Button
+            disabled={isFetching}
+            // disabled={isPending}
+            type="submit"
+          >
             {isFetching ? (
+              // {isPending ? (
               <>
                 <Spinner data-icon="inline-start" />
                 Searching
@@ -146,7 +157,11 @@ export function SearchPropertyForm() {
         </Field>
       </form>
 
-      <SearchPropertyResult data={data} isLoading={isFetching} />
+      <SearchPropertyResult
+        data={data}
+        isLoading={isFetching}
+        // isLoading={isPending}
+      />
     </div>
   );
 }

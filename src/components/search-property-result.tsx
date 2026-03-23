@@ -88,16 +88,20 @@ export function SearchPropertyResult({
 
   if (isLoading)
     return (
-      <Table>
-        <TableHeader>
-          <Skeleton className="h-12 w-full" />
-        </TableHeader>
+      <div className="divide-y divide-border">
+        <div className="flex h-12 w-full items-center">
+          <Skeleton className="h-5 w-full" />
+        </div>
+
         {[...new Array(searchParams.pageSize)].map((_, i) => (
-          <TableRow key={`filler-row-${i}`}>
-            <Skeleton className="h-12" />
-          </TableRow>
+          <div
+            className="flex h-12 w-full items-center"
+            key={`filler-row-${i}`}
+          >
+            <Skeleton className="h-5 w-full" />
+          </div>
         ))}
-      </Table>
+      </div>
     );
 
   return (
@@ -227,21 +231,23 @@ export function SearchPropertyResult({
                 <TableCell className="h-12"></TableCell>
               </TableRow>
             ))}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Empty className="size-fit flex-none bg-muted">
-                <EmptyHeader>
-                  <EmptyMedia className="bg-background" variant="icon">
-                    <SearchXIcon />
-                  </EmptyMedia>
-                </EmptyHeader>
-                <EmptyContent className="min-w-fit">
-                  <EmptyTitle>No results</EmptyTitle>
-                  <EmptyDescription>
-                    No properties matching the search
-                  </EmptyDescription>
-                </EmptyContent>
-              </Empty>
-            </div>
+            <TableRow className="absolute inset-0 flex items-center justify-center">
+              <TableCell>
+                <Empty className="size-fit flex-none bg-muted">
+                  <EmptyHeader>
+                    <EmptyMedia className="bg-background" variant="icon">
+                      <SearchXIcon />
+                    </EmptyMedia>
+                  </EmptyHeader>
+                  <EmptyContent className="min-w-fit">
+                    <EmptyTitle>No results</EmptyTitle>
+                    <EmptyDescription>
+                      No properties matching the search
+                    </EmptyDescription>
+                  </EmptyContent>
+                </Empty>
+              </TableCell>
+            </TableRow>
           </TableBody>
         )}
       </Table>
@@ -251,6 +257,7 @@ export function SearchPropertyResult({
           <PaginationItem>
             <PaginationPrevious
               disabled={searchParams.page <= 1}
+              // @ts-expect-error: BUG: search types don't match
               search={(s) => ({ ...s, page: s.page - 1 })}
               to="."
             />
@@ -263,6 +270,7 @@ export function SearchPropertyResult({
                 <PaginationItem key={`page-link-${i + 1}`}>
                   <PaginationLink
                     isActive={searchParams.page === i + 1}
+                    // @ts-expect-error: BUG: search types don't match
                     search={(s) => ({ ...s, page: i + 1 })}
                     to="."
                   >
@@ -280,6 +288,7 @@ export function SearchPropertyResult({
                 searchParams.page >=
                 Math.ceil(Number(data?.count) / searchParams.pageSize)
               }
+              // @ts-expect-error: BUG: search types don't match
               search={(s) => ({ ...s, page: s.page + 1 })}
               to="."
             />

@@ -5,14 +5,13 @@ import {
   CheckIcon,
   CircleIcon,
   FileXCorner,
-  HouseIcon,
   ImportIcon,
   XIcon,
 } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlexContainer } from "@/components/container";
+import { PageContainer } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -72,7 +71,7 @@ function RouteComponent() {
   });
 
   return (
-    <FlexContainer>
+    <PageContainer>
       <TypographyH2>Import properties from Kyero XML</TypographyH2>
       <form
         name="Import Kyero XML form"
@@ -136,7 +135,7 @@ function RouteComponent() {
           <XMLFetchPreview data={data} />
         </Suspense>
       )}
-    </FlexContainer>
+    </PageContainer>
   );
 }
 
@@ -149,15 +148,23 @@ function XMLFetchPreview({
     createPropertyMutationOptions(),
   );
 
+  const [importProgress, setImportProgress] = useState(0);
+
   return data ? (
-    <FlexContainer padding="none">
+    <div className="flex flex-col gap-sm">
       {data.length > 0 ? (
         <>
           <Button
             className="w-fit"
             disabled={isPending || isSuccess}
             onClick={async () => {
-              await Promise.all(data.map((p) => mutateAsync(p)));
+              const promises = data.map((p) =>
+                mutateAsync(p).then(() =>
+                  setImportProgress((v) => v + 1 / data.length),
+                ),
+              );
+
+              await Promise.all(promises);
             }}
             type="submit"
             variant={
@@ -166,7 +173,7 @@ function XMLFetchPreview({
           >
             {isPending ? (
               <>
-                <Spinner data-icon="inline-start" /> Importing
+                <Spinner data-icon="inline-start" /> Progress {importProgress} %
               </>
             ) : isError ? (
               <>
@@ -181,10 +188,13 @@ function XMLFetchPreview({
               <>Import {data.length} properties</>
             )}
           </Button>
-          <ItemGroup className="flex-row flex-wrap">
+          <ItemGroup
+            // className="flex-row flex-wrap"
+            className="grid grid-cols-[repeat(auto-fill,minmax(12rem,auto))] gap-xs lg:gap-sm"
+          >
             {data.map((property) => (
               <Card
-                className="relative w-full min-w-46 max-w-xs pt-0 transition-transform hover:scale-101"
+                className="relative w-full max-w-xs pt-0 transition-transform hover:scale-101"
                 key={property.ref}
               >
                 <div
@@ -233,7 +243,7 @@ function XMLFetchPreview({
           </EmptyContent>
         </Empty>
       )}
-    </FlexContainer>
+    </div>
   ) : (
     <Empty className="mx-auto w-fit">
       <EmptyContent>
