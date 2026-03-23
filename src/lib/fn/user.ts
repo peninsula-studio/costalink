@@ -6,8 +6,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
 import { userKeys } from "@/lib/fn/keys";
-import { sessionCookieMiddleware } from "@/middleware/auth";
-// import { authMiddleware } from "@/middleware/auth";
+import { sessionCookieMiddleware } from "@/lib/middleware/auth";
+// import { authMiddleware } from "@/lib/middleware/auth";
 
 export const listUsersFn = createServerFn()
   // .middleware([authMiddleware])

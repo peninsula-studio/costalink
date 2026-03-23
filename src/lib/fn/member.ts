@@ -8,7 +8,7 @@ import { auth } from "@/lib/auth";
 import { MEMBER_ROLE_ENUM } from "@/lib/db/schema";
 import { memberKeys } from "@/lib/fn/keys";
 import type { organizationSelectSchema } from "../zod/schemas/organization";
-// import { authMiddleware } from "@/middleware/auth";
+// import { authMiddleware } from "@/lib/middleware/auth";
 
 export const getActiveMemberFn = createServerFn()
   // .middleware([authMiddleware])

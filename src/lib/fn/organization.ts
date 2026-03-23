@@ -6,8 +6,8 @@ import { z } from "zod";
 import { createOrganizationFormSchema } from "@/components/create-organization-form";
 import { auth } from "@/lib/auth";
 import { organizationKeys } from "@/lib/fn/keys";
-import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
-import { organizationSelectSchema } from "../zod/schemas/organization";
+import { adminRequiredMiddleware, authMiddleware } from "@/lib/middleware/auth";
+import { organizationSelectSchema } from "@/lib/zod/schemas/organization";
 
 export const getListOrganizationsFn = createServerFn({ method: "GET" }).handler(
   async () => {

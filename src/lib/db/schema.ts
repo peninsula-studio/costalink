@@ -1,3 +1,5 @@
+import type { defaultRoles as userDefaultRoles } from "better-auth/plugins/admin/access";
+import type { defaultRoles as memberDefaultRoles } from "better-auth/plugins/organization/access";
 import {
   boolean,
   index,
@@ -17,8 +19,14 @@ import type {
 } from "@/lib/fn/kyero/schemas";
 import type { i18nStringSchema } from "@/lib/i18n/schema";
 
-export const USER_ROLE_ENUM = ["user", "admin"] as const;
-export const MEMBER_ROLE_ENUM = ["owner", "editor", "member"] as const;
+export const USER_ROLE_ENUM = ["user", "admin"] as const satisfies Array<
+  keyof typeof userDefaultRoles
+>;
+export const MEMBER_ROLE_ENUM = [
+  "admin",
+  "member",
+  "owner",
+] as const satisfies Array<keyof typeof memberDefaultRoles>;
 export const PROPERTY_STATUS_ENUM = [
   "active",
   "inactive",

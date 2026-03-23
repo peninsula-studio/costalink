@@ -5,8 +5,8 @@ import { getSessionCookie } from "better-auth/cookies";
 import { signInFormSchema } from "@/components/sign-in-form";
 import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
+import { authMiddleware } from "@/lib/middleware/auth";
 import { signUpFormSchema } from "@/lib/zod/schemas/auth";
-import { authMiddleware } from "@/middleware/auth";
 
 export const checkSessionCookieFn = createServerFn().handler(() => {
   const sessionCookie = getSessionCookie(getRequest());

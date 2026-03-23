@@ -4,7 +4,7 @@ import { and, eq, gt, ilike, lt } from "drizzle-orm";
 import { z } from "zod";
 import { searchPropertySchema } from "@/components/search-property-form";
 import { db } from "@/lib/db";
-import { adminRequiredMiddleware, authMiddleware } from "@/middleware/auth";
+import { adminRequiredMiddleware, authMiddleware } from "@/lib/middleware/auth";
 import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
