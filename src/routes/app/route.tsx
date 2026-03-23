@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { DashboardSkeleton } from "@/components/dashboard-skeleton";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
-import { authMiddleware } from "@/middleware/auth";
+import { authMiddleware } from "@/lib/middleware/auth";
 
 export const Route = createFileRoute("/app")({
   ssr: "data-only",

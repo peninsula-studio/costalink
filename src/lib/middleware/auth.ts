@@ -14,7 +14,7 @@ export const sessionCookieMiddleware = createMiddleware().server(
     if (!sessionCookie) {
       throw redirect({ to: "/sign-in" });
     }
-    return await next();
+    return next();
   },
 );
 
