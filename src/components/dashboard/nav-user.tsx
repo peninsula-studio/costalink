@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import {
   BadgeCheck,
@@ -127,7 +123,7 @@ export function NavUser({ className }: { className?: ClassNameValue }) {
                 render={
                   <DropdownMenuItem
                     render={
-                      <Link to="/app/account">
+                      <Link to="/account">
                         <BadgeCheck />
                         Account
                       </Link>

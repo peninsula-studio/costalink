@@ -31,7 +31,7 @@ import type { FileRouteTypes } from "@/routeTree.gen";
 
 export function SignUpForm({
   onSuccess,
-  callbackUrl = "/app",
+  callbackUrl = "/",
   ...props
 }: React.ComponentProps<typeof Card> & {
   onSuccess?: () => void;

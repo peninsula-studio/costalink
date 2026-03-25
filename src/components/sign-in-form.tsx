@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -27,7 +27,6 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyH1 } from "@/components/ui/typography";
 import { signInMutationOptions } from "@/lib/fn/auth";
-import { userKeys } from "@/lib/fn/keys";
 import { cn } from "@/lib/utils";
 import { emailSchema } from "@/lib/zod/schemas/auth";
 
@@ -40,7 +39,7 @@ export const signInFormSchema = z.object({
 export function SignInForm({
   className,
   onSuccess,
-  callbackUrl = "/app",
+  callbackUrl = "/",
   ...props
 }: React.ComponentProps<"div"> & {
   onSuccess?: () => void;
@@ -48,7 +47,6 @@ export function SignInForm({
   callbackUrl?: string;
 }) {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const [showPassword, setShowPassword] = useState(false);
 

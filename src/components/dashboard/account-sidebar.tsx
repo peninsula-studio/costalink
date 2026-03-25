@@ -36,7 +36,7 @@ export function AccountSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenuButton
-          render={<Link to="/app/account" />}
+          render={<Link to="/account" />}
           size="lg"
           variant="primary"
         >
@@ -55,20 +55,20 @@ export function AccountSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton render={<Link to={"/app/account"} />}>
+                <SidebarMenuButton render={<Link to="/account" />}>
                   <SettingsIcon /> Overview
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton render={<Link to={"/app/account"} />}>
+                <SidebarMenuButton render={<Link to="/account" />}>
                   <SettingsIcon /> Settings
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               <SidebarMenuSub>
                 <SidebarMenuSubItem>
-                  <SidebarMenuButton render={<Link to={"/app/account"} />}>
+                  <SidebarMenuButton render={<Link to="/account" />}>
                     Default Agency
                   </SidebarMenuButton>
                 </SidebarMenuSubItem>
@@ -84,16 +84,14 @@ export function AccountSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton
-                    render={<Link to={"/app/admin/organization"} />}
-                  >
+                  <SidebarMenuButton render={<Link to="/admin/organization" />}>
                     <Building2Icon /> Agencies
                   </SidebarMenuButton>
                 </SidebarMenuItem>
 
                 <SidebarMenuSub>
                   <SidebarMenuSubItem>
-                    <SidebarMenuButton render={<Link to={"/app/account"} />}>
+                    <SidebarMenuButton render={<Link to="/account" />}>
                       Create Agency
                     </SidebarMenuButton>
                   </SidebarMenuSubItem>

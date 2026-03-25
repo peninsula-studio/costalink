@@ -8,6 +8,6 @@ export const Route = createFileRoute("/_auth")({
     //   getSessionQueryOptions(),
     // );
     const session = await checkSessionFn();
-    if (session) throw redirect({ to: "/app" });
+    if (session) throw redirect({ to: "/" });
   },
 });

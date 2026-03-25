@@ -59,7 +59,7 @@ export const getOrganizationMembersFn = createServerFn()
       console.error(
         `Error getting organization members: ${(error as Error).message}`,
       );
-      throw redirect({ to: "/app" });
+      throw redirect({ to: "/" });
     }
   });
 
@@ -120,4 +120,3 @@ export const updateOrganizationFn = createServerFn({ method: "POST" })
       throw new Error("Failed to update organization");
     }
   });
-

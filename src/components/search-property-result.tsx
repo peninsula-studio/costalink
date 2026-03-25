@@ -24,7 +24,7 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
+  // PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -52,11 +52,11 @@ export function SearchPropertyResult({
   isLoading: boolean;
 }) {
   const { organizationId } = useParams({
-    from: "/app/$organizationId",
+    from: "/(app)/$organizationId",
   });
 
   const searchParams = useSearch({
-    from: "/app/$organizationId/property/search",
+    from: "/(app)/$organizationId/property/search",
   });
 
   const navigate = useNavigate();
@@ -191,10 +191,10 @@ export function SearchPropertyResult({
                     render={
                       <Link
                         params={{
-                          organizationId: organizationId,
+                          organizationId,
                           propertyId: property.id,
                         }}
-                        to={"/app/$organizationId/property/$propertyId"}
+                        to="/$organizationId/property/$propertyId"
                       >
                         <EyeIcon data-icon="inline-start" /> View
                       </Link>
@@ -208,10 +208,10 @@ export function SearchPropertyResult({
                       render={
                         <Link
                           params={{
-                            organizationId: organizationId,
+                            organizationId,
                             propertyId: property.id,
                           }}
-                          to={"/app/$organizationId/property/$propertyId"}
+                          to="/$organizationId/property/$propertyId"
                         >
                           <EditIcon data-icon="inline-start" /> Edit
                         </Link>

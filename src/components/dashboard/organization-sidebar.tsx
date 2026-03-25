@@ -61,7 +61,7 @@ type SidebarItem = {
 export function OrganizationSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
-  const params = useParams({ from: "/app/$organizationId" });
+  const params = useParams({ from: "/(app)/$organizationId" });
 
   const { data: session } = useSuspenseQuery(getSessionQueryOptions());
 
@@ -76,20 +76,16 @@ export function OrganizationSidebar({
     }),
   );
 
-  // const { activeOrganization, member } = useRouteContext({
-  //   from: "/app/$organizationId",
-  // });
-
   const collabItems: SidebarItem[] = [
     {
       icon: BinocularsIcon,
       title: "Search MLS",
       linkOptions: linkOptions({
-        to: "/app/$organizationId/property/search",
+        to: "/$organizationId/property/search",
         params,
       }),
       isActive: useMatch({
-        from: "/app/$organizationId/property/search",
+        from: "/(app)/$organizationId/property/search",
         shouldThrow: false,
       }),
     },
@@ -99,9 +95,9 @@ export function OrganizationSidebar({
     {
       icon: TableIcon,
       title: "View properties",
-      linkOptions: linkOptions({ to: "/app/$organizationId/property", params }),
+      linkOptions: linkOptions({ to: "/$organizationId/property", params }),
       isActive: useMatch({
-        from: "/app/$organizationId/property/",
+        from: "/(app)/$organizationId/property/",
         shouldThrow: false,
       }),
     },
@@ -109,11 +105,11 @@ export function OrganizationSidebar({
       icon: HousePlus,
       title: "Create property",
       linkOptions: linkOptions({
-        to: "/app/$organizationId/property/create",
+        to: "/$organizationId/property/create",
         params,
       }),
       isActive: useMatch({
-        from: "/app/$organizationId/property/create",
+        from: "/(app)/$organizationId/property/create",
         shouldThrow: false,
       }),
     },
@@ -121,11 +117,11 @@ export function OrganizationSidebar({
       title: "Import Properties",
       icon: ImportIcon,
       linkOptions: linkOptions({
-        to: "/app/$organizationId/property/import",
+        to: "/$organizationId/property/import",
         params,
       }),
       isActive: useMatch({
-        from: "/app/$organizationId/property/import",
+        from: "/(app)/$organizationId/property/import",
         shouldThrow: false,
       }),
     },
@@ -135,7 +131,7 @@ export function OrganizationSidebar({
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenuButton
-          render={<Link params={params} to="/app/$organizationId" />}
+          render={<Link params={params} to="/$organizationId" />}
           size="lg"
           variant="primary"
         >
@@ -283,10 +279,7 @@ export function OrganizationSidebar({
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     render={
-                      <Link
-                        params={params}
-                        to={"/app/$organizationId/settings"}
-                      >
+                      <Link params={params} to={"/$organizationId/settings"}>
                         <SettingsIcon />
                         Settings
                       </Link>
@@ -296,10 +289,7 @@ export function OrganizationSidebar({
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     render={
-                      <Link
-                        params={params}
-                        to={"/app/$organizationId/settings"}
-                      >
+                      <Link params={params} to={"/$organizationId/settings"}>
                         <UsersIcon />
                         Agents
                       </Link>

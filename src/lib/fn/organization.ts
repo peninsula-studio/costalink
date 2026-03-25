@@ -48,7 +48,6 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
         return null;
       } else {
         if (result === null) throw new Error("Data should not be null");
-        result.logo = result.logo || null;
         return result;
       }
     } catch (error) {
@@ -58,7 +57,7 @@ export const setActiveOrganizationFn = createServerFn({ method: "POST" })
       console.error(
         `fn: Error setting active Organization: ${(error as Error).message}`,
       );
-      throw redirect({ to: "/app" });
+      throw redirect({ to: "/" });
     }
   });
 
@@ -80,12 +79,11 @@ export const getFullOrganizationFn = createServerFn()
         headers: getRequestHeaders(),
       });
       if (!result) throw new Error("Organization not found");
-      result.logo = result.logo || null;
       return result;
     } catch (e) {
       console.error(`Error getting organization: ${(e as Error).message}`);
       throw new Error("Organization not found");
-      // throw redirect({ to: "/app" });
+      // throw redirect({ to: "/" });
     }
   });
 
@@ -102,10 +100,11 @@ export const getActiveOrganizationFn = createServerFn().handler(async () => {
     const organization = await auth.api.getFullOrganization({
       headers: getRequestHeaders(),
     });
+    if (!organization) throw new Error("Organization not found");
     return organization;
   } catch (e) {
     console.error(`Error getting organization info: ${(e as Error).message}`);
-    throw redirect({ to: "/app" });
+    throw redirect({ to: "/" });
   }
 });
 

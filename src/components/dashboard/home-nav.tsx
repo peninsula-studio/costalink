@@ -1,21 +1,20 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useParams, useRouteContext } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { Building2, UserIcon } from "lucide-react";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
+import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { organizationListQueryOptions } from "@/lib/fn/organization";
 
 export function HomeNav() {
-  const { user } = useRouteContext({
-    from: "/app",
-  });
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
 
   const params = useParams({
-    from: "/app/$organizationId",
+    from: "/(app)/$organizationId",
     shouldThrow: false,
   });
 
   const { data: organizationList } = useSuspenseQuery(
-    organizationListQueryOptions({ userId: user.id }),
+    organizationListQueryOptions({ userId: session.user.id }),
   );
 
   const activeOrganization = organizationList.find(
@@ -28,10 +27,10 @@ export function HomeNav() {
         activeOrganization ? (
           <Link
             params={{ organizationId: activeOrganization?.id }}
-            to="/app/$organizationId"
+            to="/$organizationId"
           />
         ) : (
-          <Link to="/app" />
+          <Link to="/" />
         )
       }
       size="lg"
@@ -45,7 +44,8 @@ export function HomeNav() {
         )}
       </div>
       <span className="truncate font-medium">
-        {(params?.organizationId && activeOrganization?.name) || user.name}
+        {(params?.organizationId && activeOrganization?.name) ||
+          session.user.name}
       </span>
     </SidebarMenuButton>
   );

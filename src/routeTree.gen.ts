@@ -10,55 +10,48 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
-import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as appRouteRouteImport } from './routes/(app)/route'
+import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
-import { Route as AppAccountRouteRouteImport } from './routes/app/account/route'
-import { Route as AppOrganizationIdRouteRouteImport } from './routes/app/$organizationId/route'
-import { Route as AppAccountIndexRouteImport } from './routes/app/account/index'
-import { Route as AppOrganizationIdIndexRouteImport } from './routes/app/$organizationId/index'
+import { Route as appAccountRouteRouteImport } from './routes/(app)/account/route'
+import { Route as appOrganizationIdRouteRouteImport } from './routes/(app)/$organizationId/route'
+import { Route as appAccountIndexRouteImport } from './routes/(app)/account/index'
+import { Route as appOrganizationIdIndexRouteImport } from './routes/(app)/$organizationId/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AppuserAdminRouteRouteImport } from './routes/app/(user)/admin/route'
-import { Route as AppOrganizationIdPropertyRouteRouteImport } from './routes/app/$organizationId/property/route'
-import { Route as AppOrganizationIdownerRouteRouteImport } from './routes/app/$organizationId/(owner)/route'
-import { Route as AppuserAdminIndexRouteImport } from './routes/app/(user)/admin/index'
-import { Route as AppOrganizationIdPropertyIndexRouteImport } from './routes/app/$organizationId/property/index'
-import { Route as AppOrganizationIdPropertySearchRouteImport } from './routes/app/$organizationId/property/search'
-import { Route as AppOrganizationIdPropertyImportRouteImport } from './routes/app/$organizationId/property/import'
-import { Route as AppOrganizationIdPropertyCreateRouteImport } from './routes/app/$organizationId/property/create'
-import { Route as AppOrganizationIdPropertyPropertyIdRouteImport } from './routes/app/$organizationId/property/$propertyId'
-import { Route as AppOrganizationIdownerSettingsRouteImport } from './routes/app/$organizationId/(owner)/settings'
-import { Route as AppuserAdminOrganizationIndexRouteImport } from './routes/app/(user)/admin/organization/index'
-import { Route as AppuserAdminOrganizationCreateRouteImport } from './routes/app/(user)/admin/organization/create'
-import { Route as AppuserAdminOrganizationIdRouteImport } from './routes/app/(user)/admin/organization/$id'
-import { Route as AppOrganizationIdPropertyPropertyIdEditRouteImport } from './routes/app/$organizationId/property/$propertyId/edit'
+import { Route as appuserAdminRouteRouteImport } from './routes/(app)/(user)/admin/route'
+import { Route as appOrganizationIdPropertyRouteRouteImport } from './routes/(app)/$organizationId/property/route'
+import { Route as appOrganizationIdownerRouteRouteImport } from './routes/(app)/$organizationId/(owner)/route'
+import { Route as appuserAdminIndexRouteImport } from './routes/(app)/(user)/admin/index'
+import { Route as appOrganizationIdPropertyIndexRouteImport } from './routes/(app)/$organizationId/property/index'
+import { Route as appOrganizationIdPropertySearchRouteImport } from './routes/(app)/$organizationId/property/search'
+import { Route as appOrganizationIdPropertyImportRouteImport } from './routes/(app)/$organizationId/property/import'
+import { Route as appOrganizationIdPropertyCreateRouteImport } from './routes/(app)/$organizationId/property/create'
+import { Route as appOrganizationIdPropertyPropertyIdRouteImport } from './routes/(app)/$organizationId/property/$propertyId'
+import { Route as appOrganizationIdownerSettingsRouteImport } from './routes/(app)/$organizationId/(owner)/settings'
+import { Route as appuserAdminOrganizationIndexRouteImport } from './routes/(app)/(user)/admin/organization/index'
+import { Route as appuserAdminOrganizationCreateRouteImport } from './routes/(app)/(user)/admin/organization/create'
+import { Route as appuserAdminOrganizationIdRouteImport } from './routes/(app)/(user)/admin/organization/$id'
+import { Route as appOrganizationIdPropertyPropertyIdEditRouteImport } from './routes/(app)/$organizationId/property/$propertyId/edit'
 
 const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
   id: '/llms.txt',
   path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRouteRoute = AppRouteRouteImport.update({
-  id: '/app',
-  path: '/app',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const appRouteRoute = appRouteRouteImport.update({
+  id: '/(app)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
+const appIndexRoute = appIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRouteRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/sign-up',
@@ -70,271 +63,262 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppAccountRouteRoute = AppAccountRouteRouteImport.update({
+const appAccountRouteRoute = appAccountRouteRouteImport.update({
   id: '/account',
   path: '/account',
-  getParentRoute: () => AppRouteRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
-const AppOrganizationIdRouteRoute = AppOrganizationIdRouteRouteImport.update({
+const appOrganizationIdRouteRoute = appOrganizationIdRouteRouteImport.update({
   id: '/$organizationId',
   path: '/$organizationId',
-  getParentRoute: () => AppRouteRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
-const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
+const appAccountIndexRoute = appAccountIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppAccountRouteRoute,
+  getParentRoute: () => appAccountRouteRoute,
 } as any)
-const AppOrganizationIdIndexRoute = AppOrganizationIdIndexRouteImport.update({
+const appOrganizationIdIndexRoute = appOrganizationIdIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppOrganizationIdRouteRoute,
+  getParentRoute: () => appOrganizationIdRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppuserAdminRouteRoute = AppuserAdminRouteRouteImport.update({
+const appuserAdminRouteRoute = appuserAdminRouteRouteImport.update({
   id: '/(user)/admin',
   path: '/admin',
-  getParentRoute: () => AppRouteRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
-const AppOrganizationIdPropertyRouteRoute =
-  AppOrganizationIdPropertyRouteRouteImport.update({
+const appOrganizationIdPropertyRouteRoute =
+  appOrganizationIdPropertyRouteRouteImport.update({
     id: '/property',
     path: '/property',
-    getParentRoute: () => AppOrganizationIdRouteRoute,
+    getParentRoute: () => appOrganizationIdRouteRoute,
   } as any)
-const AppOrganizationIdownerRouteRoute =
-  AppOrganizationIdownerRouteRouteImport.update({
+const appOrganizationIdownerRouteRoute =
+  appOrganizationIdownerRouteRouteImport.update({
     id: '/(owner)',
-    getParentRoute: () => AppOrganizationIdRouteRoute,
+    getParentRoute: () => appOrganizationIdRouteRoute,
   } as any)
-const AppuserAdminIndexRoute = AppuserAdminIndexRouteImport.update({
+const appuserAdminIndexRoute = appuserAdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppuserAdminRouteRoute,
+  getParentRoute: () => appuserAdminRouteRoute,
 } as any)
-const AppOrganizationIdPropertyIndexRoute =
-  AppOrganizationIdPropertyIndexRouteImport.update({
+const appOrganizationIdPropertyIndexRoute =
+  appOrganizationIdPropertyIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AppOrganizationIdPropertyRouteRoute,
+    getParentRoute: () => appOrganizationIdPropertyRouteRoute,
   } as any)
-const AppOrganizationIdPropertySearchRoute =
-  AppOrganizationIdPropertySearchRouteImport.update({
+const appOrganizationIdPropertySearchRoute =
+  appOrganizationIdPropertySearchRouteImport.update({
     id: '/search',
     path: '/search',
-    getParentRoute: () => AppOrganizationIdPropertyRouteRoute,
+    getParentRoute: () => appOrganizationIdPropertyRouteRoute,
   } as any)
-const AppOrganizationIdPropertyImportRoute =
-  AppOrganizationIdPropertyImportRouteImport.update({
+const appOrganizationIdPropertyImportRoute =
+  appOrganizationIdPropertyImportRouteImport.update({
     id: '/import',
     path: '/import',
-    getParentRoute: () => AppOrganizationIdPropertyRouteRoute,
+    getParentRoute: () => appOrganizationIdPropertyRouteRoute,
   } as any)
-const AppOrganizationIdPropertyCreateRoute =
-  AppOrganizationIdPropertyCreateRouteImport.update({
+const appOrganizationIdPropertyCreateRoute =
+  appOrganizationIdPropertyCreateRouteImport.update({
     id: '/create',
     path: '/create',
-    getParentRoute: () => AppOrganizationIdPropertyRouteRoute,
+    getParentRoute: () => appOrganizationIdPropertyRouteRoute,
   } as any)
-const AppOrganizationIdPropertyPropertyIdRoute =
-  AppOrganizationIdPropertyPropertyIdRouteImport.update({
+const appOrganizationIdPropertyPropertyIdRoute =
+  appOrganizationIdPropertyPropertyIdRouteImport.update({
     id: '/$propertyId',
     path: '/$propertyId',
-    getParentRoute: () => AppOrganizationIdPropertyRouteRoute,
+    getParentRoute: () => appOrganizationIdPropertyRouteRoute,
   } as any)
-const AppOrganizationIdownerSettingsRoute =
-  AppOrganizationIdownerSettingsRouteImport.update({
+const appOrganizationIdownerSettingsRoute =
+  appOrganizationIdownerSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
-    getParentRoute: () => AppOrganizationIdownerRouteRoute,
+    getParentRoute: () => appOrganizationIdownerRouteRoute,
   } as any)
-const AppuserAdminOrganizationIndexRoute =
-  AppuserAdminOrganizationIndexRouteImport.update({
+const appuserAdminOrganizationIndexRoute =
+  appuserAdminOrganizationIndexRouteImport.update({
     id: '/organization/',
     path: '/organization/',
-    getParentRoute: () => AppuserAdminRouteRoute,
+    getParentRoute: () => appuserAdminRouteRoute,
   } as any)
-const AppuserAdminOrganizationCreateRoute =
-  AppuserAdminOrganizationCreateRouteImport.update({
+const appuserAdminOrganizationCreateRoute =
+  appuserAdminOrganizationCreateRouteImport.update({
     id: '/organization/create',
     path: '/organization/create',
-    getParentRoute: () => AppuserAdminRouteRoute,
+    getParentRoute: () => appuserAdminRouteRoute,
   } as any)
-const AppuserAdminOrganizationIdRoute =
-  AppuserAdminOrganizationIdRouteImport.update({
+const appuserAdminOrganizationIdRoute =
+  appuserAdminOrganizationIdRouteImport.update({
     id: '/organization/$id',
     path: '/organization/$id',
-    getParentRoute: () => AppuserAdminRouteRoute,
+    getParentRoute: () => appuserAdminRouteRoute,
   } as any)
-const AppOrganizationIdPropertyPropertyIdEditRoute =
-  AppOrganizationIdPropertyPropertyIdEditRouteImport.update({
+const appOrganizationIdPropertyPropertyIdEditRoute =
+  appOrganizationIdPropertyPropertyIdEditRouteImport.update({
     id: '/edit',
     path: '/edit',
-    getParentRoute: () => AppOrganizationIdPropertyPropertyIdRoute,
+    getParentRoute: () => appOrganizationIdPropertyPropertyIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/app': typeof AppRouteRouteWithChildren
+  '/': typeof appIndexRoute
   '/llms.txt': typeof LlmsDottxtRoute
-  '/app/$organizationId': typeof AppOrganizationIdownerRouteRouteWithChildren
-  '/app/account': typeof AppAccountRouteRouteWithChildren
+  '/$organizationId': typeof appOrganizationIdownerRouteRouteWithChildren
+  '/account': typeof appAccountRouteRouteWithChildren
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
-  '/app/': typeof AppIndexRoute
-  '/app/$organizationId/property': typeof AppOrganizationIdPropertyRouteRouteWithChildren
-  '/app/admin': typeof AppuserAdminRouteRouteWithChildren
+  '/$organizationId/property': typeof appOrganizationIdPropertyRouteRouteWithChildren
+  '/admin': typeof appuserAdminRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/app/$organizationId/': typeof AppOrganizationIdIndexRoute
-  '/app/account/': typeof AppAccountIndexRoute
-  '/app/$organizationId/settings': typeof AppOrganizationIdownerSettingsRoute
-  '/app/$organizationId/property/$propertyId': typeof AppOrganizationIdPropertyPropertyIdRouteWithChildren
-  '/app/$organizationId/property/create': typeof AppOrganizationIdPropertyCreateRoute
-  '/app/$organizationId/property/import': typeof AppOrganizationIdPropertyImportRoute
-  '/app/$organizationId/property/search': typeof AppOrganizationIdPropertySearchRoute
-  '/app/$organizationId/property/': typeof AppOrganizationIdPropertyIndexRoute
-  '/app/admin/': typeof AppuserAdminIndexRoute
-  '/app/$organizationId/property/$propertyId/edit': typeof AppOrganizationIdPropertyPropertyIdEditRoute
-  '/app/admin/organization/$id': typeof AppuserAdminOrganizationIdRoute
-  '/app/admin/organization/create': typeof AppuserAdminOrganizationCreateRoute
-  '/app/admin/organization/': typeof AppuserAdminOrganizationIndexRoute
+  '/$organizationId/': typeof appOrganizationIdIndexRoute
+  '/account/': typeof appAccountIndexRoute
+  '/$organizationId/settings': typeof appOrganizationIdownerSettingsRoute
+  '/$organizationId/property/$propertyId': typeof appOrganizationIdPropertyPropertyIdRouteWithChildren
+  '/$organizationId/property/create': typeof appOrganizationIdPropertyCreateRoute
+  '/$organizationId/property/import': typeof appOrganizationIdPropertyImportRoute
+  '/$organizationId/property/search': typeof appOrganizationIdPropertySearchRoute
+  '/$organizationId/property/': typeof appOrganizationIdPropertyIndexRoute
+  '/admin/': typeof appuserAdminIndexRoute
+  '/$organizationId/property/$propertyId/edit': typeof appOrganizationIdPropertyPropertyIdEditRoute
+  '/admin/organization/$id': typeof appuserAdminOrganizationIdRoute
+  '/admin/organization/create': typeof appuserAdminOrganizationCreateRoute
+  '/admin/organization/': typeof appuserAdminOrganizationIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof appIndexRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
-  '/app': typeof AppIndexRoute
-  '/app/$organizationId': typeof AppOrganizationIdIndexRoute
+  '/$organizationId': typeof appOrganizationIdIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/app/account': typeof AppAccountIndexRoute
-  '/app/$organizationId/settings': typeof AppOrganizationIdownerSettingsRoute
-  '/app/$organizationId/property/$propertyId': typeof AppOrganizationIdPropertyPropertyIdRouteWithChildren
-  '/app/$organizationId/property/create': typeof AppOrganizationIdPropertyCreateRoute
-  '/app/$organizationId/property/import': typeof AppOrganizationIdPropertyImportRoute
-  '/app/$organizationId/property/search': typeof AppOrganizationIdPropertySearchRoute
-  '/app/$organizationId/property': typeof AppOrganizationIdPropertyIndexRoute
-  '/app/admin': typeof AppuserAdminIndexRoute
-  '/app/$organizationId/property/$propertyId/edit': typeof AppOrganizationIdPropertyPropertyIdEditRoute
-  '/app/admin/organization/$id': typeof AppuserAdminOrganizationIdRoute
-  '/app/admin/organization/create': typeof AppuserAdminOrganizationCreateRoute
-  '/app/admin/organization': typeof AppuserAdminOrganizationIndexRoute
+  '/account': typeof appAccountIndexRoute
+  '/$organizationId/settings': typeof appOrganizationIdownerSettingsRoute
+  '/$organizationId/property/$propertyId': typeof appOrganizationIdPropertyPropertyIdRouteWithChildren
+  '/$organizationId/property/create': typeof appOrganizationIdPropertyCreateRoute
+  '/$organizationId/property/import': typeof appOrganizationIdPropertyImportRoute
+  '/$organizationId/property/search': typeof appOrganizationIdPropertySearchRoute
+  '/$organizationId/property': typeof appOrganizationIdPropertyIndexRoute
+  '/admin': typeof appuserAdminIndexRoute
+  '/$organizationId/property/$propertyId/edit': typeof appOrganizationIdPropertyPropertyIdEditRoute
+  '/admin/organization/$id': typeof appuserAdminOrganizationIdRoute
+  '/admin/organization/create': typeof appuserAdminOrganizationCreateRoute
+  '/admin/organization': typeof appuserAdminOrganizationIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/(app)': typeof appRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/app': typeof AppRouteRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
-  '/app/$organizationId': typeof AppOrganizationIdRouteRouteWithChildren
-  '/app/account': typeof AppAccountRouteRouteWithChildren
+  '/(app)/$organizationId': typeof appOrganizationIdRouteRouteWithChildren
+  '/(app)/account': typeof appAccountRouteRouteWithChildren
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
-  '/app/': typeof AppIndexRoute
-  '/app/$organizationId/(owner)': typeof AppOrganizationIdownerRouteRouteWithChildren
-  '/app/$organizationId/property': typeof AppOrganizationIdPropertyRouteRouteWithChildren
-  '/app/(user)/admin': typeof AppuserAdminRouteRouteWithChildren
+  '/(app)/': typeof appIndexRoute
+  '/(app)/$organizationId/(owner)': typeof appOrganizationIdownerRouteRouteWithChildren
+  '/(app)/$organizationId/property': typeof appOrganizationIdPropertyRouteRouteWithChildren
+  '/(app)/(user)/admin': typeof appuserAdminRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/app/$organizationId/': typeof AppOrganizationIdIndexRoute
-  '/app/account/': typeof AppAccountIndexRoute
-  '/app/$organizationId/(owner)/settings': typeof AppOrganizationIdownerSettingsRoute
-  '/app/$organizationId/property/$propertyId': typeof AppOrganizationIdPropertyPropertyIdRouteWithChildren
-  '/app/$organizationId/property/create': typeof AppOrganizationIdPropertyCreateRoute
-  '/app/$organizationId/property/import': typeof AppOrganizationIdPropertyImportRoute
-  '/app/$organizationId/property/search': typeof AppOrganizationIdPropertySearchRoute
-  '/app/$organizationId/property/': typeof AppOrganizationIdPropertyIndexRoute
-  '/app/(user)/admin/': typeof AppuserAdminIndexRoute
-  '/app/$organizationId/property/$propertyId/edit': typeof AppOrganizationIdPropertyPropertyIdEditRoute
-  '/app/(user)/admin/organization/$id': typeof AppuserAdminOrganizationIdRoute
-  '/app/(user)/admin/organization/create': typeof AppuserAdminOrganizationCreateRoute
-  '/app/(user)/admin/organization/': typeof AppuserAdminOrganizationIndexRoute
+  '/(app)/$organizationId/': typeof appOrganizationIdIndexRoute
+  '/(app)/account/': typeof appAccountIndexRoute
+  '/(app)/$organizationId/(owner)/settings': typeof appOrganizationIdownerSettingsRoute
+  '/(app)/$organizationId/property/$propertyId': typeof appOrganizationIdPropertyPropertyIdRouteWithChildren
+  '/(app)/$organizationId/property/create': typeof appOrganizationIdPropertyCreateRoute
+  '/(app)/$organizationId/property/import': typeof appOrganizationIdPropertyImportRoute
+  '/(app)/$organizationId/property/search': typeof appOrganizationIdPropertySearchRoute
+  '/(app)/$organizationId/property/': typeof appOrganizationIdPropertyIndexRoute
+  '/(app)/(user)/admin/': typeof appuserAdminIndexRoute
+  '/(app)/$organizationId/property/$propertyId/edit': typeof appOrganizationIdPropertyPropertyIdEditRoute
+  '/(app)/(user)/admin/organization/$id': typeof appuserAdminOrganizationIdRoute
+  '/(app)/(user)/admin/organization/create': typeof appuserAdminOrganizationCreateRoute
+  '/(app)/(user)/admin/organization/': typeof appuserAdminOrganizationIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/app'
     | '/llms.txt'
-    | '/app/$organizationId'
-    | '/app/account'
+    | '/$organizationId'
+    | '/account'
     | '/sign-in'
     | '/sign-up'
-    | '/app/'
-    | '/app/$organizationId/property'
-    | '/app/admin'
+    | '/$organizationId/property'
+    | '/admin'
     | '/api/auth/$'
-    | '/app/$organizationId/'
-    | '/app/account/'
-    | '/app/$organizationId/settings'
-    | '/app/$organizationId/property/$propertyId'
-    | '/app/$organizationId/property/create'
-    | '/app/$organizationId/property/import'
-    | '/app/$organizationId/property/search'
-    | '/app/$organizationId/property/'
-    | '/app/admin/'
-    | '/app/$organizationId/property/$propertyId/edit'
-    | '/app/admin/organization/$id'
-    | '/app/admin/organization/create'
-    | '/app/admin/organization/'
+    | '/$organizationId/'
+    | '/account/'
+    | '/$organizationId/settings'
+    | '/$organizationId/property/$propertyId'
+    | '/$organizationId/property/create'
+    | '/$organizationId/property/import'
+    | '/$organizationId/property/search'
+    | '/$organizationId/property/'
+    | '/admin/'
+    | '/$organizationId/property/$propertyId/edit'
+    | '/admin/organization/$id'
+    | '/admin/organization/create'
+    | '/admin/organization/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/llms.txt'
     | '/sign-in'
     | '/sign-up'
-    | '/app'
-    | '/app/$organizationId'
+    | '/$organizationId'
     | '/api/auth/$'
-    | '/app/account'
-    | '/app/$organizationId/settings'
-    | '/app/$organizationId/property/$propertyId'
-    | '/app/$organizationId/property/create'
-    | '/app/$organizationId/property/import'
-    | '/app/$organizationId/property/search'
-    | '/app/$organizationId/property'
-    | '/app/admin'
-    | '/app/$organizationId/property/$propertyId/edit'
-    | '/app/admin/organization/$id'
-    | '/app/admin/organization/create'
-    | '/app/admin/organization'
+    | '/account'
+    | '/$organizationId/settings'
+    | '/$organizationId/property/$propertyId'
+    | '/$organizationId/property/create'
+    | '/$organizationId/property/import'
+    | '/$organizationId/property/search'
+    | '/$organizationId/property'
+    | '/admin'
+    | '/$organizationId/property/$propertyId/edit'
+    | '/admin/organization/$id'
+    | '/admin/organization/create'
+    | '/admin/organization'
   id:
     | '__root__'
-    | '/'
+    | '/(app)'
     | '/_auth'
-    | '/app'
     | '/llms.txt'
-    | '/app/$organizationId'
-    | '/app/account'
+    | '/(app)/$organizationId'
+    | '/(app)/account'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
-    | '/app/'
-    | '/app/$organizationId/(owner)'
-    | '/app/$organizationId/property'
-    | '/app/(user)/admin'
+    | '/(app)/'
+    | '/(app)/$organizationId/(owner)'
+    | '/(app)/$organizationId/property'
+    | '/(app)/(user)/admin'
     | '/api/auth/$'
-    | '/app/$organizationId/'
-    | '/app/account/'
-    | '/app/$organizationId/(owner)/settings'
-    | '/app/$organizationId/property/$propertyId'
-    | '/app/$organizationId/property/create'
-    | '/app/$organizationId/property/import'
-    | '/app/$organizationId/property/search'
-    | '/app/$organizationId/property/'
-    | '/app/(user)/admin/'
-    | '/app/$organizationId/property/$propertyId/edit'
-    | '/app/(user)/admin/organization/$id'
-    | '/app/(user)/admin/organization/create'
-    | '/app/(user)/admin/organization/'
+    | '/(app)/$organizationId/'
+    | '/(app)/account/'
+    | '/(app)/$organizationId/(owner)/settings'
+    | '/(app)/$organizationId/property/$propertyId'
+    | '/(app)/$organizationId/property/create'
+    | '/(app)/$organizationId/property/import'
+    | '/(app)/$organizationId/property/search'
+    | '/(app)/$organizationId/property/'
+    | '/(app)/(user)/admin/'
+    | '/(app)/$organizationId/property/$propertyId/edit'
+    | '/(app)/(user)/admin/organization/$id'
+    | '/(app)/(user)/admin/organization/create'
+    | '/(app)/(user)/admin/organization/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  appRouteRoute: typeof appRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  AppRouteRoute: typeof AppRouteRouteWithChildren
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -348,13 +332,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -362,19 +339,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/(app)': {
+      id: '/(app)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/': {
-      id: '/app/'
+    '/(app)/': {
+      id: '/(app)/'
       path: '/'
-      fullPath: '/app/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRouteRoute
+      fullPath: '/'
+      preLoaderRoute: typeof appIndexRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/_auth/sign-up': {
       id: '/_auth/sign-up'
@@ -390,33 +367,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/app/account': {
-      id: '/app/account'
+    '/(app)/account': {
+      id: '/(app)/account'
       path: '/account'
-      fullPath: '/app/account'
-      preLoaderRoute: typeof AppAccountRouteRouteImport
-      parentRoute: typeof AppRouteRoute
+      fullPath: '/account'
+      preLoaderRoute: typeof appAccountRouteRouteImport
+      parentRoute: typeof appRouteRoute
     }
-    '/app/$organizationId': {
-      id: '/app/$organizationId'
+    '/(app)/$organizationId': {
+      id: '/(app)/$organizationId'
       path: '/$organizationId'
-      fullPath: '/app/$organizationId'
-      preLoaderRoute: typeof AppOrganizationIdRouteRouteImport
-      parentRoute: typeof AppRouteRoute
+      fullPath: '/$organizationId'
+      preLoaderRoute: typeof appOrganizationIdRouteRouteImport
+      parentRoute: typeof appRouteRoute
     }
-    '/app/account/': {
-      id: '/app/account/'
+    '/(app)/account/': {
+      id: '/(app)/account/'
       path: '/'
-      fullPath: '/app/account/'
-      preLoaderRoute: typeof AppAccountIndexRouteImport
-      parentRoute: typeof AppAccountRouteRoute
+      fullPath: '/account/'
+      preLoaderRoute: typeof appAccountIndexRouteImport
+      parentRoute: typeof appAccountRouteRoute
     }
-    '/app/$organizationId/': {
-      id: '/app/$organizationId/'
+    '/(app)/$organizationId/': {
+      id: '/(app)/$organizationId/'
       path: '/'
-      fullPath: '/app/$organizationId/'
-      preLoaderRoute: typeof AppOrganizationIdIndexRouteImport
-      parentRoute: typeof AppOrganizationIdRouteRoute
+      fullPath: '/$organizationId/'
+      preLoaderRoute: typeof appOrganizationIdIndexRouteImport
+      parentRoute: typeof appOrganizationIdRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -425,106 +402,225 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/(user)/admin': {
-      id: '/app/(user)/admin'
+    '/(app)/(user)/admin': {
+      id: '/(app)/(user)/admin'
       path: '/admin'
-      fullPath: '/app/admin'
-      preLoaderRoute: typeof AppuserAdminRouteRouteImport
-      parentRoute: typeof AppRouteRoute
+      fullPath: '/admin'
+      preLoaderRoute: typeof appuserAdminRouteRouteImport
+      parentRoute: typeof appRouteRoute
     }
-    '/app/$organizationId/property': {
-      id: '/app/$organizationId/property'
+    '/(app)/$organizationId/property': {
+      id: '/(app)/$organizationId/property'
       path: '/property'
-      fullPath: '/app/$organizationId/property'
-      preLoaderRoute: typeof AppOrganizationIdPropertyRouteRouteImport
-      parentRoute: typeof AppOrganizationIdRouteRoute
+      fullPath: '/$organizationId/property'
+      preLoaderRoute: typeof appOrganizationIdPropertyRouteRouteImport
+      parentRoute: typeof appOrganizationIdRouteRoute
     }
-    '/app/$organizationId/(owner)': {
-      id: '/app/$organizationId/(owner)'
+    '/(app)/$organizationId/(owner)': {
+      id: '/(app)/$organizationId/(owner)'
       path: ''
-      fullPath: '/app/$organizationId'
-      preLoaderRoute: typeof AppOrganizationIdownerRouteRouteImport
-      parentRoute: typeof AppOrganizationIdRouteRoute
+      fullPath: '/$organizationId'
+      preLoaderRoute: typeof appOrganizationIdownerRouteRouteImport
+      parentRoute: typeof appOrganizationIdRouteRoute
     }
-    '/app/(user)/admin/': {
-      id: '/app/(user)/admin/'
+    '/(app)/(user)/admin/': {
+      id: '/(app)/(user)/admin/'
       path: '/'
-      fullPath: '/app/admin/'
-      preLoaderRoute: typeof AppuserAdminIndexRouteImport
-      parentRoute: typeof AppuserAdminRouteRoute
+      fullPath: '/admin/'
+      preLoaderRoute: typeof appuserAdminIndexRouteImport
+      parentRoute: typeof appuserAdminRouteRoute
     }
-    '/app/$organizationId/property/': {
-      id: '/app/$organizationId/property/'
+    '/(app)/$organizationId/property/': {
+      id: '/(app)/$organizationId/property/'
       path: '/'
-      fullPath: '/app/$organizationId/property/'
-      preLoaderRoute: typeof AppOrganizationIdPropertyIndexRouteImport
-      parentRoute: typeof AppOrganizationIdPropertyRouteRoute
+      fullPath: '/$organizationId/property/'
+      preLoaderRoute: typeof appOrganizationIdPropertyIndexRouteImport
+      parentRoute: typeof appOrganizationIdPropertyRouteRoute
     }
-    '/app/$organizationId/property/search': {
-      id: '/app/$organizationId/property/search'
+    '/(app)/$organizationId/property/search': {
+      id: '/(app)/$organizationId/property/search'
       path: '/search'
-      fullPath: '/app/$organizationId/property/search'
-      preLoaderRoute: typeof AppOrganizationIdPropertySearchRouteImport
-      parentRoute: typeof AppOrganizationIdPropertyRouteRoute
+      fullPath: '/$organizationId/property/search'
+      preLoaderRoute: typeof appOrganizationIdPropertySearchRouteImport
+      parentRoute: typeof appOrganizationIdPropertyRouteRoute
     }
-    '/app/$organizationId/property/import': {
-      id: '/app/$organizationId/property/import'
+    '/(app)/$organizationId/property/import': {
+      id: '/(app)/$organizationId/property/import'
       path: '/import'
-      fullPath: '/app/$organizationId/property/import'
-      preLoaderRoute: typeof AppOrganizationIdPropertyImportRouteImport
-      parentRoute: typeof AppOrganizationIdPropertyRouteRoute
+      fullPath: '/$organizationId/property/import'
+      preLoaderRoute: typeof appOrganizationIdPropertyImportRouteImport
+      parentRoute: typeof appOrganizationIdPropertyRouteRoute
     }
-    '/app/$organizationId/property/create': {
-      id: '/app/$organizationId/property/create'
+    '/(app)/$organizationId/property/create': {
+      id: '/(app)/$organizationId/property/create'
       path: '/create'
-      fullPath: '/app/$organizationId/property/create'
-      preLoaderRoute: typeof AppOrganizationIdPropertyCreateRouteImport
-      parentRoute: typeof AppOrganizationIdPropertyRouteRoute
+      fullPath: '/$organizationId/property/create'
+      preLoaderRoute: typeof appOrganizationIdPropertyCreateRouteImport
+      parentRoute: typeof appOrganizationIdPropertyRouteRoute
     }
-    '/app/$organizationId/property/$propertyId': {
-      id: '/app/$organizationId/property/$propertyId'
+    '/(app)/$organizationId/property/$propertyId': {
+      id: '/(app)/$organizationId/property/$propertyId'
       path: '/$propertyId'
-      fullPath: '/app/$organizationId/property/$propertyId'
-      preLoaderRoute: typeof AppOrganizationIdPropertyPropertyIdRouteImport
-      parentRoute: typeof AppOrganizationIdPropertyRouteRoute
+      fullPath: '/$organizationId/property/$propertyId'
+      preLoaderRoute: typeof appOrganizationIdPropertyPropertyIdRouteImport
+      parentRoute: typeof appOrganizationIdPropertyRouteRoute
     }
-    '/app/$organizationId/(owner)/settings': {
-      id: '/app/$organizationId/(owner)/settings'
+    '/(app)/$organizationId/(owner)/settings': {
+      id: '/(app)/$organizationId/(owner)/settings'
       path: '/settings'
-      fullPath: '/app/$organizationId/settings'
-      preLoaderRoute: typeof AppOrganizationIdownerSettingsRouteImport
-      parentRoute: typeof AppOrganizationIdownerRouteRoute
+      fullPath: '/$organizationId/settings'
+      preLoaderRoute: typeof appOrganizationIdownerSettingsRouteImport
+      parentRoute: typeof appOrganizationIdownerRouteRoute
     }
-    '/app/(user)/admin/organization/': {
-      id: '/app/(user)/admin/organization/'
+    '/(app)/(user)/admin/organization/': {
+      id: '/(app)/(user)/admin/organization/'
       path: '/organization'
-      fullPath: '/app/admin/organization/'
-      preLoaderRoute: typeof AppuserAdminOrganizationIndexRouteImport
-      parentRoute: typeof AppuserAdminRouteRoute
+      fullPath: '/admin/organization/'
+      preLoaderRoute: typeof appuserAdminOrganizationIndexRouteImport
+      parentRoute: typeof appuserAdminRouteRoute
     }
-    '/app/(user)/admin/organization/create': {
-      id: '/app/(user)/admin/organization/create'
+    '/(app)/(user)/admin/organization/create': {
+      id: '/(app)/(user)/admin/organization/create'
       path: '/organization/create'
-      fullPath: '/app/admin/organization/create'
-      preLoaderRoute: typeof AppuserAdminOrganizationCreateRouteImport
-      parentRoute: typeof AppuserAdminRouteRoute
+      fullPath: '/admin/organization/create'
+      preLoaderRoute: typeof appuserAdminOrganizationCreateRouteImport
+      parentRoute: typeof appuserAdminRouteRoute
     }
-    '/app/(user)/admin/organization/$id': {
-      id: '/app/(user)/admin/organization/$id'
+    '/(app)/(user)/admin/organization/$id': {
+      id: '/(app)/(user)/admin/organization/$id'
       path: '/organization/$id'
-      fullPath: '/app/admin/organization/$id'
-      preLoaderRoute: typeof AppuserAdminOrganizationIdRouteImport
-      parentRoute: typeof AppuserAdminRouteRoute
+      fullPath: '/admin/organization/$id'
+      preLoaderRoute: typeof appuserAdminOrganizationIdRouteImport
+      parentRoute: typeof appuserAdminRouteRoute
     }
-    '/app/$organizationId/property/$propertyId/edit': {
-      id: '/app/$organizationId/property/$propertyId/edit'
+    '/(app)/$organizationId/property/$propertyId/edit': {
+      id: '/(app)/$organizationId/property/$propertyId/edit'
       path: '/edit'
-      fullPath: '/app/$organizationId/property/$propertyId/edit'
-      preLoaderRoute: typeof AppOrganizationIdPropertyPropertyIdEditRouteImport
-      parentRoute: typeof AppOrganizationIdPropertyPropertyIdRoute
+      fullPath: '/$organizationId/property/$propertyId/edit'
+      preLoaderRoute: typeof appOrganizationIdPropertyPropertyIdEditRouteImport
+      parentRoute: typeof appOrganizationIdPropertyPropertyIdRoute
     }
   }
 }
+
+interface appOrganizationIdownerRouteRouteChildren {
+  appOrganizationIdownerSettingsRoute: typeof appOrganizationIdownerSettingsRoute
+}
+
+const appOrganizationIdownerRouteRouteChildren: appOrganizationIdownerRouteRouteChildren =
+  {
+    appOrganizationIdownerSettingsRoute: appOrganizationIdownerSettingsRoute,
+  }
+
+const appOrganizationIdownerRouteRouteWithChildren =
+  appOrganizationIdownerRouteRoute._addFileChildren(
+    appOrganizationIdownerRouteRouteChildren,
+  )
+
+interface appOrganizationIdPropertyPropertyIdRouteChildren {
+  appOrganizationIdPropertyPropertyIdEditRoute: typeof appOrganizationIdPropertyPropertyIdEditRoute
+}
+
+const appOrganizationIdPropertyPropertyIdRouteChildren: appOrganizationIdPropertyPropertyIdRouteChildren =
+  {
+    appOrganizationIdPropertyPropertyIdEditRoute:
+      appOrganizationIdPropertyPropertyIdEditRoute,
+  }
+
+const appOrganizationIdPropertyPropertyIdRouteWithChildren =
+  appOrganizationIdPropertyPropertyIdRoute._addFileChildren(
+    appOrganizationIdPropertyPropertyIdRouteChildren,
+  )
+
+interface appOrganizationIdPropertyRouteRouteChildren {
+  appOrganizationIdPropertyPropertyIdRoute: typeof appOrganizationIdPropertyPropertyIdRouteWithChildren
+  appOrganizationIdPropertyCreateRoute: typeof appOrganizationIdPropertyCreateRoute
+  appOrganizationIdPropertyImportRoute: typeof appOrganizationIdPropertyImportRoute
+  appOrganizationIdPropertySearchRoute: typeof appOrganizationIdPropertySearchRoute
+  appOrganizationIdPropertyIndexRoute: typeof appOrganizationIdPropertyIndexRoute
+}
+
+const appOrganizationIdPropertyRouteRouteChildren: appOrganizationIdPropertyRouteRouteChildren =
+  {
+    appOrganizationIdPropertyPropertyIdRoute:
+      appOrganizationIdPropertyPropertyIdRouteWithChildren,
+    appOrganizationIdPropertyCreateRoute: appOrganizationIdPropertyCreateRoute,
+    appOrganizationIdPropertyImportRoute: appOrganizationIdPropertyImportRoute,
+    appOrganizationIdPropertySearchRoute: appOrganizationIdPropertySearchRoute,
+    appOrganizationIdPropertyIndexRoute: appOrganizationIdPropertyIndexRoute,
+  }
+
+const appOrganizationIdPropertyRouteRouteWithChildren =
+  appOrganizationIdPropertyRouteRoute._addFileChildren(
+    appOrganizationIdPropertyRouteRouteChildren,
+  )
+
+interface appOrganizationIdRouteRouteChildren {
+  appOrganizationIdownerRouteRoute: typeof appOrganizationIdownerRouteRouteWithChildren
+  appOrganizationIdPropertyRouteRoute: typeof appOrganizationIdPropertyRouteRouteWithChildren
+  appOrganizationIdIndexRoute: typeof appOrganizationIdIndexRoute
+}
+
+const appOrganizationIdRouteRouteChildren: appOrganizationIdRouteRouteChildren =
+  {
+    appOrganizationIdownerRouteRoute:
+      appOrganizationIdownerRouteRouteWithChildren,
+    appOrganizationIdPropertyRouteRoute:
+      appOrganizationIdPropertyRouteRouteWithChildren,
+    appOrganizationIdIndexRoute: appOrganizationIdIndexRoute,
+  }
+
+const appOrganizationIdRouteRouteWithChildren =
+  appOrganizationIdRouteRoute._addFileChildren(
+    appOrganizationIdRouteRouteChildren,
+  )
+
+interface appAccountRouteRouteChildren {
+  appAccountIndexRoute: typeof appAccountIndexRoute
+}
+
+const appAccountRouteRouteChildren: appAccountRouteRouteChildren = {
+  appAccountIndexRoute: appAccountIndexRoute,
+}
+
+const appAccountRouteRouteWithChildren = appAccountRouteRoute._addFileChildren(
+  appAccountRouteRouteChildren,
+)
+
+interface appuserAdminRouteRouteChildren {
+  appuserAdminIndexRoute: typeof appuserAdminIndexRoute
+  appuserAdminOrganizationIdRoute: typeof appuserAdminOrganizationIdRoute
+  appuserAdminOrganizationCreateRoute: typeof appuserAdminOrganizationCreateRoute
+  appuserAdminOrganizationIndexRoute: typeof appuserAdminOrganizationIndexRoute
+}
+
+const appuserAdminRouteRouteChildren: appuserAdminRouteRouteChildren = {
+  appuserAdminIndexRoute: appuserAdminIndexRoute,
+  appuserAdminOrganizationIdRoute: appuserAdminOrganizationIdRoute,
+  appuserAdminOrganizationCreateRoute: appuserAdminOrganizationCreateRoute,
+  appuserAdminOrganizationIndexRoute: appuserAdminOrganizationIndexRoute,
+}
+
+const appuserAdminRouteRouteWithChildren =
+  appuserAdminRouteRoute._addFileChildren(appuserAdminRouteRouteChildren)
+
+interface appRouteRouteChildren {
+  appOrganizationIdRouteRoute: typeof appOrganizationIdRouteRouteWithChildren
+  appAccountRouteRoute: typeof appAccountRouteRouteWithChildren
+  appIndexRoute: typeof appIndexRoute
+  appuserAdminRouteRoute: typeof appuserAdminRouteRouteWithChildren
+}
+
+const appRouteRouteChildren: appRouteRouteChildren = {
+  appOrganizationIdRouteRoute: appOrganizationIdRouteRouteWithChildren,
+  appAccountRouteRoute: appAccountRouteRouteWithChildren,
+  appIndexRoute: appIndexRoute,
+  appuserAdminRouteRoute: appuserAdminRouteRouteWithChildren,
+}
+
+const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
+  appRouteRouteChildren,
+)
 
 interface AuthRouteRouteChildren {
   AuthSignInRoute: typeof AuthSignInRoute
@@ -540,129 +636,9 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
-interface AppOrganizationIdownerRouteRouteChildren {
-  AppOrganizationIdownerSettingsRoute: typeof AppOrganizationIdownerSettingsRoute
-}
-
-const AppOrganizationIdownerRouteRouteChildren: AppOrganizationIdownerRouteRouteChildren =
-  {
-    AppOrganizationIdownerSettingsRoute: AppOrganizationIdownerSettingsRoute,
-  }
-
-const AppOrganizationIdownerRouteRouteWithChildren =
-  AppOrganizationIdownerRouteRoute._addFileChildren(
-    AppOrganizationIdownerRouteRouteChildren,
-  )
-
-interface AppOrganizationIdPropertyPropertyIdRouteChildren {
-  AppOrganizationIdPropertyPropertyIdEditRoute: typeof AppOrganizationIdPropertyPropertyIdEditRoute
-}
-
-const AppOrganizationIdPropertyPropertyIdRouteChildren: AppOrganizationIdPropertyPropertyIdRouteChildren =
-  {
-    AppOrganizationIdPropertyPropertyIdEditRoute:
-      AppOrganizationIdPropertyPropertyIdEditRoute,
-  }
-
-const AppOrganizationIdPropertyPropertyIdRouteWithChildren =
-  AppOrganizationIdPropertyPropertyIdRoute._addFileChildren(
-    AppOrganizationIdPropertyPropertyIdRouteChildren,
-  )
-
-interface AppOrganizationIdPropertyRouteRouteChildren {
-  AppOrganizationIdPropertyPropertyIdRoute: typeof AppOrganizationIdPropertyPropertyIdRouteWithChildren
-  AppOrganizationIdPropertyCreateRoute: typeof AppOrganizationIdPropertyCreateRoute
-  AppOrganizationIdPropertyImportRoute: typeof AppOrganizationIdPropertyImportRoute
-  AppOrganizationIdPropertySearchRoute: typeof AppOrganizationIdPropertySearchRoute
-  AppOrganizationIdPropertyIndexRoute: typeof AppOrganizationIdPropertyIndexRoute
-}
-
-const AppOrganizationIdPropertyRouteRouteChildren: AppOrganizationIdPropertyRouteRouteChildren =
-  {
-    AppOrganizationIdPropertyPropertyIdRoute:
-      AppOrganizationIdPropertyPropertyIdRouteWithChildren,
-    AppOrganizationIdPropertyCreateRoute: AppOrganizationIdPropertyCreateRoute,
-    AppOrganizationIdPropertyImportRoute: AppOrganizationIdPropertyImportRoute,
-    AppOrganizationIdPropertySearchRoute: AppOrganizationIdPropertySearchRoute,
-    AppOrganizationIdPropertyIndexRoute: AppOrganizationIdPropertyIndexRoute,
-  }
-
-const AppOrganizationIdPropertyRouteRouteWithChildren =
-  AppOrganizationIdPropertyRouteRoute._addFileChildren(
-    AppOrganizationIdPropertyRouteRouteChildren,
-  )
-
-interface AppOrganizationIdRouteRouteChildren {
-  AppOrganizationIdownerRouteRoute: typeof AppOrganizationIdownerRouteRouteWithChildren
-  AppOrganizationIdPropertyRouteRoute: typeof AppOrganizationIdPropertyRouteRouteWithChildren
-  AppOrganizationIdIndexRoute: typeof AppOrganizationIdIndexRoute
-}
-
-const AppOrganizationIdRouteRouteChildren: AppOrganizationIdRouteRouteChildren =
-  {
-    AppOrganizationIdownerRouteRoute:
-      AppOrganizationIdownerRouteRouteWithChildren,
-    AppOrganizationIdPropertyRouteRoute:
-      AppOrganizationIdPropertyRouteRouteWithChildren,
-    AppOrganizationIdIndexRoute: AppOrganizationIdIndexRoute,
-  }
-
-const AppOrganizationIdRouteRouteWithChildren =
-  AppOrganizationIdRouteRoute._addFileChildren(
-    AppOrganizationIdRouteRouteChildren,
-  )
-
-interface AppAccountRouteRouteChildren {
-  AppAccountIndexRoute: typeof AppAccountIndexRoute
-}
-
-const AppAccountRouteRouteChildren: AppAccountRouteRouteChildren = {
-  AppAccountIndexRoute: AppAccountIndexRoute,
-}
-
-const AppAccountRouteRouteWithChildren = AppAccountRouteRoute._addFileChildren(
-  AppAccountRouteRouteChildren,
-)
-
-interface AppuserAdminRouteRouteChildren {
-  AppuserAdminIndexRoute: typeof AppuserAdminIndexRoute
-  AppuserAdminOrganizationIdRoute: typeof AppuserAdminOrganizationIdRoute
-  AppuserAdminOrganizationCreateRoute: typeof AppuserAdminOrganizationCreateRoute
-  AppuserAdminOrganizationIndexRoute: typeof AppuserAdminOrganizationIndexRoute
-}
-
-const AppuserAdminRouteRouteChildren: AppuserAdminRouteRouteChildren = {
-  AppuserAdminIndexRoute: AppuserAdminIndexRoute,
-  AppuserAdminOrganizationIdRoute: AppuserAdminOrganizationIdRoute,
-  AppuserAdminOrganizationCreateRoute: AppuserAdminOrganizationCreateRoute,
-  AppuserAdminOrganizationIndexRoute: AppuserAdminOrganizationIndexRoute,
-}
-
-const AppuserAdminRouteRouteWithChildren =
-  AppuserAdminRouteRoute._addFileChildren(AppuserAdminRouteRouteChildren)
-
-interface AppRouteRouteChildren {
-  AppOrganizationIdRouteRoute: typeof AppOrganizationIdRouteRouteWithChildren
-  AppAccountRouteRoute: typeof AppAccountRouteRouteWithChildren
-  AppIndexRoute: typeof AppIndexRoute
-  AppuserAdminRouteRoute: typeof AppuserAdminRouteRouteWithChildren
-}
-
-const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppOrganizationIdRouteRoute: AppOrganizationIdRouteRouteWithChildren,
-  AppAccountRouteRoute: AppAccountRouteRouteWithChildren,
-  AppIndexRoute: AppIndexRoute,
-  AppuserAdminRouteRoute: AppuserAdminRouteRouteWithChildren,
-}
-
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
-  AppRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  AppRouteRoute: AppRouteRouteWithChildren,
   LlmsDottxtRoute: LlmsDottxtRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

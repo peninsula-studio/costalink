@@ -75,7 +75,7 @@ export function CreateOrganizationForm({
       toast.success(`Organización creada`, {
         description: `Organización "${name}" con ruta "${slug}" creada con éxito`,
       });
-      await navigate({ to: "/app" });
+      await navigate({ to: "/" });
     },
   });
 

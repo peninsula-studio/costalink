@@ -4,7 +4,7 @@ import { admin, organization } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { serverEnv } from "@/env.server";
 import { db } from "@/lib/db";
-import { getInitialOrganization } from "@/lib/db/get-initial-organization";
+// import { getInitialOrganization } from "@/lib/db/get-initial-organization";
 import * as schema from "@/lib/db/schema";
 
 export const auth = betterAuth({

@@ -50,7 +50,7 @@ export const adminRequiredMiddleware = createMiddleware()
   .server(async ({ next, context, pathname }) => {
     console.info(`Checking if user is Admin at ${pathname}`);
     if (context.session.user.role !== "admin") {
-      throw redirect({ to: "/app" });
+      throw redirect({ to: "/" });
     }
     return next({ context });
   });
@@ -62,7 +62,7 @@ export const hasActiveOrganizationMiddleware = createMiddleware({
   .server(async ({ next, context }) => {
     console.log("Checking if user has active Organization...");
     if (!context.session.session.activeOrganizationId) {
-      throw redirect({ to: "/app" });
+      throw redirect({ to: "/" });
     }
     return next({ context });
   });

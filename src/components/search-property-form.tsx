@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
@@ -42,7 +42,7 @@ export const searchPropertySchema = z.object({
 
 export function SearchPropertyForm() {
   const searchParams = useSearch({
-    from: "/app/$organizationId/property/search",
+    from: "/(app)/$organizationId/property/search",
   });
 
   const navigate = useNavigate();

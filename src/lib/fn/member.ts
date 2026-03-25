@@ -19,7 +19,7 @@ export const getActiveMemberFn = createServerFn()
       });
       if (!member) {
         console.error("Not a member of the organization");
-        throw redirect({ to: "/app" });
+        throw redirect({ to: "/" });
       }
       console.info("🔷", "Getting info for:\n", "Name:", member.user.name);
       return member;
@@ -30,7 +30,7 @@ export const getActiveMemberFn = createServerFn()
       console.error(
         `fn: Error getting active member: ${(error as Error).message}`,
       );
-      throw redirect({ to: "/app" });
+      throw redirect({ to: "/" });
     }
   });
 
