@@ -1,23 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  Link,
-  type LinkOptions,
-  linkOptions,
-  useMatch,
-  useParams,
-} from "@tanstack/react-router";
-import {
-  BinocularsIcon,
-  Building2,
-  ChevronRight,
-  HousePlus,
-  ImportIcon,
-  type LucideIcon,
-  SettingsIcon,
-  TableIcon,
-  UsersIcon,
-} from "lucide-react";
-import type { ComponentProps } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -40,10 +20,30 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@repo/ui/components/sidebar";
+import { cn } from "@repo/ui/lib/utils";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  Link,
+  type LinkOptions,
+  linkOptions,
+  useMatch,
+  useParams,
+} from "@tanstack/react-router";
+import {
+  BinocularsIcon,
+  Building2,
+  ChevronRight,
+  HousePlus,
+  ImportIcon,
+  type LucideIcon,
+  SettingsIcon,
+  TableIcon,
+  UsersIcon,
+} from "lucide-react";
+import type { ComponentProps } from "react";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { getActiveMemberQueryOptions } from "@/lib/fn/member";
 import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
-import { cn } from "@repo/ui/lib/utils";
 import { NavUser } from "./nav-user";
 
 type SidebarItem = {
