@@ -5,8 +5,10 @@ dist-ssr
 *.local
 count.txt
 .env
+.next
 .nitro
+.tanstack
 .wrangler
 .output
+.vinxi
 todos.json
-.turbo
