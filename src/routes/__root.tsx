@@ -11,6 +11,7 @@ import type { MyRouterContext } from "@/router";
 import appCss from "@/styles/globals.css?url";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  ssr: "data-only",
   head: () => ({
     meta: [
       { charSet: "utf-8" },

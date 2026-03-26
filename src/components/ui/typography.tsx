@@ -7,7 +7,10 @@ function TypographyH1({
   ...props
 }: React.ComponentProps<"h1">) {
   return (
-    <h1 className={cn("font-medium text-5xl", className)} {...props}>
+    <h1
+      className={cn("font-heading font-medium text-5xl", className)}
+      {...props}
+    >
       {children}
     </h1>
   );
@@ -19,7 +22,10 @@ function TypographyH2({
   ...props
 }: React.ComponentProps<"h2">) {
   return (
-    <h2 className={cn("font-medium text-4xl", className)} {...props}>
+    <h2
+      className={cn("font-heading font-medium text-4xl", className)}
+      {...props}
+    >
       {children}
     </h2>
   );
@@ -31,7 +37,10 @@ function TypographyH3({
   ...props
 }: React.ComponentProps<"h3">) {
   return (
-    <h3 className={cn("font-medium text-3xl", className)} {...props}>
+    <h3
+      className={cn("font-heading font-medium text-3xl", className)}
+      {...props}
+    >
       {children}
     </h3>
   );
@@ -43,7 +52,10 @@ function TypographyH4({
   ...props
 }: React.ComponentProps<"h4">) {
   return (
-    <h4 className={cn("font-medium text-2xl", className)} {...props}>
+    <h4
+      className={cn("font-heading font-medium text-2xl", className)}
+      {...props}
+    >
       {children}
     </h4>
   );
@@ -55,7 +67,10 @@ function TypographyH5({
   ...props
 }: React.ComponentProps<"h5">) {
   return (
-    <h5 className={cn("font-medium text-xl", className)} {...props}>
+    <h5
+      className={cn("font-heading font-medium text-xl", className)}
+      {...props}
+    >
       {children}
     </h5>
   );
@@ -67,7 +82,10 @@ function TypographyH6({
   ...props
 }: React.ComponentProps<"h6">) {
   return (
-    <h6 className={cn("font-medium text-lg", className)} {...props}>
+    <h6
+      className={cn("font-heading font-medium text-lg", className)}
+      {...props}
+    >
       {children}
     </h6>
   );

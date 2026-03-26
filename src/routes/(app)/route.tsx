@@ -4,7 +4,6 @@ import { getSessionQueryOptions } from "@/lib/fn/auth";
 import { authMiddleware } from "@/lib/middleware/auth";
 
 export const Route = createFileRoute("/(app)")({
-  ssr: "data-only",
   server: { middleware: [authMiddleware] },
   beforeLoad: async ({ context, routeId }) => {
     await context.queryClient.ensureQueryData(getSessionQueryOptions());
