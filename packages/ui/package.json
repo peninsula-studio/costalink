@@ -11,7 +11,6 @@
     "ui": "pnpm dlx shadcn@latest"
   },
   "dependencies": {
-    "@repo/web": "workspace:*",
     "@base-ui/react": "catalog:",
     "@icons-pack/react-simple-icons": "catalog:",
     "@tanstack/react-form-start": "catalog:",

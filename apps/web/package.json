@@ -17,11 +17,11 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
     "@base-ui/react": "catalog:",
     "@better-auth/drizzle-adapter": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@neondatabase/serverless": "catalog:",
+    "@repo/ui": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-devtools": "catalog:",
@@ -59,6 +59,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
+    "@cloudflare/vite-plugin": "catalog:",
     "@fontsource-variable/inter": "catalog:",
     "@fontsource-variable/inter-tight": "catalog:",
     "@fontsource-variable/playfair-display": "catalog:",
@@ -75,6 +76,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "web-vitals": "catalog:"
+    "web-vitals": "catalog:",
+    "wrangler": "catalog:"
   }
 }
