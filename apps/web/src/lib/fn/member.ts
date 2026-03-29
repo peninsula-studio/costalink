@@ -1,13 +1,13 @@
+import { auth } from "@repo/auth";
+import type { organizationSelectSchema } from "@repo/types/schemas/organization";
+import { MEMBER_ROLE_ENUM } from "@repo/db/schema";
 import { queryOptions } from "@tanstack/react-query";
 import { isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
-import { auth } from "@/lib/auth";
-import { MEMBER_ROLE_ENUM } from "@/lib/db/schema";
 import { memberKeys } from "@/lib/fn/keys";
-import type { organizationSelectSchema } from "../zod/schemas/organization";
 // import { authMiddleware } from "@/lib/middleware/auth";
 
 export const getActiveMemberFn = createServerFn()

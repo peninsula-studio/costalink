@@ -8,16 +8,11 @@
     "preview": "vite preview",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "check": "biome check"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.9",
-    "turbo": "^2.8.20"
+    "turbo": "^2.8.21"
   },
   "engines": {
     "node": ">=24"

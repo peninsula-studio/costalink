@@ -1,12 +1,12 @@
+import { auth } from "@repo/auth";
+import { signUpFormSchema } from "@repo/types/schemas/auth";
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { signInFormSchema } from "@/components/sign-in-form";
-import { auth } from "@/lib/auth";
 import { userKeys } from "@/lib/fn/keys";
 import { authMiddleware } from "@/lib/middleware/auth";
-import { signUpFormSchema } from "@/lib/zod/schemas/auth";
 
 export const checkSessionCookieFn = createServerFn().handler(() => {
   const sessionCookie = getSessionCookie(getRequest());

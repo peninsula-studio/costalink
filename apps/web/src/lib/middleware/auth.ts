@@ -1,9 +1,9 @@
+import { auth } from "@repo/auth/index";
 import { isRedirect, redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
-import { auth } from "@/lib/auth";
 
 export const sessionCookieMiddleware = createMiddleware().server(
   async ({ next, request }) => {

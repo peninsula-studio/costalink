@@ -16,6 +16,19 @@
       ],
       "env": ["SERVER_*", "VITE_*"]
     },
+    "deploy": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [
+        "dist/**",
+        ".vercel/**",
+        ".nitro/**",
+        ".wrangler/**",
+        ".output/**",
+        ".tanstack/**"
+      ],
+      "env": ["SERVER_*", "VITE_*"]
+    },
     "//#quality": {
       "dependsOn": ["//#lint", "//#format"]
     },

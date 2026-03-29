@@ -1,4 +1,3 @@
-import { Bath, BedDouble, Expand, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@repo/ui/components/card";
 import {
   Item,
@@ -6,16 +5,27 @@ import {
   ItemMedia,
   ItemSeparator,
 } from "@repo/ui/components/item";
+import { cn } from "@repo/ui/lib/utils";
+import { Bath, BedDouble, Expand, MapPin } from "lucide-react";
+import type { ComponentProps } from "react";
 import type { property } from "@/lib/db/schema";
 import { formatPrice } from "@/lib/i18n/format";
 
 export const PropertyCard = ({
   data,
-}: {
+  className,
+  ...props
+}: ComponentProps<typeof Card> & {
   data: typeof property.$inferSelect;
 }) => {
   return (
-    <Card className="group relative w-full max-w-80 pt-0 transition-shadow hover:shadow-3xl">
+    <Card
+      className={cn(
+        "group relative pt-0 transition-shadow hover:shadow-3xl",
+        className,
+      )}
+      {...props}
+    >
       <CardHeader className="overflow-hidden p-0">
         <img
           alt="Serenity Residential Home"
@@ -63,7 +73,9 @@ export const PropertyCard = ({
                 <Expand />
               </ItemMedia>
               <ItemContent className="whitespace-nowrap">
-                {data.surfaceArea.built} m<sup>2</sup>
+                <span>
+                  {data.surfaceArea.built} m<sup>2</sup>
+                </span>
               </ItemContent>
             </Item>
           )}

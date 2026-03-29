@@ -1,13 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { CheckIcon, XCircle } from "lucide-react";
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import slugify from "slugify";
-import { toast } from "sonner";
-import z from "zod";
-import { InputValidCheck } from "@/components/input-valid-check";
 import { Button } from "@repo/ui/components/button";
 import { Card, CardContent, CardFooter } from "@repo/ui/components/card";
 import {
@@ -22,6 +13,15 @@ import {
 } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
 import { Spinner } from "@repo/ui/components/spinner";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { CheckIcon, XCircle } from "lucide-react";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import slugify from "slugify";
+import { toast } from "sonner";
+import z from "zod";
+import { InputValidCheck } from "@/components/input-valid-check";
 import { authClient } from "@/lib/auth/client";
 import { createOrganizationMutationOptions } from "@/lib/fn/organization";
 import {

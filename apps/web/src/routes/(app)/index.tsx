@@ -1,9 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Building2, CogIcon, UserIcon } from "lucide-react";
-import { Suspense } from "react";
-import { toast } from "sonner";
-import { FlexContainer } from "@/components/container";
+import type { auth } from "@repo/auth";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -23,7 +18,12 @@ import {
 } from "@repo/ui/components/item";
 import { Skeleton } from "@repo/ui/components/skeleton";
 import { TypographyH5 } from "@repo/ui/components/typography";
-import type { auth } from "@/lib/auth";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { Building2, CogIcon, UserIcon } from "lucide-react";
+import { Suspense } from "react";
+import { toast } from "sonner";
+import { FlexContainer } from "@/components/container";
 import { getSessionQueryOptions } from "@/lib/fn/auth";
 import {
   getFullOrganizationQueryOptions,

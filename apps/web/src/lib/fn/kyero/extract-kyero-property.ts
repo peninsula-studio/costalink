@@ -1,9 +1,12 @@
 // biome-ignore-all lint: file not being used
 
+import { i18nStringSchema, LOCALES } from "@repo/types/schemas/i18n";
+import {
+  kyeroImageSchema,
+  kyeroPropertySchema,
+} from "@repo/types/schemas/kyero";
 import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
-import { i18nStringSchema, LOCALES } from "@/lib/i18n/schema";
-import { kyeroImageSchema, kyeroPropertySchema } from "./schemas";
 
 // --- Extraction Function ---
 
@@ -97,6 +100,7 @@ export function extractKyeroProperties(
         location_detail: rawProp.location_detail,
         beds: Number(rawProp.beds),
         baths: Number(rawProp.baths),
+        organization_id: "", // TODO: Pending fixing the organization id for the property
         pool: toBool(rawProp.pool),
         part_ownership: toBool(rawProp.part_ownership),
         leasehold: toBool(rawProp.leasehold),

@@ -1,0 +1,36 @@
+{
+  "name": "@repo/db",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:pull": "drizzle-kit pull",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@repo/env": "workspace:*",
+    "@repo/types": "workspace:*",
+    "dotenv": "catalog:",
+    "pg": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "@types/pg": "catalog:",
+    "typescript": "catalog:"
+  },
+
+  "peerDependencies": {
+    "drizzle-kit": "catalog:",
+    "drizzle-orm": "catalog:"
+  }
+}

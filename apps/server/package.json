@@ -1,15 +1,35 @@
 {
-  "name": "server",
+  "name": "@repo/server",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
+  "exports": {
+    "./hc": "./src/hc.ts",
+    "./db/*": "./src/db/*",
+    "./auth/*": "./src/auth/*.ts",
+    "./env/*": "./src/env/*.ts",
+    "./schemas/*": "./src/schemas/*.ts"
+  },
   "dependencies": {
-    "hono": "^4.12.9"
+    "@repo/auth": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/env": "workspace:*",
+    "@better-auth/drizzle-adapter": "catalog:",
+    "better-auth": "catalog:",
+    "@t3-oss/env-core": "catalog:",
+    "hono": "^4.12.9",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "wrangler": "^4.77.0"
+    "@repo/config": "workspace:*",
+    "dotenv": "catalog:",
+    "drizzle-kit": "catalog:",
+    "postgres": "catalog:",
+    "tsx": "catalog:",
+    "wrangler": "catalog:"
   }
 }

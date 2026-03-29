@@ -1,5 +1,5 @@
+import type { auth } from "@repo/auth";
 import * as React from "react";
-import type { auth } from "@/lib/auth";
 
 type ActiveOrganization =
   | typeof auth.$Infer.ActiveOrganization

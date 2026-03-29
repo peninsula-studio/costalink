@@ -1,16 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowRightIcon,
-  FolderCode,
-  HousePlusIcon,
-  ImportIcon,
-  PlusIcon,
-} from "lucide-react";
-import { Suspense } from "react";
-import { PageContainer } from "@/components/container";
-import { PropertyCard } from "@/components/property-card";
-import { RouteSkeleton } from "@/components/route-skeleton";
 import { Button } from "@repo/ui/components/button";
 import {
   Card,
@@ -28,12 +15,30 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@repo/ui/components/empty";
-import { Item, ItemContent, ItemHeader, ItemMedia } from "@repo/ui/components/item";
+import {
+  Item,
+  ItemContent,
+  ItemHeader,
+  ItemMedia,
+} from "@repo/ui/components/item";
 import {
   TypographyH2,
   TypographyH4,
   TypographyLarge,
 } from "@repo/ui/components/typography";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  ArrowRightIcon,
+  FolderCode,
+  HousePlusIcon,
+  ImportIcon,
+  PlusIcon,
+} from "lucide-react";
+import { Suspense } from "react";
+import { PageContainer } from "@/components/container";
+import { PropertyCard } from "@/components/property-card";
+import { RouteSkeleton } from "@/components/route-skeleton";
 import { PLACEHOLDER_AGENCY_LOGO } from "@/lib/constants";
 import { getFullOrganizationQueryOptions } from "@/lib/fn/organization";
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
@@ -151,7 +156,6 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
         <>
           {properties.map((property) => (
             <Link
-              className="w-full min-w-40"
               key={property.id}
               params={{
                 organizationId: property.organizationId,
@@ -163,9 +167,9 @@ const PropertyGrid = ({ organizationId }: { organizationId: string }) => {
             </Link>
           ))}
 
-          <Card className="group transition-shadow hover:shadow-3xl">
-            <CardHeader>
-              <HousePlusIcon className="mx-auto size-6 stroke-primary" />
+          <Card className="group justify-between pt-0 transition-shadow hover:shadow-3xl">
+            <CardHeader className="flex aspect-video h-full items-center bg-linear-0 from-card/0 to-card-foreground/10">
+              <HousePlusIcon className="mx-auto aspect-square h-full max-h-1/4 min-h-8 w-auto stroke-1 stroke-primary" />
             </CardHeader>
             <CardContent>
               <CardTitle className="text-lg">Add more properties</CardTitle>

@@ -64,7 +64,7 @@
 @theme inline {
   --topnav-h: 3rem;
   --text-lg: 1.125rem;
-  --text-lg--line-height: calc(1.75 / 1.125);
+  --text-lg--line-height: calc(1.75 / 1.25);
   --text-xl: 1.266rem;
   --text-xl--line-height: calc(1.75 / 1.266);
   --text-2xl: 1.424rem;

@@ -10,18 +10,19 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "deploy": "vite build && wrangler deploy"
   },
   "dependencies": {
+    "@repo/types": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@repo/env": "workspace:*",
+    "@repo/auth": "workspace:*",
     "@base-ui/react": "catalog:",
     "@better-auth/drizzle-adapter": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@neondatabase/serverless": "catalog:",
-    "@repo/ui": "workspace:*",
+    "@repo/server": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-devtools": "catalog:",
@@ -37,8 +38,6 @@
     "better-auth": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
-    "drizzle-kit": "catalog:",
-    "drizzle-orm": "catalog:",
     "fast-xml-parser": "catalog:",
     "lucide-react": "catalog:",
     "next-themes": "catalog:",
@@ -58,6 +57,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@repo/config": "workspace:*",
     "@biomejs/biome": "catalog:",
     "@cloudflare/vite-plugin": "catalog:",
     "@fontsource-variable/inter": "catalog:",
@@ -78,5 +78,9 @@
     "vitest": "catalog:",
     "web-vitals": "catalog:",
     "wrangler": "catalog:"
+  },
+  "peerDependencies": {
+    "drizzle-kit": "catalog:",
+    "drizzle-orm": "catalog:"
   }
 }
