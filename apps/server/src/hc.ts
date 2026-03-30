@@ -1,9 +1,8 @@
 import { hc } from "hono/client";
 import type { app } from "@/app";
 
-// assign the client to a variable to calculate the type when compiling
-const client = hc<typeof app>("");
-export type Client = typeof client;
+// this is a trick to calculate the type when compiling
+export type Client = ReturnType<typeof hc<typeof app>>;
 
 export const hcWithType = (...args: Parameters<typeof hc>): Client =>
   hc<typeof app>(...args);

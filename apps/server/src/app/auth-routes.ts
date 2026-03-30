@@ -6,7 +6,7 @@ import type { AppEnv } from ".";
 export const authRoutes = new Hono<AppEnv>();
 
 authRoutes.use(
-  "/api/auth/*", // or replace with "*" to enable cors for all routes
+  "*", // or replace with "*" to enable cors for all routes
   cors({
     origin: "http://localhost:3001", // replace with your origin
     allowHeaders: ["Content-Type", "Authorization"],
@@ -17,4 +17,4 @@ authRoutes.use(
   }),
 );
 
-authRoutes.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+authRoutes.on(["POST", "GET"], "*", (c) => auth.handler(c.req.raw));

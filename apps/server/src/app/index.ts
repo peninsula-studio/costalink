@@ -53,4 +53,4 @@ authRoutes.get("/session", async (c) => {
   // const session = await auth.api.getSession({ headers: c.req.raw.headers });
 });
 
-app.route("/", authRoutes);
+app.route("/api/auth", authRoutes);
