@@ -1,11 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { Link, useRouter } from "@tanstack/react-router";
-import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
 import { Button } from "@repo/ui/components/button";
 import { Card, CardContent } from "@repo/ui/components/card";
 import { Checkbox } from "@repo/ui/components/checkbox";
@@ -26,8 +19,15 @@ import {
 } from "@repo/ui/components/input-group";
 import { Spinner } from "@repo/ui/components/spinner";
 import { TypographyH1 } from "@repo/ui/components/typography";
-import { signInMutationOptions } from "@/lib/fn/auth";
 import { cn } from "@repo/ui/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useRouter } from "@tanstack/react-router";
+import { CheckIcon, Eye, EyeClosed, XCircle } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import { signInMutationOptions } from "@/lib/fn/auth";
 import { emailSchema } from "@/lib/zod/schemas/auth";
 
 export const signInFormSchema = z.object({
@@ -79,7 +79,7 @@ export function SignInForm({
             onSubmit={handleSubmit(
               async (data) =>
                 await mutateAsync(
-                  { data },
+                  { ...data },
                   {
                     onError: (e) => {
                       const message =

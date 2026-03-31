@@ -10,6 +10,7 @@ import { admin, openAPI, organization } from "better-auth/plugins";
 // import { serverEnv } from "@/env/server";
 
 export const auth = betterAuth({
+  // basePath: "/api/auth",
   database: drizzleAdapter(db, {
     schema: schema,
     provider: "pg", // or "pg" or "mysql"
@@ -97,6 +98,7 @@ export const auth = betterAuth({
     // Development mode - Expo's exp:// scheme with local IP ranges
     ...(process.env.NODE_ENV === "development"
       ? [
+          "*",
           "exp://", // Trust all Expo URLs (prefix matching)
           "exp://**", // Trust all Expo URLs (wildcard matching)
           "exp://192.168.*.*:*/**", // Trust 192.168.x.x IP range with any port and path

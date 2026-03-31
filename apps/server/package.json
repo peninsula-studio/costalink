@@ -15,12 +15,13 @@
     "./schemas/*": "./src/schemas/*.ts"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "catalog:",
+    "@hono/zod-validator": "catalog:",
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/env": "workspace:*",
-    "@better-auth/drizzle-adapter": "catalog:",
-    "better-auth": "catalog:",
     "@t3-oss/env-core": "catalog:",
+    "better-auth": "catalog:",
     "hono": "^4.12.9",
     "zod": "catalog:"
   },

@@ -4,6 +4,7 @@ import { createMiddleware } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
+import { honoClient } from "../server/hono-client";
 
 export const sessionCookieMiddleware = createMiddleware().server(
   async ({ next, request }) => {
@@ -21,6 +22,8 @@ export const sessionCookieMiddleware = createMiddleware().server(
 export const authMiddleware = createMiddleware().server(
   async ({ next, pathname }) => {
     try {
+      // const res = await honoClient["get-session"].$get();
+      // const session = await res.json();
       const session = await auth.api.getSession({
         headers: getRequestHeaders(),
       });
