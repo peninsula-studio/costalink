@@ -12,13 +12,15 @@
     "lint": "expo lint"
   },
   "dependencies": {
-    "@repo/server": "workspace:*",
-    "@repo/auth": "workspace:*",
     "@better-auth/expo": "catalog:",
     "@react-native-masked-view/masked-view": "catalog:",
     "@react-navigation/bottom-tabs": "7.15.5",
+    "@react-navigation/drawer": "catalog:",
     "@react-navigation/elements": "2.9.10",
     "@react-navigation/native": "7.1.33",
+    "@repo/auth": "workspace:*",
+    "@repo/server": "workspace:*",
+    "@shopify/flash-list": "catalog:",
     "@tanstack/react-query": "catalog:",
     "better-auth": "catalog:",
     "expo": "~55.0.9",

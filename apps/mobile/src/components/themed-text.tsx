@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   default: {
     fontSize: 16,
-    lineHeight: 20,
+    // lineHeight: 20,
     fontWeight: 500,
   },
   hero: {

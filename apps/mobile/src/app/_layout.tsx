@@ -5,6 +5,7 @@ import {
 } from "@react-navigation/native";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { SplashScreen, Stack } from "expo-router";
+import { Drawer } from "expo-router/drawer";
 import React from "react";
 import { useColorScheme } from "react-native";
 // import { AnimatedSplashOverlay } from "@/components/animated-icon";
@@ -33,11 +34,16 @@ export default function TabLayout() {
           <Stack>
             <Stack.Screen.BackButton hidden />
             <Stack.Header hidden />
-            <Stack.Protected guard={session !== null}>
+            <Stack.Protected guard={!!session}>
               {/* <Stack.Screen name="index" /> */}
               <Stack.Screen name="(protected)" />
             </Stack.Protected>
-            <Stack.Screen name="sign-in" />
+            <Stack.Protected guard={!session}>
+              <Stack.Screen
+                name="sign-in"
+                options={{ presentation: "pageSheet" }}
+              />
+            </Stack.Protected>
           </Stack>
           {/* <AnimatedSplashOverlay /> */}
           {/* <Slot /> */}

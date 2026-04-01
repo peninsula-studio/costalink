@@ -1,5 +1,7 @@
+import { Stack } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
+import { Screen } from "react-native-screens";
 import { useAuthContext } from "@/components/auth-provider";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -38,6 +40,7 @@ export default function SignIn() {
           <TextInput
             onChangeText={setPassword}
             placeholder="Password"
+            secureTextEntry={true}
             style={styles.textInput}
             value={password}
           />

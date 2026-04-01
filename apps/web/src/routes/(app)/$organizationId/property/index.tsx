@@ -45,6 +45,7 @@ import {
   deletePropertyMutationOptions,
   getOrganizationPropertyListQueryOptions,
 } from "@/lib/fn/property";
+import { honoClient } from "@/lib/server/hono-client";
 
 const routeParamSchema = z.object({
   search: z.string().optional(),
@@ -288,13 +289,24 @@ function ResultTable() {
 
   const navigate = Route.useNavigate();
 
-  const { data: organizationProperties } = useSuspenseQuery(
-    getOrganizationPropertyListQueryOptions({
-      organizationId: organizationId,
-      page,
-      pageSize,
-    }),
-  );
+  // const { data: organizationProperties } = useSuspenseQuery(
+  //   getOrganizationPropertyListQueryOptions({
+  //     organizationId: organizationId,
+  //     page,
+  //     pageSize,
+  //   }),
+  // );
+
+  const { data: organizationProperties } = useSuspenseQuery({
+    queryKey: ["properties"],
+    queryFn: async () => {
+      const res = await honoClient.organization[":id"].properties[":pageSize?"][
+        ":page?"
+      ].$get({ param: { id: organizationId } });
+      const data = await res.json();
+      return data;
+    },
+  });
 
   const filteredProperties = organizationProperties.filter((property) => {
     const matchesSearch =

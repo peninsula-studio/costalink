@@ -1,48 +1,74 @@
-import { useQuery } from "@tanstack/react-query";
+import { FlashList } from "@shopify/flash-list";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
+import { MaxContentWidth, Spacing } from "@/constants/theme";
 import { honoClient } from "@/lib/hono-client";
+import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function Page() {
-  const { data: properties } = useQuery({
+  return (
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <React.Suspense fallback={<Text>Loading...</Text>}>
+          <PropertyList />
+        </React.Suspense>
+      </SafeAreaView>
+    </View>
+  );
+}
+
+function PropertyList() {
+  // const { data: session } = authClient.useSession();
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+  const { data: properties } = useSuspenseQuery({
     queryKey: ["property", "list"],
     queryFn: async () => {
-      return [{ id: "alskjdflkajsdf" }];
+      const kek = await honoClient.organization[":id"].properties[
+        ":pageSize?:page?"
+      ].$get({
+        param: {
+          id: session?.session.activeOrganizationId,
+          page: 1,
+          pageSize: 10,
+        },
+      });
+      const data = await kek.json();
+      // return [{ id: "alksdjlfjk" }, sess?.session || { id: "ioweiro" }];
+      return data;
     },
   });
-
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.cardGrid}>
-          {properties ? (
-            properties.map((property) => (
-              <Card key={property.id}>
-                <CardHeader>
-                  <Image
-                    contentFit="cover"
-                    contentPosition="center"
-                    priority="high"
-                    source={require("@/assets/images/mobile-hero-image.webp")}
-                    style={styles.image}
-                  />
-                </CardHeader>
-                <CardContent>
-                  <ThemedText style={styles.cardTitle}>Hello!</ThemedText>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <ThemedText>Loading...</ThemedText>
-          )}
-        </ThemedView>
-      </SafeAreaView>
-    </ThemedView>
+    <FlashList
+      contentContainerStyle={styles.cardGrid}
+      data={properties}
+      keyExtractor={(property) => property.id}
+      renderItem={({ item }) => (
+        <Card>
+          <CardHeader>
+            <Image
+              contentFit="cover"
+              contentPosition="center"
+              priority="high"
+              // source={require("@/assets/images/mobile-hero-image.webp")}
+              source={
+                item.images?.[0].url ||
+                require("@/assets/images/mobile-hero-image.webp")
+              }
+              style={styles.image}
+            />
+          </CardHeader>
+          <CardContent>
+            <ThemedText style={styles.cardTitle}>{item.id}</ThemedText>
+          </CardContent>
+        </Card>
+      )}
+    />
   );
 }
 
@@ -54,11 +80,10 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.md,
     alignItems: "center",
     gap: Spacing.md,
-    paddingBottom: BottomTabInset + Spacing.md,
+    // paddingBottom: BottomTabInset + Spacing.md,
     maxWidth: MaxContentWidth,
   },
   image: {

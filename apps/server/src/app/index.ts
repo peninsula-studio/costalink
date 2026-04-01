@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { z } from "zod";
 import { authRoutes } from "./auth-routes";
+import { organizationRoutes } from "./organization";
 
 export type AppEnv = {
   Variables: {
@@ -16,7 +17,7 @@ export const app = new Hono<AppEnv>()
   .use(
     "*", // or replace with "*" to enable cors for all routes
     cors({
-      origin: "http://localhost:5173", // replace with your origin
+      origin: ["http://localhost:5173", "*"], // replace with your origin
       allowHeaders: ["Content-Type", "Authorization"],
       allowMethods: ["POST", "GET", "OPTIONS"],
       exposeHeaders: ["Content-Length"],
@@ -70,7 +71,8 @@ export const app = new Hono<AppEnv>()
     },
   )
 
-  .route("/api/auth", authRoutes);
+  .route("/api/auth", authRoutes)
+  .route("/", organizationRoutes);
 
 // .use(
 //   "/api/auth/*", // or replace with "*" to enable cors for all routes
