@@ -17,7 +17,7 @@ export function ThemedButton({
   variant = "primary",
   children,
   raised = false,
-  style: _,
+  style,
   size = "md",
   ...props
 }: ThemedButtonProps) {
@@ -25,7 +25,9 @@ export function ThemedButton({
 
   return (
     <Pressable
-      style={({ pressed }) => [
+      style={({ pressed, hovered }) => [
+        typeof style === "object" && style,
+        typeof style === "function" && style({ pressed, hovered }),
         styles.button,
         pressed && styles.pressedButton,
         variants[variant],
@@ -51,7 +53,8 @@ const styles = StyleSheet.create({
   },
   raised: {
     boxShadow:
-      "0px 1px 0px 0px rgba(0,0,0,0.1), -1px 0px 0px rgba(0,0,0,0.1), 1px 0px 0px rgba(0,0,0,0.1), 0px -1px 0px rgba(0,0,0,0.05)",
+      "1px 1px 0px 0px rgba(0,0,0,0.1), -1px -1px 0px rgba(0,0,0,0.03), -1px 0px 0px rgba(0,0,0,0.03)",
+    // "0px 1px 0px 0px rgba(255,255,255,0.6), -1px 0px 0px rgba(255,255,255,0.6), 1px 0px 0px rgba(255,255,255,0.6), 0px -1px 0px rgba(255,255,255,0.15)",
   },
 });
 

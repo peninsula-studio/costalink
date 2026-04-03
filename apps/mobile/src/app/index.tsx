@@ -1,24 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import type React from "react";
 import { StyleSheet, View } from "react-native";
-import Animated, {
-  type EntryAnimationsValues,
-  FadeInDown,
-  type LayoutAnimation,
-  SlideInDown,
-  type StyleProps,
-  withDelay,
-  withSpring,
-} from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Colors, Spacing, Springs } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import { authClient } from "@/lib/auth-client";
+import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function HomeScreen() {
   const theme = useTheme();

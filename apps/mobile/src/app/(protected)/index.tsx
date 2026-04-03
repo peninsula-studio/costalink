@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Header, MaxContentWidth, Spacing } from "@/constants/theme";
+import { Colors, Header, MaxContentWidth, Spacing } from "@/constants/theme";
 import { honoClient } from "@/lib/hono-client";
 import { getSessionQueryOptions } from "@/lib/queries/auth";
 

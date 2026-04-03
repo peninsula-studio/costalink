@@ -1,28 +1,21 @@
-import MaskedView from "@react-native-masked-view/masked-view";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
-import { SplashScreen, Stack } from "expo-router";
-import { Drawer } from "expo-router/drawer";
-import { StatusBar } from "expo-status-bar";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import React from "react";
-import { StyleSheet, useColorScheme, View } from "react-native";
-import { easeGradient } from "react-native-easing-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 // import { AnimatedSplashOverlay } from "@/components/animated-icon";
 // import AppTabs from "@/components/app-tabs";
 import { AuthProvider } from "@/components/auth-provider";
-import GradientMaskedBlurHeader from "@/components/gradient-masked-blur-header";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedButton } from "@/components/ui/themed-button";
-import { Header, Spacing } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/lib/query-client";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -34,8 +27,6 @@ export default function TabLayout() {
       SplashScreen.hide();
     }
   }, [isPending]);
-
-  SplashScreen.preventAutoHideAsync();
 
   return (
     <QueryClientProvider client={queryClient}>
