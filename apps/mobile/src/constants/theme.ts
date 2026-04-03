@@ -11,19 +11,21 @@ import type { SpringConfig } from "react-native-reanimated/src/animation/spring"
 export const Colors = {
   light: {
     text: "#000000",
-    background: "#ffffff",
+    // background: "#ffffff",
+    background: "rgb(239,240,246)",
     backgroundElement: "#F0F0F3",
     backgroundSelected: "#E0E1E6",
     textSecondary: "#60646C",
     primary: "rgb(0,130,255)",
     textPrimary: "rgb(255,255,255)",
-    secondary: "#9ABCCC",
+    secondary: "rgb(255,255,255)",
     destructive: "rgba(255,56,60,1)",
     destructiveForeground: "rgba(255,255,255,1)",
   },
   dark: {
     text: "#000000",
-    background: "#ffffff",
+    // background: "#ffffff",
+    background: "rgb(239,240,246)",
     backgroundElement: "#F0F0F3",
     backgroundSelected: "#E0E1E6",
     textSecondary: "#60646C",
@@ -92,6 +94,7 @@ export const Radius = {
   xxl: 26,
 } as const;
 
+export const Header = { height: 50 } as const;
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;
 

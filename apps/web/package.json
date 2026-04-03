@@ -6,7 +6,7 @@
     "./components/*": "./src/components/*.tsx"
   },
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host",
     "build": "vite build",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",

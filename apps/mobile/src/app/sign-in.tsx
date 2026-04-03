@@ -12,18 +12,25 @@ import { authClient } from "@/lib/auth-client";
 export default function SignIn() {
   const { setSession } = useAuthContext();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("jorge@peninsula.studio");
+  const [password, setPassword] = useState("Test/1234");
 
   const handleLogin = async () => {
-    const kek = await authClient.signIn.email({
-      email,
-      password,
-    });
-    if (kek.data) {
-      const sess = await authClient.getSession();
-      setSession(sess.data);
-      console.log(kek.data);
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+      });
+      if (error) {
+        console.error(error);
+      }
+      if (data) {
+        const sess = await authClient.getSession();
+        setSession(sess.data);
+        console.log(data);
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 

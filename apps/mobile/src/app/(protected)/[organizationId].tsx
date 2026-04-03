@@ -2,32 +2,23 @@ import { FlashList } from "@shopify/flash-list";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Header, MaxContentWidth, Spacing } from "@/constants/theme";
+import { MaxContentWidth, Spacing } from "@/constants/theme";
 import { honoClient } from "@/lib/hono-client";
 import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function Page() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <SafeAreaView>
-        <View style={styles.test}>
-          <ThemedText>Hello everyone!!</ThemedText>
-        </View>
-        <View style={styles.test}>
-          <ThemedText>Hello everyone!!</ThemedText>
-        </View>
-        <View style={styles.test}>
-          <ThemedText>Hello everyone!!</ThemedText>
-        </View>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
         <React.Suspense fallback={<Text>Loading...</Text>}>
           <PropertyList />
         </React.Suspense>
       </SafeAreaView>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -83,11 +74,16 @@ function PropertyList() {
 }
 
 const styles = StyleSheet.create({
-  test: { height: 150 },
   container: {
-    // flex: 1,
+    flex: 1,
+    justifyContent: "center",
+    position: "relative",
+  },
+  safeArea: {
+    flex: 1,
     paddingHorizontal: Spacing.md,
-    paddingTop: Header.height,
+    alignItems: "center",
+    width: "100%",
     maxWidth: MaxContentWidth,
   },
   image: {
@@ -97,8 +93,6 @@ const styles = StyleSheet.create({
   cardGrid: {
     flex: 1,
     width: "100%",
-    backgroundColor: "red",
-    overflow: "visible",
     // minWidth: "100%",
     // display: "flex",
     // flexDirection: "column",

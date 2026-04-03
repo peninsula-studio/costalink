@@ -8,6 +8,7 @@ export type ThemedButtonProps = PressableProps & {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   themeColor?: ThemeColor;
+  raised?: boolean;
 };
 
 export function ThemedButton({
@@ -15,7 +16,8 @@ export function ThemedButton({
   darkColor,
   variant = "primary",
   children,
-  style,
+  raised = false,
+  style: _,
   size = "md",
   ...props
 }: ThemedButtonProps) {
@@ -27,8 +29,8 @@ export function ThemedButton({
         styles.button,
         pressed && styles.pressedButton,
         variants[variant],
+        raised && styles.raised,
         sizes[size],
-        // style,
       ]}
       {...props}
     >
@@ -41,24 +43,42 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 999,
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center",
   },
   pressedButton: {
     opacity: 0.7,
   },
+  raised: {
+    boxShadow:
+      "0px 1px 0px 0px rgba(0,0,0,0.1), -1px 0px 0px rgba(0,0,0,0.1), 1px 0px 0px rgba(0,0,0,0.1), 0px -1px 0px rgba(0,0,0,0.05)",
+  },
 });
 
 const sizes = StyleSheet.create({
+  xs: {
+    gap: 3,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  xsIcon: {
+    padding: 6,
+  },
   sm: {
-    gap: 6,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    gap: 4,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  smIcon: {
+    padding: 8,
   },
   md: {
     gap: 6,
     paddingHorizontal: 20,
     paddingVertical: 12,
+  },
+  mdIcon: {
+    padding: 12,
   },
   lg: {
     gap: 6,
@@ -74,6 +94,10 @@ const variants = StyleSheet.create({
   },
   secondary: {
     backgroundColor: Colors.light.secondary,
+    color: Colors.light.text,
+  },
+  glass: {
+    backgroundColor: "white",
     color: Colors.light.text,
   },
   destructive: {
