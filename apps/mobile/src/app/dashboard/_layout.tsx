@@ -39,14 +39,14 @@ export default function TabLayout() {
                 top: "auto",
               }}
             />
-            <TabTrigger asChild href="/(protected)" name="home">
+            <TabTrigger asChild href="/dashboard" name="home">
               <ThemedButton raised size="sm" variant="glass">
                 <ThemedSymbolView name="house" size={30} />
               </ThemedButton>
             </TabTrigger>
             <TabTrigger
               asChild
-              href="/(protected)/organization"
+              href="/dashboard/organization"
               name="organization"
             >
               <ThemedButton raised size="sm" variant="glass">

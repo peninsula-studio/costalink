@@ -33,9 +33,9 @@ export default function TabLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AuthProvider>
           <Stack
-            screenLayout={({ children }) => (
-              <View style={{ flex: 1 }}>{children}</View>
-            )}
+            // screenLayout={({ children }) => (
+            //   <View style={{ flex: 1 }}>{children}</View>
+            // )}
             screenOptions={{
               headerShown: false,
             }}
@@ -43,7 +43,7 @@ export default function TabLayout() {
             {/* <Stack.Header /> */}
             <Stack.Protected guard={!!session}>
               <Stack.Screen
-                name="(protected)"
+                name="dashboard"
                 options={{ headerBackVisible: false }}
               />
             </Stack.Protected>
@@ -52,6 +52,7 @@ export default function TabLayout() {
                 name="sign-in"
                 options={{ presentation: "pageSheet" }}
               />
+              <Stack.Screen name="index" />
             </Stack.Protected>
           </Stack>
           {/* <AnimatedSplashOverlay /> */}

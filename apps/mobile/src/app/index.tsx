@@ -139,7 +139,7 @@ export default function HomeScreen() {
               <ThemedText themeColor="textPrimary">Sign in</ThemedText>
             </ThemedButton>
           </Link>
-          <Link asChild href={"/(protected)"}>
+          <Link asChild href={"/dashboard"}>
             <ThemedButton variant="secondary">
               <SymbolView
                 name={"lock"}
