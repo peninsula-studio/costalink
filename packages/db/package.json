@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@repo/env": "workspace:*",
-    "@repo/types": "workspace:*",
+    "@repo/i18n": "workspace:*",
     "dotenv": "catalog:",
     "pg": "catalog:",
     "zod": "catalog:"

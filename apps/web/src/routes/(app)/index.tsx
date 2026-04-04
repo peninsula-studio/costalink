@@ -1,4 +1,5 @@
 import type { auth } from "@repo/auth";
+import { formatPrice } from "@repo/i18n/lib/format";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -30,7 +31,6 @@ import {
   organizationListQueryOptions,
 } from "@/lib/fn/organization";
 import { getOrganizationPropertyListQueryOptions } from "@/lib/fn/property";
-import { formatPrice } from "@/lib/i18n/format";
 
 export const Route = createFileRoute("/(app)/")({
   beforeLoad: async ({ context }) => {

@@ -1,9 +1,12 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "server",
+  "name": "costalink-server",
   "main": "src/index.ts",
   "compatibility_date": "2026-03-26",
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
+  "secrets": {
+    "required": ["DATABASE_URL"]
+  }
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
@@ -34,4 +37,3 @@
   //   "head_sampling_rate": 1
   // }
 }
-

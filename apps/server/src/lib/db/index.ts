@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
+import { relations } from "@repo/db/relations";
+import * as schema from "@repo/db/schema";
 import { drizzle } from "drizzle-orm/neon-http";
-import { relations } from "./relations";
-import * as schema from "./schema";
 
 const sql = neon(process.env.DATABASE_URL as string);
 

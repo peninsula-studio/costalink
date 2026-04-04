@@ -3,24 +3,24 @@ import { z } from "zod";
 
 // --- Helper Schemas (Dependencies) ---
 
-export const kyeroImageSchema = z.object({
+export const kyeroImageDbType = z.object({
   id: z.string(),
   url: z.url(), // Enforces valid URL format
 });
 
-export const kyeroSurfaceAreaSchema = z.object({
+export const kyeroSurfaceAreaDbType = z.object({
   built: z.number().optional(),
   plot: z.number().optional(),
 });
 
-export const kyeroEnergyRatingSchema = z.object({
+export const kyeroEnergyRatingDbType = z.object({
   consumption: z.string().optional(),
   emissions: z.string().optional(),
 });
 
 // --- Main KyeroProperty Schema ---
 
-export const kyeroPropertySchema = z.object({
+export const kyeroPropertyDbType = z.object({
   // -- Mandatory Fields --
   // id: z.string(),
   date: z.string(), // You could refine this with .regex() if you want to strictly validate "YYYY-MM-DD HH:MM:SS"
@@ -44,8 +44,8 @@ export const kyeroPropertySchema = z.object({
   baths: z.number(),
   pool: z.boolean(),
 
-  surface_area: kyeroSurfaceAreaSchema.optional(),
-  energy_rating: kyeroEnergyRatingSchema.optional(),
+  surface_area: kyeroSurfaceAreaDbType.optional(),
+  energy_rating: kyeroEnergyRatingDbType.optional(),
 
   url: z.url().optional(),
 
@@ -53,7 +53,7 @@ export const kyeroPropertySchema = z.object({
   desc: i18nStringSchema,
   features: i18nStringSchema.optional(),
 
-  images: z.array(kyeroImageSchema),
+  images: z.array(kyeroImageDbType),
 
   notes: z.string().optional(),
 
@@ -73,11 +73,11 @@ export const kyeroPropertySchema = z.object({
   whatsapp_number: z.string().optional(),
 });
 
-export const kyeroFeedSchema = z.object({
+export const kyeroFeedDbType = z.object({
   root: z.object({
     kyero: z.object({
       feed_version: z.string().optional(),
     }),
-    property: z.array(kyeroPropertySchema),
+    property: z.array(kyeroPropertyDbType),
   }),
 });

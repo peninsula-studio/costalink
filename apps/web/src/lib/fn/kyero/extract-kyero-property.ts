@@ -1,6 +1,7 @@
 // biome-ignore-all lint: file not being used
 
-import { i18nStringSchema, LOCALES } from "@repo/types/schemas/i18n";
+import { LOCALES } from "@repo/i18n";
+import { i18nStringSchema } from "@repo/i18n/schemas";
 import {
   kyeroImageSchema,
   kyeroPropertySchema,

@@ -1,3 +1,4 @@
+import type { i18nStringSchema } from "@repo/i18n/schemas";
 import type { defaultRoles as userDefaultRoles } from "better-auth/plugins/admin/access";
 import type { defaultRoles as memberDefaultRoles } from "better-auth/plugins/organization/access";
 import {
@@ -17,7 +18,6 @@ import type {
   kyeroImageSchema,
   kyeroSurfaceAreaSchema,
 } from "@/lib/fn/kyero/schemas";
-import type { i18nStringSchema } from "@/lib/i18n/schema";
 
 export const USER_ROLE_ENUM = ["user", "admin"] as const satisfies Array<
   keyof typeof userDefaultRoles

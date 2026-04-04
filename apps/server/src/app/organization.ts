@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
-import { db } from "@repo/db";
 import { Hono } from "hono";
 import { z } from "zod";
+import { db } from "@/lib/db";
 import type { AppEnv } from ".";
 
 export const organizationRoutes = new Hono<AppEnv>().get(

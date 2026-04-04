@@ -1,7 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { MailIcon } from "lucide-react";
-import { PageContainer } from "@/components/container";
-import { RouteSkeleton } from "@/components/route-skeleton";
+import { formatPrice } from "@repo/i18n/lib/format";
 import { Badge } from "@repo/ui/components/badge";
 import {
   Card,
@@ -15,9 +12,12 @@ import {
   TypographyLarge,
   TypographyP,
 } from "@repo/ui/components/typography";
-import { getPropertyQueryOptions } from "@/lib/fn/property";
-import { formatPrice } from "@/lib/i18n/format";
 import { cn } from "@repo/ui/lib/utils";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { MailIcon } from "lucide-react";
+import { PageContainer } from "@/components/container";
+import { RouteSkeleton } from "@/components/route-skeleton";
+import { getPropertyQueryOptions } from "@/lib/fn/property";
 
 export const Route = createFileRoute(
   "/(app)/$organizationId/property/$propertyId",

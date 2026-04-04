@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { formatPrice } from "@repo/i18n/lib/format";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -45,7 +46,6 @@ import {
   createPropertyMutationOptions,
   extractPropertiesFromKyeroXMLFn,
 } from "@/lib/fn/property";
-import { formatPrice } from "@/lib/i18n/format";
 
 export const Route = createFileRoute("/(app)/$organizationId/property/import")({
   component: RouteComponent,

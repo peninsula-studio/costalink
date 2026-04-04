@@ -13,11 +13,12 @@
     "deploy": "vite build && wrangler deploy"
   },
   "dependencies": {
-    "@repo/types": "workspace:*",
-    "@repo/db": "workspace:*",
-    "@repo/ui": "workspace:*",
-    "@repo/env": "workspace:*",
     "@repo/auth": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/env": "workspace:*",
+    "@repo/i18n": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@repo/ui": "workspace:*",
     "@base-ui/react": "catalog:",
     "@better-auth/drizzle-adapter": "catalog:",
     "@hookform/resolvers": "catalog:",

@@ -20,6 +20,7 @@
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/env": "workspace:*",
+    "@repo/i18n": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "better-auth": "catalog:",
     "hono": "^4.12.10",
