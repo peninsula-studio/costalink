@@ -23,33 +23,10 @@ export const Route = createFileRoute("/(app)/$organizationId/property/search")({
       breadcrumbs: [...context.breadcrumbs, { label: "Search", href: routeId }],
     };
   },
-  // loader: async ({ context }) => {
-  //   const propertyCount = await db
-  //     .select({ count: count() })
-  //     .from(property)
-  //     .where(eq(property.organizationId, context.activeOrganization.id));
-  //   console.log(propertyCount);
-  // },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  // const { organizationId } = Route.useParams();
-  // const { type, sortBy, sortOrder, page, pageSize } = Route.useSearch();
-  //
-  // const navigate = useNavigate();
-  //
-  // const allTypes: ComponentProps<typeof Select>["items"] = [
-  //   { label: "Select type", value: "" },
-  //   { label: "Detached", value: "detached" },
-  //   { label: "Townhouse", value: "townhouse" },
-  // ];
-  //
-  // const allStatus: ComponentProps<typeof Select>["items"] = [
-  //   { label: "Select status", value: "" },
-  //   ...PROPERTY_STATUS_ENUM.map((s) => ({ label: s, value: s })),
-  // ];
-
   return (
     <PageContainer>
       <TypographyH1>Search Property</TypographyH1>

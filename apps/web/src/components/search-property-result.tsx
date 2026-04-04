@@ -272,18 +272,22 @@ export function SearchPropertyResult({
                 ...new Array(Math.ceil(data.count / searchParams.pageSize)),
               ].map((_, i) => (
                 <PaginationItem key={`page-link-${i + 1}`}>
-                  <Link
-                    disabled={searchParams.page === i + 1}
-                    search={(s) => ({
-                      ...s,
-                      page: i + 1,
-                    })}
-                    to="."
-                  >
-                    <PaginationLink isActive={searchParams.page === i + 1}>
-                      {i + 1}
-                    </PaginationLink>
-                  </Link>
+                  <PaginationLink
+                    isActive={searchParams.page === i + 1}
+                    nativeButton={false}
+                    render={
+                      <Link
+                        disabled={searchParams.page === i + 1}
+                        search={(s) => ({
+                          ...s,
+                          page: i + 1,
+                        })}
+                        to="."
+                      >
+                        {i + 1}
+                      </Link>
+                    }
+                  ></PaginationLink>
                 </PaginationItem>
               ))}
               {/* <PaginationEllipsis /> */}
