@@ -8,10 +8,19 @@
   },
   "scripts": {},
   "dependencies": {
+    "@repo/auth": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/server": "workspace:*",
+    "dotenv": "catalog:",
+    "expo-secure-store": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
     "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "better-auth": "catalog:",
+    "@better-auth/expo": "catalog:"
   }
 }
