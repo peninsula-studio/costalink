@@ -1,3 +1,4 @@
+import { authClient } from "@repo/auth/client";
 import { Stack } from "expo-router";
 import { TabList, TabSlot, Tabs, TabTrigger } from "expo-router/ui";
 import React from "react";
@@ -8,7 +9,6 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedSymbolView } from "@/components/ui/themed-symbol-view";
 import { Spacing } from "@/constants/theme";
-import { authClient } from "@/lib/auth-client";
 
 export default function TabLayout() {
   const { data: session } = authClient.useSession();

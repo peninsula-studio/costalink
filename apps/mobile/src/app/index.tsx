@@ -1,3 +1,5 @@
+import { authClient } from "@repo/auth/client";
+import { getSessionQueryOptions } from "@repo/types/queries/auth";
 import { useQuery } from "@tanstack/react-query";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -11,8 +13,6 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Colors, Spacing, Springs } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
-import { authClient } from "@/lib/auth-client";
-import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function HomeScreen() {
   const theme = useTheme();

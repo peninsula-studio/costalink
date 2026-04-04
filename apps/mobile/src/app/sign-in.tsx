@@ -1,13 +1,11 @@
-import { Stack } from "expo-router";
+import { authClient } from "@repo/auth/client";
 import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import { Screen } from "react-native-screens";
 import { useAuthContext } from "@/components/auth-provider";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Colors, MaxContentWidth, Radius, Spacing } from "@/constants/theme";
-import { authClient } from "@/lib/auth-client";
 
 export default function SignIn() {
   const { setSession } = useAuthContext();

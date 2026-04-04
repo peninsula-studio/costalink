@@ -3,6 +3,8 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { authClient } from "@repo/auth/client";
+import { queryClient } from "@repo/types/queries/query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -12,8 +14,6 @@ import { View } from "react-native";
 // import AppTabs from "@/components/app-tabs";
 import { AuthProvider } from "@/components/auth-provider";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { authClient } from "@/lib/auth-client";
-import { queryClient } from "@/lib/query-client";
 
 SplashScreen.preventAutoHideAsync();
 

@@ -1,28 +1,47 @@
+import { honoClient } from "@repo/types/lib/hono-client";
+import { getSessionQueryOptions } from "@repo/types/queries/auth";
+import { getListOrganizationsQueryOptions } from "@repo/types/queries/organization";
 import { FlashList } from "@shopify/flash-list";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  OrganizationPreview,
+  OrganizationPreviewSkeleton,
+} from "@/components/organization-preview";
 import { ThemedText } from "@/components/themed-text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Colors, Header, MaxContentWidth, Spacing } from "@/constants/theme";
-import { honoClient } from "@/lib/hono-client";
-import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function Page() {
+  const { data: organizationList } = useSuspenseQuery(
+    getListOrganizationsQueryOptions(),
+  );
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <SafeAreaView>
-        <View style={styles.test}>
-          <ThemedText>Hello everyone!!</ThemedText>
-        </View>
-        <View style={styles.test}>
-          <ThemedText>Hello everyone!!</ThemedText>
-        </View>
-        <View style={styles.test}>
-          <ThemedText>Hello everyone!!</ThemedText>
-        </View>
+    <ScrollView
+    // contentContainerStyle={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
+        <React.Suspense
+          fallback={
+            <>
+              <OrganizationPreviewSkeleton />
+              <OrganizationPreviewSkeleton />
+              <OrganizationPreviewSkeleton />
+            </>
+          }
+        >
+          {organizationList.map((o) => (
+            <OrganizationPreview
+              key={o.id}
+              organizationId={o.id}
+              organizationSlug={o.slug}
+            />
+          ))}
+        </React.Suspense>
         <React.Suspense fallback={<Text>Loading...</Text>}>
           <PropertyList />
         </React.Suspense>
@@ -41,6 +60,7 @@ function PropertyList() {
         ":pageSize?:page?"
       ].$get({
         param: {
+          // BUG: Check that there is an active organization before
           id: session?.session.activeOrganizationId,
           page: 1,
           pageSize: 10,
@@ -83,10 +103,10 @@ function PropertyList() {
 }
 
 const styles = StyleSheet.create({
-  test: { height: 150 },
   container: {
     // flex: 1,
     paddingHorizontal: Spacing.md,
+    gap: Spacing.lg,
     paddingTop: Header.height,
     maxWidth: MaxContentWidth,
   },

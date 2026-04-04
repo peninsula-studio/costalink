@@ -1,3 +1,5 @@
+import { honoClient } from "@repo/types/lib/hono-client";
+import { getSessionQueryOptions } from "@repo/types/queries/auth";
 import { FlashList } from "@shopify/flash-list";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
@@ -7,8 +9,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { MaxContentWidth, Spacing } from "@/constants/theme";
-import { honoClient } from "@/lib/hono-client";
-import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function Page() {
   return (
