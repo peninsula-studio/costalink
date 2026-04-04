@@ -9,7 +9,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint && biome lint src/",
+    "format": "biome format --write src/",
+    "check": "biome check src/"
   },
   "dependencies": {
     "@better-auth/expo": "catalog:",
@@ -21,6 +23,7 @@
     "@react-navigation/native": "7.1.33",
     "@repo/auth": "workspace:*",
     "@repo/server": "workspace:*",
+    "@repo/types": "workspace:*",
     "@shopify/flash-list": "2.3.1",
     "@shopify/react-native-skia": "2.6.1",
     "@tanstack/react-query": "catalog:",
@@ -36,7 +39,7 @@
     "expo-linking": "55.0.11",
     "expo-network": "55.0.11",
     "expo-router": "55.0.10",
-    "expo-secure-store": "55.0.11",
+    "expo-secure-store": "catalog:",
     "expo-splash-screen": "~55.0.14",
     "expo-status-bar": "~55.0.4",
     "expo-symbols": "~55.0.6",
@@ -51,7 +54,8 @@
     "react-native-safe-area-context": "~5.6.2",
     "react-native-screens": "~4.23.0",
     "react-native-web": "~0.21.2",
-    "react-native-worklets": "0.7.2"
+    "react-native-worklets": "0.7.2",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/react": "~19.2.14",
