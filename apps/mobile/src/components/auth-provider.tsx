@@ -1,5 +1,5 @@
-import { authClient } from "@repo/auth/client";
 import React from "react";
+import { authClient } from "@/lib/auth-client";
 
 type AuthContextProps = {
   session: typeof authClient.$Infer.Session | null;

@@ -19,7 +19,7 @@ export default function GradientMaskedBlurHeader({
   const { colors: blurColors, locations: blurLocations } = easeGradient({
     colorStops: {
       0: { color: "black" },
-      0.3: { color: "rgba(0,0,0,0.99)" },
+      0.2: { color: "rgba(0,0,0,0.99)" },
       1: { color: "transparent" },
     },
   });

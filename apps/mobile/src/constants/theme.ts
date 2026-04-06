@@ -96,6 +96,11 @@ export const Radius = {
 
 export const Header = { height: 50 } as const;
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+export const Insets = Platform.select({
+  ios: { top: 120, bottom: 90 },
+  android: { top: 110, bottom: 100 },
+  default: { top: 50, bottom: 50 },
+});
 export const MaxContentWidth = 800;
 
 export const Springs = {

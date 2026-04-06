@@ -1,7 +1,8 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "@repo/config/tsconfig.base.json",
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
   "compilerOptions": {
+    "jsx": "react-jsx",
     "strict": true,
     "paths": {
       "@/*": ["./src/*"],
@@ -10,7 +11,7 @@
   },
   "references": [
     {
-      "path": "../server/tsconfig.json"
+      "path": "../api/tsconfig.json"
     }
   ]
 }

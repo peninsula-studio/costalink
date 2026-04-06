@@ -1,4 +1,3 @@
-import { getFullOrganizationQueryOptions } from "@repo/types/queries/organization";
 import type { organizationSelectSchema } from "@repo/types/schemas/organization";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
@@ -6,6 +5,7 @@ import { StyleSheet, View } from "react-native";
 import type { z } from "zod";
 import { ThemedText } from "@/components/themed-text";
 import { Colors, Radius, Spacing } from "@/constants/theme";
+import { getFullOrganizationQueryOptions } from "@/lib/queries/organization";
 
 export function OrganizationPreview(
   props: z.infer<typeof organizationSelectSchema>,
@@ -25,6 +25,7 @@ export function OrganizationPreview(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
     backgroundColor: "white",
     padding: Spacing.sm,
     gap: Spacing.xs,

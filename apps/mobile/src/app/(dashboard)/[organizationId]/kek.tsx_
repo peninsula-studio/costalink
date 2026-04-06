@@ -1,56 +1,34 @@
-import { honoClient } from "@repo/types/lib/hono-client";
-import { getSessionQueryOptions } from "@repo/types/queries/auth";
-import { getListOrganizationsQueryOptions } from "@repo/types/queries/organization";
 import { FlashList } from "@shopify/flash-list";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  OrganizationPreview,
-  OrganizationPreviewSkeleton,
-} from "@/components/organization-preview";
 import { ThemedText } from "@/components/themed-text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Colors, Header, MaxContentWidth, Spacing } from "@/constants/theme";
+import { MaxContentWidth, Spacing } from "@/constants/theme";
+import { honoClient } from "@/lib/hono-client";
+import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function Page() {
-  const { data: organizationList } = useSuspenseQuery(
-    getListOrganizationsQueryOptions(),
-  );
+  const { organizationId } = useLocalSearchParams();
+  if (typeof organizationId !== "string") {
+    return null;
+  }
 
   return (
-    <ScrollView
-    // contentContainerStyle={styles.container}
-    >
-      <SafeAreaView style={styles.container}>
-        <React.Suspense
-          fallback={
-            <>
-              <OrganizationPreviewSkeleton />
-              <OrganizationPreviewSkeleton />
-              <OrganizationPreviewSkeleton />
-            </>
-          }
-        >
-          {organizationList.map((o) => (
-            <OrganizationPreview
-              key={o.id}
-              organizationId={o.id}
-              organizationSlug={o.slug}
-            />
-          ))}
-        </React.Suspense>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
         <React.Suspense fallback={<Text>Loading...</Text>}>
-          <PropertyList />
+          <PropertyList id={organizationId} />
         </React.Suspense>
       </SafeAreaView>
-    </ScrollView>
+    </View>
   );
 }
 
-function PropertyList() {
+function PropertyList({ id }: { id: string }) {
   // const { data: session } = authClient.useSession();
   const { data: session } = useSuspenseQuery(getSessionQueryOptions());
   const { data: properties } = useSuspenseQuery({
@@ -60,8 +38,7 @@ function PropertyList() {
         ":pageSize?:page?"
       ].$get({
         param: {
-          // BUG: Check that there is an active organization before
-          id: session?.session.activeOrganizationId,
+          id: id,
           page: 1,
           pageSize: 10,
         },
@@ -104,10 +81,15 @@ function PropertyList() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
+    justifyContent: "center",
+    position: "relative",
+  },
+  safeArea: {
+    flex: 1,
     paddingHorizontal: Spacing.md,
-    gap: Spacing.lg,
-    paddingTop: Header.height,
+    alignItems: "center",
+    width: "100%",
     maxWidth: MaxContentWidth,
   },
   image: {
@@ -117,8 +99,6 @@ const styles = StyleSheet.create({
   cardGrid: {
     flex: 1,
     width: "100%",
-    backgroundColor: "red",
-    overflow: "visible",
     // minWidth: "100%",
     // display: "flex",
     // flexDirection: "column",
