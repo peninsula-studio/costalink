@@ -1,3 +1,4 @@
+import type { property } from "@repo/db/schema";
 import { formatPrice } from "@repo/i18n/lib/format";
 import { Card, CardContent, CardHeader } from "@repo/ui/components/card";
 import {
@@ -9,7 +10,6 @@ import {
 import { cn } from "@repo/ui/lib/utils";
 import { Bath, BedDouble, Expand, MapPin } from "lucide-react";
 import type { ComponentProps } from "react";
-import type { property } from "@/lib/db/schema";
 
 export const PropertyCard = ({
   data,

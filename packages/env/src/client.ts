@@ -4,6 +4,7 @@ import { z } from "zod";
 // Validate server environment
 export const clientEnv = createEnv({
   client: {
+    VITE_API_URL: z.string(),
     VITE_APP_TITLE: z.string().min(1).optional(),
     VITE_ROOT_DOMAIN: z.string().min(1).optional(),
   },

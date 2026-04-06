@@ -6,10 +6,10 @@ import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie } from "better-auth/cookies";
 import type { z } from "zod";
 import { signInFormSchema } from "@/components/sign-in-form";
-import { authClient } from "@/lib/auth/client";
+import { authClient } from "@/lib/auth-client";
 import { userKeys } from "@/lib/fn/keys";
+import { honoClient } from "@/lib/hono-client";
 import { authMiddleware } from "@/lib/middleware/auth";
-import { honoClient } from "@/lib/server/hono-client";
 
 export const checkSessionCookieFn = createServerFn().handler(() => {
   const sessionCookie = getSessionCookie(getRequest());

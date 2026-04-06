@@ -22,7 +22,7 @@ import slugify from "slugify";
 import { toast } from "sonner";
 import z from "zod";
 import { InputValidCheck } from "@/components/input-valid-check";
-import { authClient } from "@/lib/auth/client";
+import { authClient } from "@/lib/auth-client";
 import { createOrganizationMutationOptions } from "@/lib/fn/organization";
 import {
   organizationPlanSchema,

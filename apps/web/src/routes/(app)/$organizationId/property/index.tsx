@@ -1,3 +1,5 @@
+import { db } from "@repo/db";
+import { PROPERTY_STATUS_ENUM, property } from "@repo/db/schema";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Field, FieldContent, FieldLabel } from "@repo/ui/components/field";
@@ -39,13 +41,8 @@ import {
 } from "lucide-react";
 import { type ComponentProps, Suspense } from "react";
 import { z } from "zod";
-import { db } from "@/lib/db";
-import { PROPERTY_STATUS_ENUM, property } from "@/lib/db/schema";
-import {
-  deletePropertyMutationOptions,
-  getOrganizationPropertyListQueryOptions,
-} from "@/lib/fn/property";
-import { honoClient } from "@/lib/server/hono-client";
+import { deletePropertyMutationOptions } from "@/lib/fn/property";
+import { honoClient } from "@/lib/hono-client";
 
 const routeParamSchema = z.object({
   search: z.string().optional(),
@@ -300,15 +297,15 @@ function ResultTable() {
   const { data: organizationProperties } = useSuspenseQuery({
     queryKey: ["properties"],
     queryFn: async () => {
-      const res = await honoClient.organization[":id"].properties[":pageSize?"][
-        ":page?"
+      const res = await honoClient.organization[":id"].properties[
+        ":pageSize?:page?"
       ].$get({ param: { id: organizationId } });
       const data = await res.json();
       return data;
     },
   });
 
-  const filteredProperties = organizationProperties.filter((property) => {
+  const filteredProperties = organizationProperties.filter((property: any) => {
     const matchesSearch =
       search &&
       (property.ref?.toLowerCase().includes(search.toLowerCase()) ||

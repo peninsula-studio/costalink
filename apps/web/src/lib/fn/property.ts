@@ -1,11 +1,11 @@
+import { db } from "@repo/db";
+import { property } from "@repo/db/schema";
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq, gt, ilike, lt } from "drizzle-orm";
 import { z } from "zod";
 import { searchPropertySchema } from "@/components/search-property-form";
-import { db } from "@/lib/db";
 import { adminRequiredMiddleware, authMiddleware } from "@/lib/middleware/auth";
-import { property } from "../db/schema";
 import { propertyKeys } from "./keys";
 import { extractKyeroProperties } from "./kyero/extract-kyero-property";
 import type { kyeroPropertySchema } from "./kyero/schemas";

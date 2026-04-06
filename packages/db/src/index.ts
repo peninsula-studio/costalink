@@ -1,9 +1,11 @@
 import { neon } from "@neondatabase/serverless";
+import { serverEnv } from "@repo/env/server";
 import { drizzle } from "drizzle-orm/neon-http";
 import { relations } from "./relations";
 import * as schema from "./schema";
 
-const sql = neon(process.env.DATABASE_URL as string);
+// const sql = neon(process.env.DATABASE_URL as string);
+const sql = neon(serverEnv.DATABASE_URL as string);
 
 export const db = drizzle({
   // connection: serverEnv.DATABASE_URL,

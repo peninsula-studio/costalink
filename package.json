@@ -12,10 +12,16 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.10",
-    "turbo": "^2.9.3"
+    "turbo": "^2.9.4"
   },
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.0",
+  "version": "1.0.0",
+  "dependencies": {
+    "expo": "~55.0.11",
+    "react": "19.2.0",
+    "react-native": "0.83.4"
+  }
 }

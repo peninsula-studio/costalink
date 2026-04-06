@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
@@ -11,7 +10,7 @@ export const serverEnv = createEnv({
         (str) => !str.includes("YOUR_POSTGRESQL_URL_HERE"),
         "You forgot to change the default URL",
       ),
-    SERVER_URL: z.url().optional(),
+    SERVER_URL: z.url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),

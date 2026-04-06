@@ -1,11 +1,11 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "costalink-server",
+  "name": "costalink-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-03-26",
   "compatibility_flags": ["nodejs_compat"],
   "secrets": {
-    "required": ["DATABASE_URL", "BETTER_AUTH_SECRET"]
+    "required": ["DATABASE_URL", "BETTER_AUTH_SECRET", "SERVER_URL"]
   },
   "observability": {
     "logs": {

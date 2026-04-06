@@ -23,7 +23,7 @@
     "@better-auth/drizzle-adapter": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@neondatabase/serverless": "catalog:",
-    "@repo/server": "workspace:*",
+    "@repo/api": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-devtools": "catalog:",

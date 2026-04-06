@@ -1,19 +1,16 @@
-// import { tanstackStartCookies } from "better-auth/cookies";
-
 import { expo } from "@better-auth/expo";
 import { db } from "@repo/db";
-// import { getInitialOrganization } from "@/lib/db/get-initial-organization";
 import * as schema from "@repo/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, openAPI, organization } from "better-auth/plugins";
-// import { serverEnv } from "@/env/server";
 
 export const auth = betterAuth({
+  baseURL: process.env.SERVER_URL,
   // basePath: "/api/auth",
   database: drizzleAdapter(db, {
     schema: schema,
-    provider: "pg", // or "pg" or "mysql"
+    provider: "pg",
   }),
   databaseHooks: {
     session: {
@@ -94,7 +91,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     // Basic scheme
     "myapp://",
-
+    "myapp://**",
     // Development mode - Expo's exp:// scheme with local IP ranges
     ...(process.env.NODE_ENV === "development"
       ? [

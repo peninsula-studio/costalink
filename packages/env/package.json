@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./server": "./src/server.ts",
-    "./web": "./src/web.ts"
+    "./*": "./src/*.ts"
   },
   "dependencies": {
     "@t3-oss/env-core": "^0.13.11",
@@ -14,6 +13,7 @@
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

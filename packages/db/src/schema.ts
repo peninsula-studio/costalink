@@ -1,4 +1,9 @@
-import type { i18nStringSchema } from "@repo/i18n/schemas";
+import type { i18nStringSchema } from "@repo/types/schemas/i18n";
+import type {
+  kyeroEnergyRating,
+  kyeroImage,
+  kyeroSurfaceArea,
+} from "@repo/types/schemas/kyero";
 import type { defaultRoles as userDefaultRoles } from "better-auth/plugins/admin/access";
 import type { defaultRoles as memberDefaultRoles } from "better-auth/plugins/organization/access";
 import {
@@ -13,11 +18,6 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import type { z } from "zod";
-import type {
-  kyeroEnergyRatingDbType,
-  kyeroImageDbType,
-  kyeroSurfaceAreaDbType,
-} from "./kyeroSchemas";
 
 export const USER_ROLE_ENUM = ["user", "admin"] as const satisfies Array<
   keyof typeof userDefaultRoles
@@ -68,16 +68,16 @@ export const property = pgTable(
     pool: boolean("pool").notNull().default(false),
     // -- Nested Objects --
     surfaceArea:
-      jsonb("surface_area").$type<z.infer<typeof kyeroSurfaceAreaDbType>>(),
+      jsonb("surface_area").$type<z.infer<typeof kyeroSurfaceArea>>(),
     energyRating:
-      jsonb("energy_rating").$type<z.infer<typeof kyeroEnergyRatingDbType>>(),
+      jsonb("energy_rating").$type<z.infer<typeof kyeroEnergyRating>>(),
     url: text("url"),
     notes: text("notes"),
     // -- Description and Features (Multi-language) --
     desc: jsonb("desc").$type<z.infer<typeof i18nStringSchema>>(),
     features: jsonb("features").$type<z.infer<typeof i18nStringSchema>>(),
     // -- Arrays --
-    images: jsonb("images").$type<z.infer<typeof kyeroImageDbType>[]>(),
+    images: jsonb("images").$type<z.infer<typeof kyeroImage>[]>(),
     // -- V3.5+ Additions --
     videoUrl: text("video_url"),
     virtualTourUrl: text("virtual_tour_url"),

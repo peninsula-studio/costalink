@@ -103,7 +103,7 @@ export function SignInForm({
                 </TypographyH1>
               </FieldLegend>
               <FieldDescription className="text-center text-base">
-                Inicio de sesión en Selecciona-RRHH
+                Inicio de sesión
               </FieldDescription>
 
               <FieldGroup>
