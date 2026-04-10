@@ -20,19 +20,21 @@
 //   );
 // }
 
+import type { LucideProps } from "lucide-react-native";
 import * as icons from "lucide-react-native/icons";
 import type { ThemeColor } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
-interface IconProps {
+interface IconProps extends LucideProps {
   name: keyof typeof icons;
   themeColor?: ThemeColor;
-  size?: number;
 }
 
-export function ThemedIcon({ name, themeColor, size }: IconProps) {
+export function ThemedIcon({ name, themeColor, color, ...props }: IconProps) {
   const theme = useTheme();
   const LucideIcon = icons[name];
 
-  return <LucideIcon color={themeColor && theme[themeColor]} size={size} />;
+  return (
+    <LucideIcon color={themeColor ? theme[themeColor] : color} {...props} />
+  );
 }

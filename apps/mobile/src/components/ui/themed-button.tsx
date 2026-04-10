@@ -26,13 +26,13 @@ export function ThemedButton({
   return (
     <Pressable
       style={({ pressed, hovered }) => [
-        typeof style === "object" && style,
-        typeof style === "function" && style({ pressed, hovered }),
         styles.button,
         pressed && styles.pressedButton,
         variants[variant],
         raised && styles.raised,
         sizes[size],
+        typeof style === "function" && style({ pressed, hovered }),
+        typeof style === "object" && style,
       ]}
       {...props}
     >
@@ -91,6 +91,7 @@ const sizes = StyleSheet.create({
 });
 
 const variants = StyleSheet.create({
+  none: {},
   primary: {
     backgroundColor: Colors.light.primary,
     color: Colors.light.textPrimary,

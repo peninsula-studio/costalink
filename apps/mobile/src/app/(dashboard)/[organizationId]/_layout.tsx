@@ -1,12 +1,5 @@
-import {
-  Redirect,
-  Stack,
-  // Tabs,
-  useGlobalSearchParams,
-  useLocalSearchParams,
-} from "expo-router";
+import { Redirect, useGlobalSearchParams } from "expo-router";
 import { TabList, TabSlot, Tabs, TabTrigger } from "expo-router/ui";
-import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { HomeIcon } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -47,54 +40,95 @@ export default function TabLayout() {
 
   return (
     <Tabs>
-      <TabList asChild>
+      <TabList style={{ display: "none" }}>
+        <TabTrigger
+          href={{
+            pathname: "/(dashboard)/[organizationId]",
+            params: { organizationId },
+          }}
+          name="index"
+        ></TabTrigger>
+        <TabTrigger
+          href={{
+            pathname: "/(dashboard)/[organizationId]/properties",
+            params: { organizationId },
+          }}
+          name="properties"
+        ></TabTrigger>
+      </TabList>
+
+      <View
+        style={{
+          position: "absolute",
+          // bottom: 0,
+          bottom: Spacing.md,
+          left: Spacing.md,
+          right: Spacing.md,
+          zIndex: 100,
+        }}
+      >
+        {/* <GradientMaskedBlurHeader */}
+        {/*   style={{ */}
+        {/*     transform: [{ rotate: "180deg" }], */}
+        {/*     bottom: 0, */}
+        {/*     height: insets.bottom + 50, */}
+        {/*     top: "auto", */}
+        {/*   }} */}
+        {/* /> */}
         <View
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            paddingBottom: Spacing.md,
-            paddingHorizontal: Spacing.md,
+            padding: 3,
+            borderRadius: 999,
+            backgroundColor: "rgba(255,255,255,0.3)",
+            boxShadow: "0 0 20px 0 rgba(0,0,0,0.04)",
+            marginHorizontal: "auto",
             justifyContent: "center",
-            gap: Spacing.xxs,
-            zIndex: 100,
           }}
         >
-          <GradientMaskedBlurHeader
+          <View
             style={{
-              transform: [{ rotate: "180deg" }],
-              bottom: 0,
-              height: insets.bottom + 50,
-              top: "auto",
+              flexDirection: "row",
+              justifyContent: "center",
+              marginHorizontal: "auto",
+              // width: "min-content",
+              gap: Spacing.xxs,
+              backgroundColor: "white",
+              borderRadius: 999,
             }}
-          />
-          <TabTrigger
-            asChild
-            href={{
-              pathname: "/(dashboard)/[organizationId]",
-              params: { organizationId },
-            }}
-            name="index"
           >
-            <ThemedButton raised size="sm" variant="glass">
-              <ThemedIcon name="House" size={30} />
-            </ThemedButton>
-          </TabTrigger>
-          <TabTrigger
-            asChild
-            href={{
-              pathname: "/(dashboard)/[organizationId]/properties",
-              params: { organizationId },
-            }}
-            name="properties"
-          >
-            <ThemedButton raised size="sm" variant="glass">
-              <ThemedIcon name="Building2" size={30} />
-            </ThemedButton>
-          </TabTrigger>
+            <TabTrigger
+              asChild
+              href={{
+                pathname: "/(dashboard)/[organizationId]",
+                params: { organizationId },
+              }}
+              name="index"
+            >
+              <ThemedButton variant="none">
+                <ThemedIcon
+                  fill="rgba(55,20,250,0.3)"
+                  fillRule="nonzero"
+                  name="House"
+                  size={26}
+                  strokeWidth={1.2}
+                />
+              </ThemedButton>
+            </TabTrigger>
+            <TabTrigger
+              asChild
+              href={{
+                pathname: "/(dashboard)/[organizationId]/properties",
+                params: { organizationId },
+              }}
+              name="properties"
+            >
+              <ThemedButton variant="none">
+                <ThemedIcon name="Building2" size={26} strokeWidth={1.2} />
+              </ThemedButton>
+            </TabTrigger>
+          </View>
         </View>
-      </TabList>
+      </View>
 
       <TabSlot />
     </Tabs>
