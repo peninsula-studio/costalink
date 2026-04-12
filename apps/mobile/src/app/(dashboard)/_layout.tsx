@@ -1,35 +1,31 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Redirect, Slot, Stack, Tabs, useRouter } from "expo-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
-import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 // import { AnimatedSplashOverlay } from "@/components/animated-icon";
 // import AppTabs from "@/components/app-tabs";
-import { AuthProvider } from "@/components/auth-provider";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { ThemedText } from "@/components/themed-text";
-import { Colors } from "@/constants/theme";
+import { UserModalProvider } from "@/components/user-options-modal/context";
+import { Spacing } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { authClient } from "@/lib/auth-client";
-import { queryClient } from "@/lib/queries/query-client";
+import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function DashboardLayout() {
   const colorScheme = useColorScheme();
 
-  const { data: session, isPending } = authClient.useSession();
+  // const { data: session, isPending } = authClient.useSession();
+  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
 
-  React.useEffect(() => {
-    if (!isPending) {
-      SplashScreen.hide();
-    }
-  }, [isPending]);
+  // React.useEffect(() => {
+  //   if (!isPending) {
+  //     SplashScreen.hide();
+  //   }
+  // }, [isPending]);
 
   // return (
   //   <Stack
@@ -52,28 +48,50 @@ export default function DashboardLayout() {
   //   </View>
   // );
 
+  // if (isPending)
+  //   return (
+  //     <SafeAreaView
+  //       style={{ flex: 1, paddingTop: 100, paddingHorizontal: Spacing.md }}
+  //     >
+  //       <ThemedText>Loading (dashboard)/_layout...</ThemedText>
+  //     </SafeAreaView>
+  //   );
+
   return (
-    <React.Suspense fallback={<ThemedText>Loading...</ThemedText>}>
-      <Stack
-        screenOptions={{
-          header: () => <DashboardHeader />,
-        }}
-      >
-        {/* <Stack.Protected guard={!!session}> */}
-        <Stack.Screen name="index" options={{ animation: "none" }} />
-        <Stack.Screen name="[organizationId]" options={{ animation: "fade" }} />
-        <Stack.Screen
-          name="user"
-          options={{
-            headerShown: false,
-            sheetAllowedDetents: [0.65, 1],
-            contentStyle: { flex: 1, backgroundColor: Colors.light.background },
-            presentation: "formSheet",
-            sheetGrabberVisible: true,
+    <React.Suspense
+      fallback={
+        <SafeAreaView
+          style={{ flex: 1, paddingTop: 100, paddingHorizontal: Spacing.md }}
+        >
+          <ThemedText>Loading (dashboard)/_layout...</ThemedText>
+        </SafeAreaView>
+      }
+    >
+      <UserModalProvider>
+        <Stack
+          screenOptions={{
+            header: () => <DashboardHeader />,
           }}
-        />
-        {/* </Stack.Protected> */}
-      </Stack>
+        >
+          {/* <Stack.Protected guard={!!session}> */}
+          <Stack.Screen name="index" options={{ animation: "none" }} />
+          <Stack.Screen
+            name="[organizationId]"
+            options={{ animation: "none" }}
+          />
+          {/* <Stack.Screen */}
+          {/*   name="user" */}
+          {/*   options={{ */}
+          {/*     headerShown: false, */}
+          {/*     sheetAllowedDetents: [0.65, 1], */}
+          {/*     // contentStyle: { flex: 1, backgroundColor: Colors.light.background }, */}
+          {/*     presentation: "pageSheet", */}
+          {/*     sheetGrabberVisible: true, */}
+          {/*   }} */}
+          {/* /> */}
+          {/* </Stack.Protected> */}
+        </Stack>
+      </UserModalProvider>
     </React.Suspense>
   );
 }

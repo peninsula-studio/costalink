@@ -11,8 +11,8 @@
     "check": "biome check"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.10",
-    "turbo": "^2.9.5"
+    "@biomejs/biome": "2.4.11",
+    "turbo": "^2.9.6"
   },
   "engines": {
     "node": ">=24"

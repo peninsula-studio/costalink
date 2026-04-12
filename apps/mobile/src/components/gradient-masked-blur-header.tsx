@@ -1,15 +1,20 @@
 import MaskedView from "@react-native-masked-view/masked-view";
-import { BlurView } from "expo-blur";
+import { BlurView, type BlurViewProps } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View, type ViewProps } from "react-native";
 import { easeGradient } from "react-native-easing-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
+interface Props extends ViewProps {
+  blurTarget?: BlurViewProps["blurTarget"];
+}
+
 export default function GradientMaskedBlurHeader({
   style,
+  blurTarget,
   ...props
-}: ViewProps) {
+}: Props) {
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const tint: React.ComponentProps<typeof BlurView>["tint"] =
@@ -19,8 +24,8 @@ export default function GradientMaskedBlurHeader({
   const { colors: blurColors, locations: blurLocations } = easeGradient({
     colorStops: {
       0: { color: "black" },
-      0.2: { color: "rgba(0,0,0,0.99)" },
-      1: { color: "transparent" },
+      0.15: { color: "rgba(0,0,0,0.99)" },
+      0.7: { color: "transparent" },
     },
   });
 
@@ -28,9 +33,9 @@ export default function GradientMaskedBlurHeader({
   const { colors: gradientColors, locations: gradientLocations } = easeGradient(
     {
       colorStops: {
-        0: { color: "rgba(239,240,246,1)" },
-        0.1: { color: "rgba(239,240,246,0.99)" },
-        1: { color: "rgba(239,240,246,0)" },
+        0: { color: "rgba(239,240,246,0.3)" },
+        0.1: { color: "rgba(239,240,246,0.29)" },
+        0.6: { color: "rgba(239,240,246,0)" },
       },
     },
   );
@@ -63,7 +68,12 @@ export default function GradientMaskedBlurHeader({
         }
         style={StyleSheet.absoluteFill}
       >
-        <BlurView intensity={20} style={StyleSheet.absoluteFill} tint={tint} />
+        <BlurView
+          blurTarget={blurTarget}
+          intensity={20}
+          style={StyleSheet.absoluteFill}
+          tint={tint}
+        />
       </MaskedView>
     </View>
   );

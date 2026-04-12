@@ -18,7 +18,12 @@ export default function AuthLayout() {
       }}
     >
       {/* <Stack.Protected guard={!session}> */}
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{
+          presentation: "pageSheet",
+        }}
+      />
       <Stack.Screen
         name="sign-in"
         options={{

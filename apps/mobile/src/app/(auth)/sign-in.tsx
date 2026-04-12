@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { useAuthContext } from "@/components/auth-provider";
@@ -13,24 +14,26 @@ export default function SignIn() {
   const [email, setEmail] = useState("jorge@peninsula.studio");
   const [password, setPassword] = useState("Test/1234");
 
-  const handleLogin = async () => {
-    try {
-      const { data, error } = await authClient.signIn.email({
-        email,
-        password,
-      });
-      if (error) {
-        console.error(error);
+  const { mutateAsync } = useMutation({
+    mutationFn: async () => {
+      try {
+        const { data, error } = await authClient.signIn.email({
+          email,
+          password,
+        });
+        if (error) {
+          console.error(error);
+        }
+        if (data) {
+          const sess = await authClient.getSession();
+          setSession(sess.data);
+          console.log(data);
+        }
+      } catch (e) {
+        console.error(e);
       }
-      if (data) {
-        const sess = await authClient.getSession();
-        setSession(sess.data);
-        console.log(data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    },
+  });
 
   return (
     <ThemedView style={styles.container}>
@@ -50,7 +53,10 @@ export default function SignIn() {
             value={password}
           />
         </View>
-        <ThemedButton onPress={handleLogin} variant="primary">
+        <ThemedButton
+          onPress={async () => await mutateAsync()}
+          variant="primary"
+        >
           <ThemedText>Sign In</ThemedText>
         </ThemedButton>
       </View>

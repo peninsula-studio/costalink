@@ -10,8 +10,7 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
 export const authClient = createAuthClient({
-  baseURL:
-  Platform.select({
+  baseURL: Platform.select({
     android: "http://10.0.2.2:8787",
     ios: "http://localhost:8787",
     default: "http://localhost:8787",

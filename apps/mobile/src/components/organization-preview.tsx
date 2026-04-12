@@ -1,21 +1,24 @@
 import type { organizationSelectSchema } from "@repo/types/schemas/organization";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, type ViewProps } from "react-native";
 import type { z } from "zod";
 import { ThemedText } from "@/components/themed-text";
 import { Colors, Radius, Spacing } from "@/constants/theme";
 import { getFullOrganizationQueryOptions } from "@/lib/queries/organization";
 
-export function OrganizationPreview(
-  props: z.infer<typeof organizationSelectSchema>,
-) {
+export function OrganizationPreview({
+  style,
+  organizationId,
+  organizationSlug,
+  ...props
+}: z.infer<typeof organizationSelectSchema> & ViewProps) {
   const { data: organization } = useSuspenseQuery(
-    getFullOrganizationQueryOptions(props),
+    getFullOrganizationQueryOptions({ organizationId, organizationSlug }),
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]} {...props}>
       <ThemedText type="subtitle">{organization.name}</ThemedText>
       <ThemedText type="small">{organization.id}</ThemedText>
     </View>
@@ -24,8 +27,6 @@ export function OrganizationPreview(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: "100%",
     backgroundColor: "white",
     padding: Spacing.sm,
     gap: Spacing.xs,
@@ -33,9 +34,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export function OrganizationPreviewSkeleton() {
+export function OrganizationPreviewSkeleton({ style, ...props }: ViewProps) {
   return (
-    <View style={skeletonStyles.skeletonContainer}>
+    <View style={[skeletonStyles.skeletonContainer, style]} {...props}>
       <View style={{ flexDirection: "row", gap: Spacing.xs }}>
         <View
           style={{
@@ -55,9 +56,9 @@ export function OrganizationPreviewSkeleton() {
 
 const skeletonStyles = StyleSheet.create({
   skeletonContainer: {
-    minHeight: 130,
+    height: 130,
     position: "relative",
-    flex: 1,
+    // flex: 1,
     padding: Spacing.sm,
     backgroundColor: "#dfdfdf",
     borderRadius: Radius.sm,

@@ -1,11 +1,13 @@
 import { LegendList } from "@legendapp/list";
-import { FlashList } from "@shopify/flash-list";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -19,13 +21,19 @@ import { honoClient } from "@/lib/hono-client";
 import { getSessionQueryOptions } from "@/lib/queries/auth";
 
 export default function Page() {
-  const { organizationId } = useGlobalSearchParams<{
+  const { organizationId } = useLocalSearchParams<{
     organizationId: string;
   }>();
   return (
     <View style={styles.container}>
-      <View style={styles.safeArea}>
-        <React.Suspense fallback={<Text>Loading...</Text>}>
+      <View style={styles.listContainer}>
+        <React.Suspense
+          fallback={
+            <SafeAreaView style={{ paddingTop: Insets.top }}>
+              <Text>Loading...</Text>
+            </SafeAreaView>
+          }
+        >
           <PropertyList />
         </React.Suspense>
       </View>
@@ -34,10 +42,12 @@ export default function Page() {
 }
 
 function PropertyList() {
-  const { organizationId } = useGlobalSearchParams<{
+  const { organizationId } = useLocalSearchParams<{
     organizationId: string;
   }>();
   const { data: session } = useSuspenseQuery(getSessionQueryOptions());
+
+  const insets = useSafeAreaInsets();
 
   const { data: properties } = useSuspenseQuery({
     queryKey: ["property", "list", organizationId],
@@ -66,7 +76,10 @@ function PropertyList() {
   return (
     <LegendList
       // automaticallyAdjustContentInsets={true}
-      contentContainerStyle={styles.cardGrid}
+      contentContainerStyle={[
+        styles.cardGrid,
+        { paddingTop: insets.top + Insets.top },
+      ]}
       // contentInsetAdjustmentBehavior="always"
       data={properties}
       ItemSeparatorComponent={() => <View style={{ height: Spacing.md }} />}
@@ -108,9 +121,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "relative",
   },
-  safeArea: {
+  listContainer: {
     flex: 1,
-    // paddingTop: Header.height,
+    // paddingTop: Insets.top,
+    // paddingHorizontal: Spacing.md,
     // alignItems: "center",
     width: "100%",
     maxWidth: MaxContentWidth,
@@ -128,7 +142,7 @@ const styles = StyleSheet.create({
     // gap: Spacing.sm,
     maxWidth: MaxContentWidth,
     paddingTop: Insets.top,
-    paddingBottom: Insets.bottom,
+    // paddingBottom: Insets.bottom,
     paddingHorizontal: Spacing.md,
     // borderRadius: Spacing.lg,
   },

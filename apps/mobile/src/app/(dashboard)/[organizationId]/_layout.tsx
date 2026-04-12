@@ -1,25 +1,75 @@
-import { Redirect, useGlobalSearchParams } from "expo-router";
-import { TabList, TabSlot, Tabs, TabTrigger } from "expo-router/ui";
-import { HomeIcon } from "lucide-react-native";
+import { organizationKeys } from "@repo/types/queries/organization-keys";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  Redirect,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from "expo-router";
+import {
+  TabList,
+  TabSlot,
+  Tabs,
+  TabTrigger,
+  type TabTriggerProps,
+} from "expo-router/ui";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DashboardHeader } from "@/components/dashboard-header";
-import GradientMaskedBlurHeader from "@/components/gradient-masked-blur-header";
+import type { View } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import OrganizationTabBar from "@/components/dashboard/organization-tab-bar";
 import { ThemedText } from "@/components/themed-text";
-import { ThemedButton } from "@/components/ui/themed-button";
-import { ThemedIcon } from "@/components/ui/themed-symbol-view";
-import { Spacing } from "@/constants/theme";
 import { authClient } from "@/lib/auth-client";
 
 export default function TabLayout() {
-  const { organizationId } = useGlobalSearchParams<{
+  const { organizationId } = useLocalSearchParams<{
     organizationId: string;
   }>();
 
   const insets = useSafeAreaInsets();
 
-  if (!organizationId) {
+  const indicatorRef = React.useRef<View>(null);
+
+  const router = useRouter();
+  const navigation = useNavigation();
+
+  const {
+    data: activeOrganization,
+    isFetching,
+    isPending,
+  } = useQuery({
+    queryKey: organizationKeys.setActive({ organizationId }),
+    staleTime: 0,
+    gcTime: 0,
+    // mutationKey: organizationKeys.setActive({ organizationId }),
+    queryFn: async () => {
+      try {
+        const { data, error } = await authClient.organization.setActive({
+          organizationId,
+        });
+        if (error) {
+          console.error(error);
+          throw new Error(error.message);
+        }
+        return data;
+      } catch (e) {
+        console.error(`Error setting organization to ${organizationId}: ${e}`);
+        throw e;
+      }
+    },
+  });
+
+  if (isPending || isFetching) {
+    return (
+      <SafeAreaView style={{ flex: 1, paddingTop: 120 }}>
+        <ThemedText>Loading /[organizationId]...</ThemedText>
+      </SafeAreaView>
+    );
+  }
+
+  if (!activeOrganization) {
     return <Redirect href={{ pathname: "/(dashboard)" }} />;
   }
 
@@ -38,105 +88,70 @@ export default function TabLayout() {
   //   </NativeTabs>
   // );
 
+  const tabTriggerData: TabTriggerProps[] = [
+    {
+      name: "index",
+      href: {
+        pathname: "/(dashboard)/[organizationId]",
+        params: { organizationId },
+      },
+    },
+    {
+      name: "properties",
+      href: {
+        pathname: "/(dashboard)/[organizationId]/properties",
+        params: { organizationId },
+      },
+    },
+    {
+      name: "search",
+      href: {
+        pathname: "/(dashboard)/[organizationId]/search",
+        params: { organizationId },
+      },
+    },
+  ];
+
   return (
     <Tabs>
       <TabList style={{ display: "none" }}>
-        <TabTrigger
-          href={{
-            pathname: "/(dashboard)/[organizationId]",
-            params: { organizationId },
-          }}
-          name="index"
-        ></TabTrigger>
-        <TabTrigger
-          href={{
-            pathname: "/(dashboard)/[organizationId]/properties",
-            params: { organizationId },
-          }}
-          name="properties"
-        ></TabTrigger>
+        {tabTriggerData.map((triggerData, i) => (
+          <TabTrigger key={i} {...triggerData}></TabTrigger>
+        ))}
+        {/* <TabTrigger */}
+        {/*   href={{ */}
+        {/*     pathname: "/(dashboard)/[organizationId]", */}
+        {/*     params: { organizationId }, */}
+        {/*   }} */}
+        {/*   name="index" */}
+        {/* ></TabTrigger> */}
+        {/* <TabTrigger */}
+        {/*   href={{ */}
+        {/*     pathname: "/(dashboard)/[organizationId]/properties", */}
+        {/*     params: { organizationId }, */}
+        {/*   }} */}
+        {/*   name="properties" */}
+        {/* ></TabTrigger> */}
+        {/* <TabTrigger */}
+        {/*   href={{ */}
+        {/*     pathname: "/(dashboard)/[organizationId]/search", */}
+        {/*     params: { organizationId }, */}
+        {/*   }} */}
+        {/*   name="search" */}
+        {/* ></TabTrigger> */}
       </TabList>
 
-      <View
-        style={{
-          position: "absolute",
-          // bottom: 0,
-          bottom: Spacing.md,
-          left: Spacing.md,
-          right: Spacing.md,
-          zIndex: 100,
-        }}
-      >
-        {/* <GradientMaskedBlurHeader */}
-        {/*   style={{ */}
-        {/*     transform: [{ rotate: "180deg" }], */}
-        {/*     bottom: 0, */}
-        {/*     height: insets.bottom + 50, */}
-        {/*     top: "auto", */}
-        {/*   }} */}
-        {/* /> */}
-        <View
-          style={{
-            padding: 3,
-            borderRadius: 999,
-            backgroundColor: "rgba(255,255,255,0.3)",
-            boxShadow: "0 0 20px 0 rgba(0,0,0,0.04)",
-            marginHorizontal: "auto",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              marginHorizontal: "auto",
-              // width: "min-content",
-              gap: Spacing.xxs,
-              backgroundColor: "white",
-              borderRadius: 999,
-            }}
-          >
-            <TabTrigger
-              asChild
-              href={{
-                pathname: "/(dashboard)/[organizationId]",
-                params: { organizationId },
-              }}
-              name="index"
-            >
-              <ThemedButton variant="none">
-                <ThemedIcon
-                  fill="rgba(55,20,250,0.3)"
-                  fillRule="nonzero"
-                  name="House"
-                  size={26}
-                  strokeWidth={1.2}
-                />
-              </ThemedButton>
-            </TabTrigger>
-            <TabTrigger
-              asChild
-              href={{
-                pathname: "/(dashboard)/[organizationId]/properties",
-                params: { organizationId },
-              }}
-              name="properties"
-            >
-              <ThemedButton variant="none">
-                <ThemedIcon name="Building2" size={26} strokeWidth={1.2} />
-              </ThemedButton>
-            </TabTrigger>
-          </View>
-        </View>
-      </View>
+      <OrganizationTabBar data={tabTriggerData} />
 
-      <TabSlot />
+      <React.Suspense
+        fallback={
+          <SafeAreaView style={{ flex: 1, paddingTop: 120 }}>
+            <ThemedText>Loading organization Index</ThemedText>
+          </SafeAreaView>
+        }
+      >
+        <TabSlot />
+      </React.Suspense>
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

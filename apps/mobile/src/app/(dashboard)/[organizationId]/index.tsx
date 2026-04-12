@@ -1,21 +1,16 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  OrganizationPreview,
-  OrganizationPreviewSkeleton,
-} from "@/components/organization-preview";
 import { ThemedText } from "@/components/themed-text";
-import { Header, MaxContentWidth, Spacing } from "@/constants/theme";
-import {
-  getFullOrganizationQueryOptions,
-  getListOrganizationsQueryOptions,
-} from "@/lib/queries/organization";
+import { Insets, MaxContentWidth, Spacing } from "@/constants/theme";
+import { getFullOrganizationQueryOptions } from "@/lib/queries/organization";
 
 export default function Page() {
-  const { organizationId } = useLocalSearchParams<{ organizationId: string }>();
+  const { organizationId } = useLocalSearchParams<{
+    organizationId: string;
+  }>();
 
   const { data: fullOrganization } = useSuspenseQuery(
     getFullOrganizationQueryOptions({ organizationId }),
@@ -36,10 +31,10 @@ export default function Page() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     paddingHorizontal: Spacing.md,
-    gap: Spacing.lg,
-    paddingTop: Header.height,
+    gap: Spacing.md,
+    paddingTop: Insets.top,
     maxWidth: MaxContentWidth,
   },
   image: {

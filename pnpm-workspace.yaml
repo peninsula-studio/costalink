@@ -6,9 +6,9 @@ catalog:
   "@babel/core": ^7.29.0
   "@base-ui/react": ^1.3.0
   "@better-auth/drizzle-adapter": https://pkg.pr.new/better-auth/better-auth/@better-auth/drizzle-adapter@6913
-  '@better-auth/expo': ^1.5.6
-  "@biomejs/biome": "2.4.10"
-  "@cloudflare/vite-plugin": ^1.31.1
+  '@better-auth/expo': ^1.6.2
+  "@biomejs/biome": "2.4.11"
+  "@cloudflare/vite-plugin": ^1.31.2
   "@fontsource-variable/dm-sans": ^5.2.8
   "@fontsource-variable/inter": "^5.2.8"
   "@fontsource-variable/inter-tight": "^5.2.7"
@@ -27,19 +27,19 @@ catalog:
   "@tailwindcss/vite": ^4.2.2
   "@tanstack/devtools-a11y": ^0.1.2
   "@tanstack/devtools-vite": ^0.6.0
-  "@tanstack/eslint-plugin-query": ^5.96.2
+  "@tanstack/eslint-plugin-query": ^5.98.0
   "@tanstack/eslint-plugin-router": ^1.161.6
   "@tanstack/react-devtools": ^0.10.2
-  "@tanstack/react-form-devtools": ^0.2.20
-  "@tanstack/react-form-start": ^1.28.6
-  "@tanstack/react-query": ^5.96.2
-  "@tanstack/react-query-devtools": ^5.96.2
-  "@tanstack/react-router": ^1.168.10
-  "@tanstack/react-router-devtools": ^1.166.11
-  "@tanstack/react-router-ssr-query": ^1.166.10
-  "@tanstack/react-start": ^1.167.16
+  "@tanstack/react-form-devtools": ^0.2.21
+  "@tanstack/react-form-start": ^1.29.0
+  "@tanstack/react-query": ^5.98.0
+  "@tanstack/react-query-devtools": ^5.98.0
+  "@tanstack/react-router": ^1.168.15
+  "@tanstack/react-router-devtools": ^1.166.13
+  "@tanstack/react-router-ssr-query": ^1.166.11
+  "@tanstack/react-start": ^1.167.28
   "@tanstack/react-table": "^8.21.3"
-  "@tanstack/router-plugin": "^1.167.12"
+  "@tanstack/router-plugin": "^1.167.14"
   "@tanstack/zod-adapter": "^1.166.9"
   "@testing-library/react": "^16.3.2"
   "@types/babel__core": ^7.20.5
@@ -49,7 +49,7 @@ catalog:
   "@types/react-dom": ^19.2.3
   "@vitejs/plugin-react": ^6.0.1
   babel-plugin-react-compiler: ^1.0.0
-  better-auth: ^1.5.6
+  better-auth: ^1.6.2
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   date-fns: ^4.1.0
@@ -82,13 +82,13 @@ catalog:
   "tsx": "^4.21.0"
   tw-animate-css: ^1.4.0
   typescript: ^6.0.2
-  "vite": "^8.0.7"
+  "vite": "^8.0.8"
   "vite-plugin-neon-new": "^0.8.0"
   vite-plus: latest
   "vite-tsconfig-paths": "^6.1.1"
-  "vitest": "^4.1.3"
+  "vitest": "^4.1.4"
   "web-vitals": "^5.2.0"
-  wrangler: ^4.81.0
+  wrangler: ^4.81.1
   zod: ^4.3.6
 
 catalogMode: prefer

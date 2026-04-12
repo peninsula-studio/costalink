@@ -1,8 +1,9 @@
+import type { ComponentProps } from "react";
 import { Pressable, type PressableProps, StyleSheet } from "react-native";
 import { Colors, type ThemeColor } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
-export type ThemedButtonProps = PressableProps & {
+export type ThemedButtonProps = ComponentProps<typeof Pressable> & {
   lightColor?: string;
   darkColor?: string;
   variant?: keyof typeof variants;

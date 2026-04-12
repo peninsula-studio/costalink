@@ -14,7 +14,8 @@ export const Colors = {
     // background: "#ffffff",
     background: "rgb(239,240,246)",
     backgroundElement: "#F0F0F3",
-    backgroundSelected: "#E0E1E6",
+    // backgroundSelected: "#E0E1E6",
+    backgroundSelected: "rgb(230,230,255)",
     textSecondary: "#60646C",
     primary: "rgb(0,130,255)",
     textPrimary: "rgb(255,255,255)",
@@ -97,9 +98,9 @@ export const Radius = {
 export const Header = { height: 50 } as const;
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const Insets = Platform.select({
-  ios: { top: 120, bottom: 90 },
-  android: { top: 110, bottom: 100 },
-  default: { top: 50, bottom: 50 },
+  ios: { top: 80, bottom: 90 },
+  android: { top: 80, bottom: 100 },
+  default: { top: 80, bottom: 1000 },
 });
 export const MaxContentWidth = 800;
 
@@ -108,5 +109,10 @@ export const Springs = {
     damping: 160,
     stiffness: 200,
     mass: 1.5,
+  },
+  fast: {
+    damping: 100,
+    stiffness: 280,
+    mass: 1,
   },
 } as const satisfies { [k: string]: SpringConfig };

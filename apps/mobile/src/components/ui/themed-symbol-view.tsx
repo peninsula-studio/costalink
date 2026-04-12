@@ -30,11 +30,23 @@ interface IconProps extends LucideProps {
   themeColor?: ThemeColor;
 }
 
-export function ThemedIcon({ name, themeColor, color, ...props }: IconProps) {
+export function ThemedIcon({
+  name,
+  themeColor,
+  strokeWidth = 1.5,
+  size = 20,
+  color,
+  ...props
+}: IconProps) {
   const theme = useTheme();
   const LucideIcon = icons[name];
 
   return (
-    <LucideIcon color={themeColor ? theme[themeColor] : color} {...props} />
+    <LucideIcon
+      color={themeColor ? theme[themeColor] : color}
+      size={size}
+      strokeWidth={strokeWidth}
+      {...props}
+    />
   );
 }

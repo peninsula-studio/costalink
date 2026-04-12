@@ -1,3 +1,4 @@
+import { organizationKeys } from "@repo/types/queries/organization-keys";
 import type { organizationSelectSchema } from "@repo/types/schemas/organization";
 import { queryOptions } from "@tanstack/react-query";
 import type { z } from "zod";
@@ -5,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 
 export const getListOrganizationsQueryOptions = () =>
   queryOptions({
-    queryKey: ["user", "organizations"],
+    queryKey: organizationKeys.list(),
     queryFn: async () => {
       try {
         const { data, error } = await authClient.organization.list();
