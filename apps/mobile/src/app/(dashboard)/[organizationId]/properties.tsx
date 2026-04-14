@@ -1,29 +1,15 @@
-import { LegendList } from "@legendapp/list";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
-import { ThemedText } from "@/components/themed-text";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  BottomTabInset,
-  Header,
-  Insets,
-  MaxContentWidth,
-  Spacing,
-} from "@/constants/theme";
-import { honoClient } from "@/lib/hono-client";
-import { getSessionQueryOptions } from "@/lib/queries/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { OrganizationProperiesList } from "@/components/organization-properties-list";
+import { Insets, MaxContentWidth, Spacing } from "@/constants/theme";
 
 export default function Page() {
   const { organizationId } = useLocalSearchParams<{
     organizationId: string;
   }>();
+
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
@@ -34,84 +20,10 @@ export default function Page() {
             </SafeAreaView>
           }
         >
-          <PropertyList />
+          <OrganizationProperiesList organizationId={organizationId} />
         </React.Suspense>
       </View>
     </View>
-  );
-}
-
-function PropertyList() {
-  const { organizationId } = useLocalSearchParams<{
-    organizationId: string;
-  }>();
-  const { data: session } = useSuspenseQuery(getSessionQueryOptions());
-
-  const insets = useSafeAreaInsets();
-
-  const { data: properties } = useSuspenseQuery({
-    queryKey: ["property", "list", organizationId],
-    queryFn: async () => {
-      try {
-        const kek = await honoClient.organization[":id"].properties[
-          ":pageSize?:page?"
-        ].$get({
-          param: {
-            id: organizationId,
-            page: 1,
-            pageSize: 10,
-          },
-        });
-        const data = await kek.json();
-        return data;
-      } catch (e) {
-        console.error(`Error getting property list ${e}`);
-        throw e;
-      }
-    },
-  });
-
-  // const properties: { id: string; images: { url: string }[] }[] = [];
-
-  return (
-    <LegendList
-      // automaticallyAdjustContentInsets={true}
-      contentContainerStyle={[
-        styles.cardGrid,
-        { paddingTop: insets.top + Insets.top },
-      ]}
-      // contentInsetAdjustmentBehavior="always"
-      data={properties}
-      ItemSeparatorComponent={() => <View style={{ height: Spacing.md }} />}
-      keyExtractor={(property) => property.id}
-      ListEmptyComponent={() => (
-        <View>
-          <ThemedText>Empty list!</ThemedText>
-        </View>
-      )}
-      persistentScrollbar={false}
-      recycleItems
-      renderItem={({ item }) => (
-        <Card>
-          <CardHeader>
-            <Image
-              contentFit="cover"
-              contentPosition="center"
-              priority="high"
-              // source={require("@/assets/images/mobile-hero-image.webp")}
-              source={
-                item.images?.[0].url ||
-                require("@/assets/images/mobile-hero-image.webp")
-              }
-              style={styles.image}
-            />
-          </CardHeader>
-          <CardContent>
-            <ThemedText style={styles.cardTitle}>{item.id}</ThemedText>
-          </CardContent>
-        </Card>
-      )}
-    />
   );
 }
 

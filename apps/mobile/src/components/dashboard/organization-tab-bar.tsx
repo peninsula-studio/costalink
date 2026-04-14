@@ -1,6 +1,12 @@
-import { Redirect, useLocalSearchParams } from "expo-router";
+import {
+  Redirect,
+  useLocalSearchParams,
+  usePathname,
+  useSegments,
+} from "expo-router";
 import { TabTrigger, type TabTriggerProps } from "expo-router/ui";
-import React from "react";
+import type * as icons from "lucide-react-native/icons";
+import React, { useEffectEvent } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedRef,
@@ -14,13 +20,16 @@ import { ThemedIcon } from "@/components/ui/themed-symbol-view";
 import { Colors, Spacing, Springs } from "@/constants/theme";
 
 export default function OrganizationTabBar({
-  data,
+  triggerData,
 }: {
-  data: TabTriggerProps[];
+  triggerData: (TabTriggerProps & { iconName: keyof typeof icons })[];
 }) {
   const { organizationId } = useLocalSearchParams<{
     organizationId: string;
   }>();
+
+  const pathname = usePathname();
+  const segments = useSegments();
 
   const indicatorRef = React.useRef<View>(null);
   const triggerContainerRef = useAnimatedRef();
@@ -28,24 +37,30 @@ export default function OrganizationTabBar({
 
   const indicatorOffset = useSharedValue(0);
 
-  const handlePress = (pos: number) => {
+  const moveTabIndicator = useEffectEvent((_p: string) => {
+    if (segments[1] !== "[organizationId]") return;
+    const tabIndex = segments[2]
+      ? triggerData.findIndex((v) => v.name === segments[2])
+      : 0;
+    const tabOffset =
+      (triggerContainerRef?.current?.children?.[
+        tabIndex
+      ]?.getBoundingClientRect()?.x || 0) -
+      (triggerContainerRef.current?.getBoundingClientRect().x || 0);
     scheduleOnUI(() => {
-      // const measurement = measure(triggerContainerRef);
-      // const kek = pathname.split("/")[2];
-      // if (measurement === null) return;
-      // indicatorOffset.set((measurement?.width / data.length) * pos || 0);
-      indicatorOffset.set(pos);
-      // console.log(measurement);
+      indicatorOffset.set(tabOffset);
     });
-  };
+  });
+
+  React.useEffect(() => {
+    moveTabIndicator(pathname);
+  }, [pathname]);
 
   const indicatorStyles = useAnimatedStyle(() => {
     "worklet";
     return {
-      // left: withSpring(offset.value + getActivePath(pathname) * 72),
       transform: [
         {
-          // translateX: withSpring(indicatorOffset.value * 63, Springs.fast),
           translateX: withSpring(indicatorOffset.value, Springs.fast),
         },
       ],
@@ -60,49 +75,39 @@ export default function OrganizationTabBar({
     <View
       style={{
         position: "absolute",
-        // bottom: 0,
         bottom: Spacing.md,
         left: Spacing.md,
         right: Spacing.md,
         zIndex: 100,
       }}
     >
-      {/* <GradientMaskedBlurHeader */}
-      {/*   style={{ */}
-      {/*     transform: [{ rotate: "180deg" }], */}
-      {/*     bottom: 0, */}
-      {/*     height: insets.bottom + 50, */}
-      {/*     top: "auto", */}
-      {/*   }} */}
-      {/* /> */}
       <View style={styles.outerContainer}>
         <Animated.View
           ref={triggerContainerRef}
           style={styles.triggerContainer}
         >
-          <Animated.View
-            ref={indicatorRef}
-            style={[styles.animatedIndicator, indicatorStyles]}
-          ></Animated.View>
-
-          {data.map((triggerProps, i) => (
-            <TabTrigger asChild key={i} {...triggerProps}>
+          {triggerData.map(({ iconName, ...triggerProps }) => (
+            <TabTrigger asChild key={`${triggerProps.name}`} {...triggerProps}>
               <ThemedButton
-                onPress={({ currentTarget: t }) =>
-                  handlePress(
-                    t.getBoundingClientRect().x -
-                      (t.parentElement?.getBoundingClientRect().x || 0),
-                  )
-                }
+                // onPress={({ currentTarget: t }) =>
+                //   handlePress(
+                //     t.getBoundingClientRect().x -
+                //       (t.parentElement?.getBoundingClientRect().x || 0),
+                //   )
+                // }
                 ref={buttonRef}
                 style={styles.triggerButton}
                 variant="none"
               >
-                <ThemedIcon name="LayoutGrid" />
-                {/* <View style={styles.buttonBgPlaceholder} /> */}
+                <ThemedIcon name={iconName} />
               </ThemedButton>
             </TabTrigger>
           ))}
+
+          <Animated.View
+            ref={indicatorRef}
+            style={[styles.animatedIndicator, indicatorStyles]}
+          ></Animated.View>
         </Animated.View>
       </View>
     </View>
@@ -138,7 +143,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     borderRadius: 999,
-    zIndex: 0,
+    zIndex: -1,
   },
   triggerButton: {
     position: "relative",

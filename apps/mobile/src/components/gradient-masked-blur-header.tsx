@@ -3,7 +3,7 @@ import { BlurView, type BlurViewProps } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View, type ViewProps } from "react-native";
 import { easeGradient } from "react-native-easing-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Insets } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 interface Props extends ViewProps {
@@ -15,7 +15,7 @@ export default function GradientMaskedBlurHeader({
   blurTarget,
   ...props
 }: Props) {
-  const insets = useSafeAreaInsets();
+  // const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const tint: React.ComponentProps<typeof BlurView>["tint"] =
     colorScheme === "dark" ? "dark" : "light";
@@ -44,7 +44,8 @@ export default function GradientMaskedBlurHeader({
     <View
       style={{
         flex: 1,
-        height: insets.top + 80,
+        // height: 80,
+        height: Insets.top,
         position: "absolute",
         top: 0,
         left: 0,
