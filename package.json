@@ -11,7 +11,7 @@
     "check": "biome check"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.11",
+    "@biomejs/biome": "2.4.12",
     "turbo": "^2.9.6"
   },
   "engines": {
@@ -21,7 +21,7 @@
   "version": "1.0.0",
   "dependencies": {
     "expo": "~55.0.11",
-    "react": "19.2.0",
+    "react": "catalog:",
     "react-native": "0.83.4"
   }
 }

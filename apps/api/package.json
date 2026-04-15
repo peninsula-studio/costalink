@@ -23,7 +23,7 @@
     "@repo/i18n": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "better-auth": "catalog:",
-    "hono": "^4.12.12",
+    "hono": "^4.12.14",
     "zod": "catalog:"
   },
   "devDependencies": {
